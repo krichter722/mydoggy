@@ -309,46 +309,37 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
 
                 AttributesImpl dockedDescriptorAttributes = new AttributesImpl();
+                addAttributes(dockedDescriptorAttributes, dockedTypeDescriptor);
                 dockedDescriptorAttributes.addAttribute(null, "dockLength", null, null, String.valueOf(dockedTypeDescriptor.getDockLength()));
                 dockedDescriptorAttributes.addAttribute(null, "minimumDockLength", null, null, String.valueOf(dockedTypeDescriptor.getMinimumDockLength()));
                 dockedDescriptorAttributes.addAttribute(null, "popupMenuEnabled", null, null, String.valueOf(dockedTypeDescriptor.isPopupMenuEnabled()));
-                dockedDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(dockedTypeDescriptor.isAnimating()));
-                dockedDescriptorAttributes.addAttribute(null, "hideRepresentativeButtonOnVisible", null, null, String.valueOf(dockedTypeDescriptor.isHideRepresentativeButtonOnVisible()));
-                dockedDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(dockedTypeDescriptor.isIdVisibleOnTitleBar()));
-                dockedDescriptorAttributes.addAttribute(null, "autoHide", null, null, String.valueOf(dockedTypeDescriptor.isAutoHide()));
                 writer.dataElement("docked", dockedDescriptorAttributes);
 
                 // SlidingTypeDescriptor
                 SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);
 
                 AttributesImpl slidingDescriptorAttributes = new AttributesImpl();
+                addAttributes(slidingDescriptorAttributes, slidingTypeDescriptor);
                 slidingDescriptorAttributes.addAttribute(null, "transparentMode", null, null, String.valueOf(slidingTypeDescriptor.isTransparentMode()));
                 slidingDescriptorAttributes.addAttribute(null, "transparentDelay", null, null, String.valueOf(slidingTypeDescriptor.getTransparentDelay()));
                 slidingDescriptorAttributes.addAttribute(null, "transparentRatio", null, null, String.valueOf(slidingTypeDescriptor.getTransparentRatio()));
-                slidingDescriptorAttributes.addAttribute(null, "enabled", null, null, String.valueOf(slidingTypeDescriptor.isEnabled()));
-                slidingDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(slidingTypeDescriptor.isAnimating()));
-                slidingDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(slidingTypeDescriptor.isIdVisibleOnTitleBar()));
-                slidingDescriptorAttributes.addAttribute(null, "autoHide", null, null, String.valueOf(slidingTypeDescriptor.isAutoHide()));
-                slidingDescriptorAttributes.addAttribute(null, "hideRepresentativeButtonOnVisible", null, null, String.valueOf(dockedTypeDescriptor.isHideRepresentativeButtonOnVisible()));
                 writer.dataElement("sliding", slidingDescriptorAttributes);
 
                 // FloatingTypeDescriptor
                 FloatingTypeDescriptor floatingTypeDescriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
+
                 AttributesImpl floatingDescriptorAttributes = new AttributesImpl();
+                addAttributes(floatingDescriptorAttributes, floatingTypeDescriptor);
                 floatingDescriptorAttributes.addAttribute(null, "modal", null, null, String.valueOf(floatingTypeDescriptor.isModal()));
                 floatingDescriptorAttributes.addAttribute(null, "transparentMode", null, null, String.valueOf(floatingTypeDescriptor.isTransparentMode()));
                 floatingDescriptorAttributes.addAttribute(null, "transparentDelay", null, null, String.valueOf(floatingTypeDescriptor.getTransparentDelay()));
                 floatingDescriptorAttributes.addAttribute(null, "transparentRatio", null, null, String.valueOf(floatingTypeDescriptor.getTransparentRatio()));
-                floatingDescriptorAttributes.addAttribute(null, "enabled", null, null, String.valueOf(floatingTypeDescriptor.isEnabled()));
-                floatingDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(floatingTypeDescriptor.isAnimating()));
-                floatingDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(floatingTypeDescriptor.isIdVisibleOnTitleBar()));
-                floatingDescriptorAttributes.addAttribute(null, "autoHide", null, null, String.valueOf(floatingTypeDescriptor.isAutoHide()));
                 floatingDescriptorAttributes.addAttribute(null, "addToTaskBar", null, null, String.valueOf(floatingTypeDescriptor.isAddToTaskBar()));
                 floatingDescriptorAttributes.addAttribute(null, "alwaysOnTop", null, null, String.valueOf(floatingTypeDescriptor.isAlwaysOnTop()));
                 floatingDescriptorAttributes.addAttribute(null, "osDecorated", null, null, String.valueOf(floatingTypeDescriptor.isOsDecorated()));
-                floatingDescriptorAttributes.addAttribute(null, "hideRepresentativeButtonOnVisible", null, null, String.valueOf(dockedTypeDescriptor.isHideRepresentativeButtonOnVisible()));
                 floatingDescriptorAttributes.addAttribute(null, "resizable", null, null, String.valueOf(floatingTypeDescriptor.isResizable()));
 
+                // Store location
                 Point point = floatingTypeDescriptor.getLocation();
                 Dimension dimension = floatingTypeDescriptor.getSize();
                 if (point != null || dimension != null) {
@@ -372,6 +363,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 } else
                     writer.dataElement("floating", floatingDescriptorAttributes);
 
+                // Store ScreenWindow bounds.. TODO: this is never loaded....why???
                 if (toolWindow.isMaximized() && (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE)) {
                     Rectangle screenWindowBounds = context.get(MyDoggyToolWindowManager.class).getDescriptor(toolWindow).getScreenWindowBounds();
 
@@ -385,16 +377,14 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                 // FloatingLiveTypeDescriptor
                 FloatingLiveTypeDescriptor floatingLiveTypeDescriptor = (FloatingLiveTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
+
                 AttributesImpl floatingLiveDescriptorAttributes = new AttributesImpl();
+                addAttributes(floatingLiveDescriptorAttributes, floatingLiveTypeDescriptor);
                 floatingLiveDescriptorAttributes.addAttribute(null, "transparentMode", null, null, String.valueOf(floatingLiveTypeDescriptor.isTransparentMode()));
                 floatingLiveDescriptorAttributes.addAttribute(null, "transparentDelay", null, null, String.valueOf(floatingLiveTypeDescriptor.getTransparentDelay()));
                 floatingLiveDescriptorAttributes.addAttribute(null, "transparentRatio", null, null, String.valueOf(floatingLiveTypeDescriptor.getTransparentRatio()));
-                floatingLiveDescriptorAttributes.addAttribute(null, "enabled", null, null, String.valueOf(floatingLiveTypeDescriptor.isEnabled()));
-                floatingLiveDescriptorAttributes.addAttribute(null, "animating", null, null, String.valueOf(floatingLiveTypeDescriptor.isAnimating()));
-                floatingLiveDescriptorAttributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(floatingLiveTypeDescriptor.isIdVisibleOnTitleBar()));
-                floatingLiveDescriptorAttributes.addAttribute(null, "autoHide", null, null, String.valueOf(floatingLiveTypeDescriptor.isAutoHide()));
-                floatingLiveDescriptorAttributes.addAttribute(null, "hideRepresentativeButtonOnVisible", null, null, String.valueOf(dockedTypeDescriptor.isHideRepresentativeButtonOnVisible()));
 
+                // Store location
                 point = floatingLiveTypeDescriptor.getLocation();
                 dimension = floatingLiveTypeDescriptor.getSize();
                 if (point != null || dimension != null) {
@@ -419,7 +409,6 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     writer.dataElement("floatingLive", floatingLiveDescriptorAttributes);
 
                 // RepresentativeAnchor Descriptor
-
                 RepresentativeAnchorDescriptor anchorDescriptor = toolWindow.getRepresentativeAnchorDescriptor();
 
                 AttributesImpl anchorDescriptorAttributes = new AttributesImpl();
@@ -476,6 +465,16 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             } catch (SAXException e) {
                 throw new RuntimeException(e);
             }
+        }
+
+
+        protected void addAttributes(AttributesImpl attributes, ToolWindowTypeDescriptor descriptor) {
+            attributes.addAttribute(null, "animating", null, null, String.valueOf(descriptor.isAnimating()));
+            attributes.addAttribute(null, "autoHide", null, null, String.valueOf(descriptor.isAutoHide()));
+            attributes.addAttribute(null, "enabled", null, null, String.valueOf(descriptor.isEnabled()));
+            attributes.addAttribute(null, "hideRepresentativeButtonOnVisible", null, null, String.valueOf(descriptor.isHideRepresentativeButtonOnVisible()));
+            attributes.addAttribute(null, "idVisibleOnTitleBar", null, null, String.valueOf(descriptor.isIdVisibleOnTitleBar()));
+            attributes.addAttribute(null, "titleBarButtonsVisible", null, null, String.valueOf(descriptor.isTitleBarButtonsVisible()));
         }
     }
 
@@ -1005,43 +1004,34 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 Element typeElement = getElement(tool, "docked");
                 if (typeElement != null) {
                     DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+
+                    applyAttributes(typeElement, descriptor);
                     descriptor.setDockLength(getInteger(typeElement, "dockLength", 200));
                     descriptor.setMinimumDockLength(getInteger(typeElement, "minimumDockLength", 100));
                     descriptor.setPopupMenuEnabled(getBoolean(typeElement, "popupMenuEnabled", true));
-                    descriptor.setAnimating(getBoolean(typeElement, "animating", true));
-                    descriptor.setIdVisibleOnTitleBar(getBoolean(typeElement, "idVisibleOnTitleBar", true));
-                    descriptor.setHideRepresentativeButtonOnVisible(getBoolean(typeElement, "hideRepresentativeButtonOnVisible", false));
-                    descriptor.setAutoHide(getBoolean(typeElement, "autoHide", false));
-
                 }
 
                 typeElement = getElement(tool, "sliding");
                 if (typeElement != null) {
                     SlidingTypeDescriptor descriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);
-                    descriptor.setEnabled(getBoolean(typeElement, "enabled", true));
+
+                    applyAttributes(typeElement, descriptor);
                     descriptor.setTransparentDelay(getInteger(typeElement, "transparentDelay", 0));
                     descriptor.setTransparentMode(getBoolean(typeElement, "transparentMode", true));
                     descriptor.setTransparentRatio(getFloat(typeElement, "transparentRatio", 0.7f));
-                    descriptor.setAnimating(getBoolean(typeElement, "animating", true));
-                    descriptor.setIdVisibleOnTitleBar(getBoolean(typeElement, "idVisibleOnTitleBar", true));
-                    descriptor.setHideRepresentativeButtonOnVisible(getBoolean(typeElement, "hideRepresentativeButtonOnVisible", false));
-                    descriptor.setAutoHide(getBoolean(typeElement, "autoHide", false));
                 }
 
                 typeElement = getElement(tool, "floating");
                 if (typeElement != null) {
                     FloatingTypeDescriptor descriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
-                    descriptor.setEnabled(getBoolean(typeElement, "enabled", true));
+
+                    applyAttributes(typeElement, descriptor);
                     descriptor.setTransparentDelay(getInteger(typeElement, "transparentDelay", 0));
                     descriptor.setTransparentMode(getBoolean(typeElement, "transparentMode", true));
                     descriptor.setTransparentRatio(getFloat(typeElement, "transparentRatio", 0.7f));
                     descriptor.setModal(getBoolean(typeElement, "modal", false));
-                    descriptor.setAnimating(getBoolean(typeElement, "animating", true));
-                    descriptor.setIdVisibleOnTitleBar(getBoolean(typeElement, "idVisibleOnTitleBar", true));
-                    descriptor.setAutoHide(getBoolean(typeElement, "autoHide", false));
                     descriptor.setAddToTaskBar(getBoolean(typeElement, "addToTaskBar", false));
                     descriptor.setAlwaysOnTop(getBoolean(typeElement, "alwaysOnTop", true));
-                    descriptor.setHideRepresentativeButtonOnVisible(getBoolean(typeElement, "hideRepresentativeButtonOnVisible", false));
                     descriptor.setOsDecorated(getBoolean(typeElement, "osDecorated", false));
                     descriptor.setResizable(getBoolean(typeElement, "resizable", true));
 
@@ -1062,13 +1052,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 typeElement = getElement(tool, "floatingLive");
                 if (typeElement != null) {
                     FloatingLiveTypeDescriptor descriptor = (FloatingLiveTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
-                    descriptor.setEnabled(getBoolean(typeElement, "enabled", true));
+
+                    applyAttributes(typeElement, descriptor);
                     descriptor.setTransparentDelay(getInteger(typeElement, "transparentDelay", 0));
                     descriptor.setTransparentMode(getBoolean(typeElement, "transparentMode", true));
                     descriptor.setTransparentRatio(getFloat(typeElement, "transparentRatio", 0.7f));
-                    descriptor.setAnimating(getBoolean(typeElement, "animating", true));
-                    descriptor.setIdVisibleOnTitleBar(getBoolean(typeElement, "idVisibleOnTitleBar", true));
-                    descriptor.setAutoHide(getBoolean(typeElement, "autoHide", false));
 
                     Element location = getElement(typeElement, "location");
                     if (location != null)
@@ -1263,6 +1251,15 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
             if (maximizedTool != null)
                 maximizedTool.setMaximized(true);
+        }
+
+        protected void applyAttributes(Element element, ToolWindowTypeDescriptor descriptor) {
+            descriptor.setAnimating(getBoolean(element, "animating", true));
+            descriptor.setAutoHide(getBoolean(element, "autoHide", false));
+            descriptor.setEnabled(getBoolean(element, "enabled", true));
+            descriptor.setHideRepresentativeButtonOnVisible(getBoolean(element, "hideRepresentativeButtonOnVisible", false));
+            descriptor.setIdVisibleOnTitleBar(getBoolean(element, "idVisibleOnTitleBar", true));
+            descriptor.setHideRepresentativeButtonOnVisible(getBoolean(element, "titleBarButtonsVisible", true));
         }
     }
 
