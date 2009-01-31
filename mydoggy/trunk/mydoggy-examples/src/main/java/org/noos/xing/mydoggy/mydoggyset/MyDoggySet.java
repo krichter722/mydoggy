@@ -109,7 +109,11 @@ public class MyDoggySet {
         this.frame.getContentPane().setLayout(new ExtendedTableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
 
         // Init ToolWindowManager
+        long start = System.currentTimeMillis();
         final MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager();
+        long end = System.currentTimeMillis();
+        System.out.println("time: " + (end - start));
+
 
         // Add MyDoggyToolWindowManager to frame
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
@@ -204,8 +208,8 @@ public class MyDoggySet {
         toolWindowManager.registerToolWindow("Tool 1", "Title 1", null, toolOnePanel, ToolWindowAnchor.BOTTOM);
         toolWindowManager.registerToolWindow("Tool 2", "Title 2", null, panel, ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 3", "Title 3",
-                                             SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/save.png"),
-                                             new MainPanel(), ToolWindowAnchor.LEFT);
+                SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/save.png"),
+                new MainPanel(), ToolWindowAnchor.LEFT);
         toolWindowManager.registerToolWindow("Tool 4", "Title 4", null, new JButton("Hello World 4"), ToolWindowAnchor.TOP);
         toolWindowManager.registerToolWindow("Tool 5", "Title 5", null, new JButton("Hello World 5"), ToolWindowAnchor.TOP);
         toolWindowManager.registerToolWindow("Tool 6", "Title 6", null, new JButton("Hello World 6"), ToolWindowAnchor.BOTTOM);
@@ -228,9 +232,9 @@ public class MyDoggySet {
 
 
         toolWindowManager.registerToolWindow("Paramètres", "Paramètres",
-                                             null, new JButton("HELLOO"), ToolWindowAnchor.LEFT);
+                null, new JButton("HELLOO"), ToolWindowAnchor.LEFT);
         toolWindowManager.registerToolWindow("Vue gÃ©ometrique", "Vue gÃ©ometrique",
-                                             null, new JButton("Vue gÃ©ometrique"), ToolWindowAnchor.LEFT);
+                null, new JButton("Vue gÃ©ometrique"), ToolWindowAnchor.LEFT);
 
 
         // Make all available
@@ -472,7 +476,7 @@ public class MyDoggySet {
         myDoggyResourceManager.putInstanceCreator(ParentOfQuestion.class, new ObjectCreator() {
             public Object create(Context context) {
                 return new CustomParentOfQuestion(context.get(Component.class),
-                                                  context.get(ToolWindow.class));
+                        context.get(ToolWindow.class));
             }
         });
 
@@ -538,26 +542,26 @@ public class MyDoggySet {
             r.x = r.y = 0;
 
             GraphicsUtil.fillRect(g, r,
-                                  backgroundStart, backgroundEnd,
-                                  null,
-                                  GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
+                    backgroundStart, backgroundEnd,
+                    null,
+                    GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
 
             if (descriptor.isIdVisibleOnTitleBar() ||
-                toolWindow.getType() == ToolWindowType.FLOATING ||
-                toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
-                toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
+                    toolWindow.getType() == ToolWindowType.FLOATING ||
+                    toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
+                    toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
 
                 String id = SwingUtil.getUserString(descriptor.getToolWindow().getId());
                 r.width = g.getFontMetrics().stringWidth(id) + 8;
 
                 int halfHeigh = (r.height / 2);
                 GraphicsUtil.fillRect(g, r,
-                                      Color.WHITE,
-                                      idBackgroundColor,
-                                      new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
-                                                  new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
-                                                  4),
-                                      GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
+                        Color.WHITE,
+                        idBackgroundColor,
+                        new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
+                                new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
+                                4),
+                        GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
 
 
                 Polygon polygon = new Polygon();
@@ -566,10 +570,10 @@ public class MyDoggySet {
                 polygon.addPoint(r.x + r.width - halfHeigh, r.y + r.height);
 
                 GraphicsUtil.fillRect(g, r,
-                                      Color.WHITE,
-                                      idBackgroundColor,
-                                      polygon,
-                                      GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
+                        Color.WHITE,
+                        idBackgroundColor,
+                        polygon,
+                        GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
 
                 g.setColor(idColor);
                 g.drawString(id, r.x + 2, r.y + g.getFontMetrics().getAscent());
@@ -595,11 +599,11 @@ public class MyDoggySet {
 
             if (flashing || active) {
                 GraphicsUtil.fillRect(g,
-                                      r,
-                                      backgroundStart,
-                                      backgroundEnd,
-                                      null,
-                                      GraphicsUtil.BOTTOM_TO_UP_GRADIENT);
+                        r,
+                        backgroundStart,
+                        backgroundEnd,
+                        null,
+                        GraphicsUtil.BOTTOM_TO_UP_GRADIENT);
             } else {
                 g.setColor(UIManager.getColor(MyDoggyKeySpace.TWRA_BACKGROUND_INACTIVE));
                 g.fillRect(0, 0, r.width, r.height);
@@ -723,7 +727,7 @@ public class MyDoggySet {
 
 
             double size[][] = {{TableLayoutConstants.FILL}, // Columns
-                               {20, 20, 20, 20, TableLayoutConstants.FILL}}; // Rows
+                    {20, 20, 20, 20, TableLayoutConstants.FILL}}; // Rows
             infoPanel.setLayout(new TableLayout(size));
             infoPanel.add(new JTextField("textfield1"), "0,0");
             infoPanel.add(new JTextField("textfield2"), "0,1");

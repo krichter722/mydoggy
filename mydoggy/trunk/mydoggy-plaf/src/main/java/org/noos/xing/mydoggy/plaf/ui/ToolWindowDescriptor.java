@@ -105,7 +105,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
             else if (evt.getOldValue() == ToolWindowType.FLOATING || evt.getNewValue() == ToolWindowType.FLOATING)
                 setFloatingWindow(false);
 
-            if (evt.getSource() != this ||
+            if (evt.getSource() != toolWindow ||
                 (evt.getNewValue() != ToolWindowType.FLOATING &&
                  evt.getNewValue() != ToolWindowType.FLOATING_FREE))
                 return;

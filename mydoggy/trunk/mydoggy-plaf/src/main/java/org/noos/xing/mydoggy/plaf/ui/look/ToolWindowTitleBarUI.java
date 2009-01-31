@@ -100,7 +100,7 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
                 }
             }
         } else if ("active".equals(evt.getPropertyName())) {
-            if (evt.getSource() != descriptor || !toolWindow.isVisible())
+            if (evt.getSource() != toolWindow || !toolWindow.isVisible())
                 return;
 
             if (evt.getNewValue() == Boolean.FALSE) {
