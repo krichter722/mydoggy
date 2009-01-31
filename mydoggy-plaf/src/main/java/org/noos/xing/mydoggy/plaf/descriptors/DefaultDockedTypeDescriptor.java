@@ -125,7 +125,8 @@ public class DefaultDockedTypeDescriptor extends DefaultToolWindowTypeDescriptor
     }
 
     public void setEnabled(boolean enabled) {
-        throw new RuntimeException("Cannot call this method. This type is always available.");
+        if (!enabled)
+            throw new RuntimeException("Cannot call this method. This type is always available.");
     }
 
 

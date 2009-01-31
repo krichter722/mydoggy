@@ -182,14 +182,11 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
         PropertyChangeEventSource toolWindowSource = descriptor.getToolWindow();
 
-        toolWindowSource.addPlafPropertyChangeListener("type", propertyChangeListener);
-        toolWindowSource.addPlafPropertyChangeListener("maximized",propertyChangeListener);
+        toolWindowSource.addPlafPropertyChangeListener(propertyChangeListener, "type", "maximized");
 
         // Init floating live type desrciptor properties listeners
         PropertyChangeEventSource floatingLiveTypeDescriptorSource = (PropertyChangeEventSource) descriptor.getToolWindow().getTypeDescriptor(FloatingLiveTypeDescriptor.class);
-        floatingLiveTypeDescriptorSource.addPlafPropertyChangeListener("location", propertyChangeListener);
-        floatingLiveTypeDescriptorSource.addPlafPropertyChangeListener("size", propertyChangeListener);
-        floatingLiveTypeDescriptorSource.addPlafPropertyChangeListener("enabled", propertyChangeListener);
+        floatingLiveTypeDescriptorSource.addPlafPropertyChangeListener(propertyChangeListener, "location", "size", "enabled");
 
         moveMouseInputHandler = new FloatingMoveMouseInputHandler(null);
         livePanelComponentListener = new LivePanelComponentListener();
@@ -202,9 +199,6 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
 
         public void onType(PropertyChangeEvent evt) {
-            if (evt.getSource() != descriptor)
-                return;
-
             assert "type".equals(evt.getPropertyName());
             if (evt.getNewValue() == ToolWindowType.FLOATING_LIVE) {
                 if (descriptor.getManager().getLayeredPane() != null) {
