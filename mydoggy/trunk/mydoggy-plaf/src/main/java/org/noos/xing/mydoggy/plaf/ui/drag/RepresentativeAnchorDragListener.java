@@ -177,7 +177,4 @@ public class RepresentativeAnchorDragListener extends DragListenerAdapter {
         );
     }
 
-    protected boolean isDragEnabled() {
-        return true;
-    }
 }
