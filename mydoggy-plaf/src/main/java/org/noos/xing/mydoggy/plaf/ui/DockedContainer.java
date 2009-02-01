@@ -1,12 +1,10 @@
 package org.noos.xing.mydoggy.plaf.ui;
 
-import org.noos.xing.mydoggy.PersistenceDelegate;
-import org.noos.xing.mydoggy.ToolWindowListener;
-import org.noos.xing.mydoggy.ToolWindowTab;
-import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ToolWindowTabEvent;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
+import org.noos.xing.mydoggy.plaf.persistence.InternalPersistenceDelegateFilterAdapter;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -137,7 +135,12 @@ public class DockedContainer extends MyDoggyToolWindowContainer {
 
         public void propertyChange(PropertyChangeEvent evt) {
             if ((Boolean) evt.getNewValue()) {
-                descriptor.getManager().getPersistenceDelegate().save(workspace = new ByteArrayOutputStream());
+                descriptor.getManager().getPersistenceDelegate().save(workspace = new ByteArrayOutputStream(), new InternalPersistenceDelegateFilterAdapter(){
+                    @Override
+                    public boolean storeToolWindow(ToolWindow toolWindow) {
+                        return toolWindow != descriptor.getToolWindow();
+                    }
+                });
             } else if (workspace != null) {
                 if (valueAdj)
                     return;
