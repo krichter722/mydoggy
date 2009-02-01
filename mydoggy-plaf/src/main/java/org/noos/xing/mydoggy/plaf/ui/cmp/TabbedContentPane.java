@@ -930,6 +930,10 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         public void dragGestureRecognized(DragGestureEvent dge) {
             super.dragGestureRecognized(dge);
 
+            // Acquire locks
+            if (!acquireLocks())
+                return;
+
             Point tabPt = dge.getDragOrigin();
 
             dragTabIndex = indexAtLocation(tabPt.x, tabPt.y);
@@ -963,6 +967,9 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         }
 
         public void dragMouseMoved(DragSourceDragEvent dsde) {
+            if (!checkStatus())
+                return;
+
             // Update ghost image
             updateGhostImage(dsde.getLocation());
 
@@ -982,6 +989,11 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
         public void dragDropEnd(DragSourceDropEvent e) {
             try {
+                if (!checkStatus())
+                    return;
+
+                releaseLocksOne();
+
                 if (!e.getDropSuccess()) {
                     // Finalize drag action...
                     if (lastDropPanel != null) {
@@ -1006,6 +1018,8 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
                         content.setDetached(true);
                     }
                 }
+
+                releaseLocksTwo();
             } finally {
                 // End dockable drop gesture..
                 dockableDropDragEnd();
