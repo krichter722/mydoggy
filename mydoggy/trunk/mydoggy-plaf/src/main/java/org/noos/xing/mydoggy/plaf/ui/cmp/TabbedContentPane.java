@@ -984,7 +984,6 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
                 setGhostImage(dge.getDragOrigin(), image);
             }
 
-            // TODO: remove tab....
             removeTabAt(dragTabIndex);
         }
 
