@@ -1129,9 +1129,9 @@ public class MultiSplitDockableContainer extends JPanel {
         return os.toByteArray();
     }
 
-    protected Split decode(byte[] bytes) {
+    protected Node decode(byte[] bytes) {
         XMLDecoder d = new XMLDecoder(new ByteArrayInputStream(bytes));
-        return (Split) (d.readObject());
+        return (Node) (d.readObject());
     }
 
     protected void validateModel(Node root) {
