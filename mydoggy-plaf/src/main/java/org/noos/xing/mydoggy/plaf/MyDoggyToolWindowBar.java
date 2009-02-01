@@ -991,8 +991,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
                             MultiSplitDockableContainer.DockableEntry dockableEntry = dockableContainer.getDockableEntries().get(0);
                             component = dockableContainer.getDockableEntries().get(0).getComponent();
-                            dockableContainer.removeDockable(dockableEntry.getDockable(),
-                                                             !visible && !manager.isShowingGroup());
+                            dockableContainer.removeDockable(dockableEntry.getDockable(), false);
 
                             // Put the component on the new location...
                             int temp = getSplitDividerLocation();
