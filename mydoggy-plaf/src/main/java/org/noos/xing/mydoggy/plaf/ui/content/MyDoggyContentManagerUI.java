@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
+import org.noos.xing.mydoggy.plaf.persistence.InternalPersistenceDelegateFilterAdapter;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentDialog;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentFrame;
@@ -38,7 +39,7 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
     protected PropertyChangeSupport internalPropertyChangeSupport;
     protected EventListenerList contentManagerUIListeners;
     protected PropertyChangeListener contentUIListener;
-    
+
     protected Content maximizedContent;
     protected Content lastSelected;
 
@@ -50,7 +51,7 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
         contentManagerUIListeners = new EventListenerList();
         this.closeable = this.detachable = this.minimizable = this.maximizable = true;
         this.popupMenuEnabled = true;
-        this.contentUIMap = new Hashtable<Content,T>();
+        this.contentUIMap = new Hashtable<Content, T>();
     }
 
 
@@ -258,7 +259,7 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
         firePropertyChangeEvent(new PropertyChangeEvent(contentManagerUI, property, oldValue, newValue));
     }
 
-    
+
     public class ContentDialogFocusListener implements WindowFocusListener {
         protected Content content;
 
@@ -288,7 +289,7 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
         public void windowLostFocus(WindowEvent e) {
         }
     }
-    
+
     public class ContentUIListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
@@ -309,11 +310,11 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
                     if ((Boolean) evt.getNewValue()) {
                         dialog = new ContentFrame(
                                 content, contentUI,
-                                                  parentFrame, oldWindow.getBounds());
+                                parentFrame, oldWindow.getBounds());
                     } else {
                         dialog = new ContentDialog(
                                 content, contentUI,
-                                                   parentFrame, oldWindow.getBounds());
+                                parentFrame, oldWindow.getBounds());
                     }
 
                     dialog.setBounds(oldWindow.getBounds());
@@ -331,6 +332,12 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
                         SwingUtil.requestFocus(focusOwner);
                 }
             }
+        }
+    }
+
+    public class ContentManagerUIPersistenceDelegateFilter extends InternalPersistenceDelegateFilterAdapter {
+        public boolean saveSelectedContent() {
+            return false;
         }
     }
 }
