@@ -435,7 +435,7 @@ public class MyDoggySet {
         resourceManager.putProperty("drag.icon.useDefault", "true");
         resourceManager.putBoolean("drag.toolwindow.asTab", true);
 */
-        resourceManager.putBoolean(MyDoggyKeySpace.DRAG_ENABLED, false);
+//        UIManager.put(MyDoggyKeySpace.DRAG_ENABLED, false);
 
         MyDoggyResourceManager myDoggyResourceManager = (MyDoggyResourceManager) myDoggyToolWindowManager.getResourceManager();
 
