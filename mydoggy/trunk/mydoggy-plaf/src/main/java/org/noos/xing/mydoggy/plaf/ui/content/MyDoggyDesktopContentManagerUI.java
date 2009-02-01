@@ -450,7 +450,7 @@ public class MyDoggyDesktopContentManagerUI extends MyDoggyContentManagerUI<Desk
 
             if ("maximizedBefore".equals(evt.getPropertyName())) {
                 if ((Boolean) evt.getNewValue()) {
-                    toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
+                    toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream(), new ContentManagerUIPersistenceDelegateFilter());
                     toolWindowManager.getToolWindowGroup().setVisible(false);
 
                     oldFucusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();

@@ -229,7 +229,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
     }
 
     public synchronized void setSelected(Content content, boolean selected) {
-//        System.out.println("content = " + content.getId() + " selected =  " + selected);
+        System.out.println("content = " + content.getId() + " selected =  " + selected);
 
         if (selected) {
             if (lastSelected != null)
@@ -674,7 +674,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                         tmpWorkspace = null;
                     }
 
-                    toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
+                    toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream(), new ContentManagerUIPersistenceDelegateFilter());
                     toolWindowManager.getToolWindowGroup().setVisible(false);
 
                     oldFucusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();

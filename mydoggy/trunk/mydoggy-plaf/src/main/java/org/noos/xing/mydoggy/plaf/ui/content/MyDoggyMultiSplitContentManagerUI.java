@@ -669,7 +669,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                     }
 
                     // Save and clear the workspace
-                    toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream());
+                    toolWindowManager.getPersistenceDelegate().save(tmpWorkspace = new ByteArrayOutputStream(), new ContentManagerUIPersistenceDelegateFilter());
                     toolWindowManager.getToolWindowGroup().setVisible(false);
 
                     oldFucusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();

@@ -8,8 +8,10 @@ import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowBar;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.common.context.DefaultMutableContext;
+import org.noos.xing.mydoggy.plaf.persistence.InternalPersistenceDelegateFilter;
+import org.noos.xing.mydoggy.plaf.persistence.InternalPersistenceDelegateFilterAdapter;
+import org.noos.xing.mydoggy.plaf.persistence.InternalPersistenceDelegateFilterWrapper;
 import org.noos.xing.mydoggy.plaf.persistence.PersistenceDelegateCallbackAdapter;
-import org.noos.xing.mydoggy.plaf.persistence.PersistenceDelegateFilterAdapter;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.MergePolicyApplier;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.ResetMergePolicy;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.UnionMergePolicy;
@@ -59,7 +61,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         this.masterElementParser = new MasterElementParser();
         this.masterElementWriter = new ToolWindowManagerElementWriter(toolWindowManager);
         this.dummyCallback = new PersistenceDelegateCallbackAdapter();
-        this.dummyFilter = new PersistenceDelegateFilterAdapter(); 
+        this.dummyFilter = new InternalPersistenceDelegateFilterAdapter();
 
         initMaps();
     }
@@ -126,6 +128,10 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             MutableContext context = new DefaultMutableContext();
             context.put(MyDoggyToolWindowManager.class, toolWindowManager);
             context.put(PersistenceDelegateFilter.class, (filter != null) ? filter : dummyFilter);
+            context.put(InternalPersistenceDelegateFilter.class,
+                    (filter != null)
+                            ? (filter instanceof InternalPersistenceDelegateFilter ? filter : new InternalPersistenceDelegateFilterWrapper(filter))
+                            : dummyFilter);
             context.put("standalone", standalone);
 
             masterElementWriter.write(writer, context);
@@ -544,7 +550,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     contentAttributes.addAttribute(null, "id", null, null, content.getId());
                     contentAttributes.addAttribute(null, "detached", null, null, String.valueOf(content.isDetached()));
                     contentAttributes.addAttribute(null, "enabled", null, null, String.valueOf(content.isEnabled()));
-                    contentAttributes.addAttribute(null, "selected", null, null, String.valueOf(content.isSelected()));
+                    contentAttributes.addAttribute(null, "selected", null, null, context.get(InternalPersistenceDelegateFilter.class).saveSelectedContent() ? String.valueOf(content.isSelected()) : "false");
                     contentAttributes.addAttribute(null, "maximized", null, null, String.valueOf(content.isMaximized()));
                     contentAttributes.addAttribute(null, "minimized", null, null, String.valueOf(content.isMinimized()));
                     contentAttributes.addAttribute(null, "flashing", null, null, String.valueOf(content.isFlashing()));
@@ -1259,7 +1265,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             descriptor.setEnabled(getBoolean(element, "enabled", true));
             descriptor.setHideRepresentativeButtonOnVisible(getBoolean(element, "hideRepresentativeButtonOnVisible", false));
             descriptor.setIdVisibleOnTitleBar(getBoolean(element, "idVisibleOnTitleBar", true));
-            descriptor.setHideRepresentativeButtonOnVisible(getBoolean(element, "titleBarButtonsVisible", true));
+            descriptor.setTitleBarButtonsVisible(getBoolean(element, "titleBarButtonsVisible", true));
         }
     }
 
