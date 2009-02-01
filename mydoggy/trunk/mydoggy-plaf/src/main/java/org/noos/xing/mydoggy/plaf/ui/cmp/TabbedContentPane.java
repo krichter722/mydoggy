@@ -69,6 +69,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
     protected int indexAtLocation;
 
     protected boolean pointerVisible;
+    public boolean valueAdjusting = false;
 
 
     public TabbedContentPane() {
@@ -361,15 +362,29 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         return contentMap.get(index);
     }
 
-    public synchronized void setIndex(Content content, Integer newIndex) {
+    public synchronized void setIndex(final Content content, Integer newIndex) {
         if (newIndex < 0 || newIndex >= getTabCount())
             throw new IllegalArgumentException("Invalid index");
 
-        int index = indexOfContent(content);
-        if (index != -1) {
-            removeTabAt(index);
-            addTab(content, content.getComponent(), newIndex);
+        boolean selected = content.isSelected();
+
+        valueAdjusting = true;
+        try {
+            int index = indexOfContent(content);
+            if (index != -1) {
+                removeTabAt(index);
+                addTab(content, content.getComponent(), newIndex);
+            }
+        } finally {
+            valueAdjusting = false;
         }
+
+        if (selected)
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    content.setSelected(true);
+                }
+            });
     }
 
     public int indexOfContent(Content content) {
@@ -885,7 +900,9 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
                         e.dropComplete(true);
                     } else {
                         if (targetIndex >= 0) {
-                            setIndex(getContentAt(dragTabIndex), targetIndex);
+//                            setIndex(getContentAt(dragTabIndex), targetIndex);
+                            addTab(dragContent, dragContent.getComponent(), targetIndex);
+                            dragContent.setSelected(true);
                             e.dropComplete(true);
                         } else
                             e.dropComplete(false);
@@ -921,6 +938,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
     public class TabbedDragListenerAdapter extends DragListenerAdapter {
 
+        protected Content draggingContent;
 
         public TabbedDragListenerAdapter(MyDoggyToolWindowManager manager) {
             super(manager);
@@ -940,11 +958,12 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             if (dragTabIndex < 0)
                 return;
 
-            Content content = getContentAt(dragTabIndex);
+            draggingContent = getContentAt(dragTabIndex);
+
             dge.startDrag(DragSource.DefaultMoveDrop,
                           new MyDoggyTransferable(manager,
                                                   MyDoggyTransferable.CONTENT_ID_DF,
-                                                  content.getId()),
+                                                  draggingContent.getId()),
                           this);
 
             // Setup ghostImage
@@ -964,6 +983,9 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
                 // setup ghost image;
                 setGhostImage(dge.getDragOrigin(), image);
             }
+
+            // TODO: remove tab....
+            removeTabAt(dragTabIndex);
         }
 
         public void dragMouseMoved(DragSourceDragEvent dsde) {
@@ -1016,9 +1038,12 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
                         contentUI.setDetachedBounds(bounds);
                         content.setDetached(true);
+                    } else {
+                        // restore content at the same position
+                        addTab(draggingContent, draggingContent.getComponent(), dragTabIndex);
+                        draggingContent.setSelected(true);
                     }
-                }
-
+                }   
                 releaseLocksTwo();
             } finally {
                 // End dockable drop gesture..

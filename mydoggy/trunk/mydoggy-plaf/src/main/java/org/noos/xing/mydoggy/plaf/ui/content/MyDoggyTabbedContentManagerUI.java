@@ -229,6 +229,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
     }
 
     public synchronized void setSelected(Content content, boolean selected) {
+        System.out.println("content = " + content.getId() + " selected =  " + selected);
+
         if (selected) {
             if (lastSelected != null)
                 lastSelected.setSelected(false);
@@ -317,7 +319,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         final TabbedContentPane tabbedContentPane = new TabbedContentPane(true);
         tabbedContentPane.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                if (!valueAdjusting && !contentValueAdjusting) {
+                if (!valueAdjusting && !contentValueAdjusting && !tabbedContentPane.valueAdjusting) {
                     int selectedIndex = tabbedContentPane.getSelectedIndex();
                     if (selectedIndex == -1)
                         return;

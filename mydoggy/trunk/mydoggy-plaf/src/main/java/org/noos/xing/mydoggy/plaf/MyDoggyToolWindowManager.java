@@ -46,7 +46,7 @@ import java.util.List;
  */
 public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManager, PropertyChangeListener {
 
-    protected static boolean firePublic = true; // TODO: ..This is not so good...
+    public static boolean firePublic = true; // TODO: ..This is not so good...
 
     protected final Object sync = new Object();
 
@@ -1471,17 +1471,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 }
 
                 if (group.getToolsWindow().length > 0) {
-
-/*
-                    PropertyChangeListener listener = new PropertyChangeListener() {
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            System.out.println("ERORRE :" + SwingUtil.toString(evt));
-                        }
-                    };
-*/
                     try {
-//                        group.getToolsWindow()[0].addPropertyChangeListener(listener);
-
                         firePublic = false;
 
                         group.setVisible(false);
@@ -1489,7 +1479,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                         group.setVisible(true);
                     } finally {
                         firePublic = true;
-//                        group.getToolsWindow()[0].removePropertyChangeListener(listener);
                     }
                 } else
                     setDockableMainContentMode(!(Boolean) evt.getNewValue());
