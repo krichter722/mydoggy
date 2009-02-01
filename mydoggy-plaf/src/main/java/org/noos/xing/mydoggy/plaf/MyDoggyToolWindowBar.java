@@ -1076,13 +1076,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 SwingUtil.repaint(splitPane);
             }
 
-            //
-            // TODO: verify this...maybe it should also be moved to onFinishedAnimation method. 
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    descriptor.externalFocusValueAdjusting = false;
-                }
-            });
+            descriptor.disableExternalFocusValueAdjustingLater();
         }
 
         public void disabledContentManagerPropertyChange(PropertyChangeEvent evt) {

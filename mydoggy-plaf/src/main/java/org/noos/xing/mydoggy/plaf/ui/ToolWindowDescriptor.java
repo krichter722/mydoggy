@@ -776,6 +776,14 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         }
     }
 
+    public void disableExternalFocusValueAdjustingLater() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                externalFocusValueAdjusting = false;
+            }
+        });
+    }
+
 
     public class ToolWindowDescriptorCleaner extends DefaultCleanerAggregator {
 
