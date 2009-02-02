@@ -54,10 +54,12 @@ public class DefaultFloatingTypeDescriptor extends DefaultToolWindowTypeDescript
                                          boolean idVisibleOnTitleBar,
                                          boolean hideRepresentativeButtonOnVisible,
                                          boolean resizable,
-                                         boolean titleBarButtonsVisible) {
+                                         boolean titleBarButtonsVisible,
+                                         boolean titleBarVisible) {
 
-        super(toolWindowDescriptor, parent, enabled, animating, 
-                autoHide, idVisibleOnTitleBar, hideRepresentativeButtonOnVisible, titleBarButtonsVisible);
+        super(toolWindowDescriptor, parent, enabled, animating,
+              autoHide, idVisibleOnTitleBar, hideRepresentativeButtonOnVisible,
+              titleBarButtonsVisible, titleBarVisible);
 
         this.location = location;
         this.size = size;
@@ -229,7 +231,8 @@ public class DefaultFloatingTypeDescriptor extends DefaultToolWindowTypeDescript
                                                  modal, addToTaskBar, alwaysOnTop, osDecorated, enabled, animating, autoHide,
                                                  idVisibleOnTitleBar,
                                                  hideRepresentativeButtonOnVisible,
-                                                 resizable, titleBarButtonsVisible);
+                                                 resizable,
+                                                 titleBarButtonsVisible, titleBarVisible);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

@@ -123,6 +123,12 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
         } else if ("type".equals(propertyName)) {
             if (!ToolWindowType.EXTERN.equals(evt.getNewValue()))
                 setIdOnTitleBarVisible(descriptor.getTypeDescriptor((ToolWindowType) evt.getNewValue()).isIdVisibleOnTitleBar());
+        } else if ("titleBarVisible".equals(propertyName)) {
+            if (((ToolWindowTypeDescriptor)evt.getSource()).getType() == toolWindow.getType()) {
+                // modify the visible property value of the panel now...
+                toolWindowTitleBar.setVisible((Boolean) evt.getNewValue());
+            }
+
         }
     }
 
