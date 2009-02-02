@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.Dockable;
 
 import java.awt.*;
+import java.util.List;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -17,9 +18,14 @@ public interface MultiSplitWindow<D extends Dockable> {
 
     void removeDockable(D dockable);
 
-    int getNumDockables();
+    int getDockableCount();
 
     D getDockable();
 
+    List<D> getDockables();
+
     boolean containsDockable(D dockable);
+
+    Object getModel();
+
 }

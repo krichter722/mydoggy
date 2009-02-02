@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.AggregationPosition;
+import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
@@ -17,6 +18,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -33,7 +35,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
 
     // Multi split support
     protected DockableDropPanel dockableDropPanel;
-    protected MultiSplitDockableContainer multiSplitDockableContainer;
+    protected MultiSplitDockableContainer<ToolWindow> multiSplitDockableContainer;
 
     // Transparency support
     protected Timer transparencyTimer;
@@ -179,7 +181,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
             modalWindowDockableDropPanel.setModalWindow(this);
 
             this.dockableDropPanel = modalWindowDockableDropPanel;
-            this.multiSplitDockableContainer = (MultiSplitDockableContainer) dockableDropPanel.getComponent();
+            this.multiSplitDockableContainer = (MultiSplitDockableContainer<ToolWindow>) dockableDropPanel.getComponent();
         } else
             throw new IllegalArgumentException("Cannot recognize old window.");
     }
@@ -247,7 +249,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
 
         // Update 'resizable'
         boolean resizable = toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).isResizable();
-        if (getNumDockables() == 1)
+        if (getDockableCount() == 1)
             setResizable(resizable);
         else {
             if (resizable)
@@ -263,18 +265,26 @@ public class ModalFrame extends JFrame implements ModalWindow,
         }
     }
 
-    public int getNumDockables() {
+    public int getDockableCount() {
         return multiSplitDockableContainer.getDockableCount();
     }
 
     public ToolWindow getDockable() {
-        return (ToolWindow) multiSplitDockableContainer.getDockableEntries().get(0).dockable;
+        return (ToolWindow) multiSplitDockableContainer.getDockable();
+    }
+
+    public List<ToolWindow> getDockables() {
+        return multiSplitDockableContainer.getDockables();
     }
 
     public boolean containsDockable(ToolWindow toolWindow) {
         return multiSplitDockableContainer.containsDockable(toolWindow);
     }
-    
+
+    public Object getModel() {
+        return multiSplitDockableContainer.getModel();
+    }
+
 
     public boolean isModal() {
         synchronized (ModalFrame.this) {
@@ -297,7 +307,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
 
 
     protected void initComponents() {
-        multiSplitDockableContainer = new MultiSplitDockableContainer(toolWindowManager, JSplitPane.VERTICAL_SPLIT);
+        multiSplitDockableContainer = new MultiSplitDockableContainer<ToolWindow>(toolWindowManager, JSplitPane.VERTICAL_SPLIT);
 
         dockableDropPanel = new ModalWindowDockableDropPanel(this, toolWindowManager);
         dockableDropPanel.setComponent(multiSplitDockableContainer);
@@ -352,13 +362,13 @@ public class ModalFrame extends JFrame implements ModalWindow,
         super.processWindowEvent(windowEvent);
     }
 
-    
+
     public class ModalWindowListener extends WindowAdapter {
 
         @Override
         public void windowClosing(WindowEvent e) {
-            for (MultiSplitDockableContainer.DockableEntry dockableEntry : multiSplitDockableContainer.getDockableEntries()) {
-                ((ToolWindow) dockableEntry.dockable).setVisible(false);
+            for (Dockable dockable : multiSplitDockableContainer.getDockables()) {
+                ((ToolWindow) dockable).setVisible(false);
             }
 
             super.windowClosing(e);

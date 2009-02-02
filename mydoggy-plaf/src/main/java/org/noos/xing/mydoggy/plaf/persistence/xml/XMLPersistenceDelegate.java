@@ -17,6 +17,7 @@ import org.noos.xing.mydoggy.plaf.persistence.xml.merge.ResetMergePolicy;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.UnionMergePolicy;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.DockableDropPanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ModalWindow;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitDockableContainer;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitLayout;
 import org.noos.xing.mydoggy.plaf.ui.content.ContentDescriptor;
@@ -200,6 +201,44 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                 // Write ToolWindows
                 writer.startElement("toolWindows");
+
+                // write ModalWindow
+                if (toolWindowManager.getModalWindowMap().size() > 0) {
+                    Map<ToolWindow, ModalWindow> modalWindowMap = toolWindowManager.getModalWindowMap();
+
+                    writer.startElement("detachedWindows");
+
+                    for (ToolWindow toolWindow : modalWindowMap.keySet()) {
+                        ModalWindow modalWindow = modalWindowMap.get(toolWindow);
+
+                        if (modalWindow.getDockableCount() > 1) {
+                            writer.startElement("detachedWindow");
+                            for (Dockable dockable : modalWindow.getDockables()) {
+                                AttributesImpl attributes = new AttributesImpl();
+                                attributes.addAttribute(null, "id", null, null, dockable.getId());
+                                writer.dataElement("toolWindow", attributes);
+                            }
+
+                            // store layout of the window ...
+
+                            writer.startElement("layout");
+                            ByteArrayOutputStream os = new ByteArrayOutputStream();
+                            XMLEncoder encoder = new XMLEncoder(os);
+                            encoder.writeObject(modalWindow.getModel());
+                            encoder.flush();
+                            encoder.close();
+                            String model = os.toString();
+                            writer.cdata(model.substring(model.indexOf('\n')));
+                            writer.endElement("layout");
+
+                            writer.endElement("detachedWindow");
+                        }
+                    }
+
+                    writer.endElement("detachedWindows");
+                }
+
+
                 for (ToolWindow toolWindow : manager.getToolWindows()) {
                     if  (!context.get(PersistenceDelegateFilter.class).storeToolWindow(toolWindow))
                         continue;
@@ -207,6 +246,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     mutableContext.put(ToolWindow.class, toolWindow);
                     getElementWriter(ToolWindow.class).write(writer, context);
                 }
+
                 writer.endElement("toolWindows");
 
                 // Write ToolWindowManagerDescriptor

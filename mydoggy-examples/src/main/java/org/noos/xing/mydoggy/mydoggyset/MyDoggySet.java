@@ -233,8 +233,12 @@ public class MyDoggySet {
 
         toolWindowManager.registerToolWindow("Paramètres", "Paramètres",
                 null, new JButton("HELLOO"), ToolWindowAnchor.LEFT);
+
+        JButton jButton = new JButton("Vue gÃ©ometrique");
+        jButton.setMinimumSize(new Dimension(50,50));
+
         toolWindowManager.registerToolWindow("Vue gÃ©ometrique", "Vue gÃ©ometrique",
-                null, new JButton("Vue gÃ©ometrique"), ToolWindowAnchor.LEFT);
+                null,jButton , ToolWindowAnchor.LEFT);
 
 
         // Make all available

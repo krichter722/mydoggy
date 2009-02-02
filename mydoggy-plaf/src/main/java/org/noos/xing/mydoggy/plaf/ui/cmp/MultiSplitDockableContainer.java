@@ -22,7 +22,9 @@ import java.util.List;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MultiSplitDockableContainer extends JPanel {
+public class MultiSplitDockableContainer<D extends Dockable> extends JPanel {
+
+
     public enum Action {
         ADD_DOCK,
         REMOVE_DOCK
@@ -1063,8 +1065,17 @@ public class MultiSplitDockableContainer extends JPanel {
         return false;
     }
 
-    public Dockable getFirstDockable() {
+    public Dockable getDockable() {
         return getDockableEntries().get(0).dockable;
+    }
+
+    public List<D> getDockables() {
+        List<D> dockables = new ArrayList<D>(entries.size());
+        for (DockableEntry dockableEntry : entries.values()) {
+            dockables.add((D) dockableEntry.dockable);
+        }
+
+        return dockables;
     }
 
     // Methods to manage container root

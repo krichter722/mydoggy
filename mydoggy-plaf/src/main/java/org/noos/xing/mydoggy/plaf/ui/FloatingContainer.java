@@ -123,7 +123,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 lastBounds = window.getBounds();
 
                 // Hide the window if necessary
-                if (window.getNumDockables() <= 0) {
+                if (window.getDockableCount() <= 0) {
                     window.getContentPane().setVisible(true);
                     window.setVisible(false);
 

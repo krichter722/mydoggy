@@ -1195,6 +1195,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return modalWindow;
     }
 
+    public Map<ToolWindow, ModalWindow> getModalWindowMap() {
+        return modalWindowMap;
+    }
+
     public void removeModalWindow(ToolWindow toolWindow) {
         modalWindowMap.remove(toolWindow);
     }
