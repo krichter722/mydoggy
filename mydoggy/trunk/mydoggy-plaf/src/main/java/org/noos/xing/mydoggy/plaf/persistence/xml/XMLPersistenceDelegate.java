@@ -206,13 +206,13 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 if (toolWindowManager.getModalWindowMap().size() > 0) {
                     Map<ToolWindow, ModalWindow> modalWindowMap = toolWindowManager.getModalWindowMap();
 
-                    writer.startElement("detachedWindows");
+                    writer.startElement("sharedWindows");
 
                     for (ToolWindow toolWindow : modalWindowMap.keySet()) {
                         ModalWindow modalWindow = modalWindowMap.get(toolWindow);
 
                         if (modalWindow.getDockableCount() > 1) {
-                            writer.startElement("detachedWindow");
+                            writer.startElement("sharedWindow");
                             for (Dockable dockable : modalWindow.getDockables()) {
                                 AttributesImpl attributes = new AttributesImpl();
                                 attributes.addAttribute(null, "id", null, null, dockable.getId());
@@ -231,11 +231,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                             writer.cdata(model.substring(model.indexOf('\n')));
                             writer.endElement("layout");
 
-                            writer.endElement("detachedWindow");
+                            writer.endElement("sharedWindow");
                         }
                     }
 
-                    writer.endElement("detachedWindows");
+                    writer.endElement("sharedWindows");
                 }
 
 
@@ -1029,6 +1029,10 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         public boolean parse(Element element, Context context) {
             mergePolicyApplier = context.get(MergePolicyApplier.class);
 
+            // Load shared window
+            Element sharedWindowsElem = getElement(element, "sharedWindows");
+
+            // Load toolwindows
             NodeList tools = element.getElementsByTagName("toolWindow");
 
             for (int i = 0, size = tools.getLength(); i < size; i++) {
