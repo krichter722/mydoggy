@@ -14,7 +14,7 @@ import java.awt.datatransfer.Transferable;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ContentWindowMultiSplitContainer extends MultiSplitTabbedContentContainer {
+public class ContentWindowMultiSplitContainer extends MultiSplitTabbedContentContainer<Content> {
 
 
     public ContentWindowMultiSplitContainer(MyDoggyToolWindowManager toolWindowManager) {

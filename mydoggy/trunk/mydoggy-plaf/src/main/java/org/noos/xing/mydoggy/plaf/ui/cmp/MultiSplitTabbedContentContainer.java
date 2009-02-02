@@ -19,7 +19,7 @@ import java.awt.image.BufferedImage;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MultiSplitTabbedContentContainer extends MultiSplitDockableContainer {
+public class MultiSplitTabbedContentContainer<D extends Dockable> extends MultiSplitDockableContainer<D> {
     protected DockableDropPanel dockableDropPanel;
 
 

@@ -17,6 +17,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -28,7 +29,7 @@ public class ModalDialog extends JDialog implements ModalWindow,
 
     // Multi split support
     protected DockableDropPanel dockableDropPanel;
-    protected MultiSplitDockableContainer multiSplitDockableContainer;
+    protected MultiSplitDockableContainer<ToolWindow> multiSplitDockableContainer;
 
     protected FloatingResizeMouseInputHandler resizeMouseInputHandler; 
 
@@ -158,7 +159,7 @@ public class ModalDialog extends JDialog implements ModalWindow,
             modalWindowDockableDropPanel.setModalWindow(this);
 
             this.dockableDropPanel = modalWindowDockableDropPanel;
-            this.multiSplitDockableContainer = (MultiSplitDockableContainer) dockableDropPanel.getComponent();
+            this.multiSplitDockableContainer = (MultiSplitDockableContainer<ToolWindow>) dockableDropPanel.getComponent();
         } else
             throw new IllegalArgumentException("Cannot recognize old window.");
     }
@@ -195,12 +196,12 @@ public class ModalDialog extends JDialog implements ModalWindow,
     public void addDockable(ToolWindow toolWindow, Component content) {
         addDockable(toolWindow, content, null, AggregationPosition.DEFAULT);
 
-        if (getNumDockables() == 1)
+        if (getDockableCount() == 1)
             setTitle(toolWindow.getTitle());
 
         // Update 'resizable'
         boolean resizable = toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).isResizable();
-        if (getNumDockables() == 1)
+        if (getDockableCount() == 1)
             setResizable(resizable);
         else {
             if (resizable)
@@ -221,7 +222,7 @@ public class ModalDialog extends JDialog implements ModalWindow,
 
         // Update 'resizable'
         boolean resizable = toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).isResizable();
-        if (getNumDockables() == 1)
+        if (getDockableCount() == 1)
             setResizable(resizable);
         else {
             if (resizable)
@@ -237,7 +238,7 @@ public class ModalDialog extends JDialog implements ModalWindow,
         }
     }
 
-    public int getNumDockables() {
+    public int getDockableCount() {
         return multiSplitDockableContainer.getDockableCount();
     }
 
@@ -245,8 +246,16 @@ public class ModalDialog extends JDialog implements ModalWindow,
         return (ToolWindow) multiSplitDockableContainer.getDockableEntries().get(0).dockable;
     }
 
+    public List<ToolWindow> getDockables() {
+        return multiSplitDockableContainer.getDockables();
+    }
+
     public boolean containsDockable(ToolWindow toolWindow) {
         return multiSplitDockableContainer.containsDockable(toolWindow);
+    }
+
+    public Object getModel() {
+        return multiSplitDockableContainer.getModel();
     }
 
     public void setResizable(boolean resizable) {
@@ -256,7 +265,7 @@ public class ModalDialog extends JDialog implements ModalWindow,
 
     
     protected void initComponents() {
-        multiSplitDockableContainer = new MultiSplitDockableContainer(toolWindowManager, JSplitPane.VERTICAL_SPLIT);
+        multiSplitDockableContainer = new MultiSplitDockableContainer<ToolWindow>(toolWindowManager, JSplitPane.VERTICAL_SPLIT);
 
         dockableDropPanel = new ModalWindowDockableDropPanel(this, toolWindowManager);
         dockableDropPanel.setComponent(multiSplitDockableContainer);

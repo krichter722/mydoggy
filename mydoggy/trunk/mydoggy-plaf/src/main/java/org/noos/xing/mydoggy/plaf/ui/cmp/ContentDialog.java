@@ -15,6 +15,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -23,7 +24,7 @@ public class ContentDialog extends JDialog implements ContentWindow {
     protected Content content;
     protected ContentUI contentUI;
 
-    protected MultiSplitDockableContainer multiSplitDockableContainer;
+    protected MultiSplitDockableContainer<Content> multiSplitDockableContainer;
 
 
     public ContentDialog(Content content, ContentUI contentUI, Frame parentFrame, Rectangle inBounds) throws HeadlessException {
@@ -83,16 +84,24 @@ public class ContentDialog extends JDialog implements ContentWindow {
         multiSplitDockableContainer.removeDockable(content);
     }
 
-    public int getNumDockables() {
+    public int getDockableCount() {
         return multiSplitDockableContainer.getDockableCount();
     }
 
     public Content getDockable() {
-        return (Content) multiSplitDockableContainer.getFirstDockable();
+        return (Content) multiSplitDockableContainer.getDockable();
+    }
+
+    public List<Content> getDockables() {
+        return multiSplitDockableContainer.getDockables();
     }
 
     public boolean containsDockable(Content content) {
         return multiSplitDockableContainer.containsDockable(content);
+    }
+
+    public Object getModel() {
+        return multiSplitDockableContainer.getModel();
     }
 
 
@@ -149,8 +158,8 @@ public class ContentDialog extends JDialog implements ContentWindow {
         protected void update() {
             if (isActive() && isVisible()) {
                 Rectangle bounds = getBounds();
-                for (MultiSplitDockableContainer.DockableEntry dockableEntry : multiSplitDockableContainer.getDockableEntries()) {
-                    ((Content) dockableEntry.dockable).getContentUI().setDetachedBounds(bounds);
+                for (Content content : multiSplitDockableContainer.getDockables()) {
+                    content.getContentUI().setDetachedBounds(bounds);
                 }
             }
         }
@@ -160,8 +169,8 @@ public class ContentDialog extends JDialog implements ContentWindow {
     public class ContentWindowAdapter extends WindowAdapter {
 
         public void windowClosing(WindowEvent e) {
-            for (MultiSplitDockableContainer.DockableEntry dockableEntry : multiSplitDockableContainer.getDockableEntries()) {
-                dockableEntry.dockable.setDetached(false);
+            for (Content content : multiSplitDockableContainer.getDockables()) {
+                content.setDetached(false);
             }
 
             content = null;

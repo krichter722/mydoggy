@@ -806,7 +806,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                     ContentWindow window = (ContentWindow) SwingUtilities.windowForComponent(content.getComponent());
                     window.removeDockable(content);
 
-                    if (window.getNumDockables() <= 0) {
+                    if (window.getDockableCount() <= 0) {
                         window.setVisible(false);
                         window.dispose();
                     }
