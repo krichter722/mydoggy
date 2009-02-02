@@ -251,6 +251,8 @@ public class MyDoggySet {
         toolWindow.setAutoHide(true);
         dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
 //        representativeAnchorDescriptor.setPopupMenuEnabled(false);
+        dockedTypeDescriptor.setTitleBarButtonsVisible(false);
+        dockedTypeDescriptor.setTitleBarVisible(false);
         dockedTypeDescriptor.setDockLength(200);
 
 //        UIManager.put(MyDoggyKeySpace.DEBUG, false);

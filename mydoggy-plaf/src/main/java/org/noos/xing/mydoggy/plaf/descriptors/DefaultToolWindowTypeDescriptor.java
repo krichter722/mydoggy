@@ -23,6 +23,7 @@ public abstract class DefaultToolWindowTypeDescriptor extends PropertyChangeEven
     protected boolean autoHide;
     protected boolean idVisibleOnTitleBar;
     protected boolean titleBarButtonsVisible;
+    protected boolean titleBarVisible;
     protected boolean hideRepresentativeButtonOnVisible;
 
     protected Map<String, ToolWindowAction> toolWindowActionMap;
@@ -35,6 +36,7 @@ public abstract class DefaultToolWindowTypeDescriptor extends PropertyChangeEven
         this.idVisibleOnTitleBar = true;
         this.hideRepresentativeButtonOnVisible = false;
         this.titleBarButtonsVisible = true;
+        this.titleBarVisible = true;
 
         this.toolWindowActionMap = new HashMap<String, ToolWindowAction>();
     }
@@ -46,7 +48,8 @@ public abstract class DefaultToolWindowTypeDescriptor extends PropertyChangeEven
                                            boolean autoHide,
                                            boolean idVisibleOnTitleBar,
                                            boolean hideRepresentativeButtonOnVisible,
-                                           boolean titleBarButtonsVisible) {
+                                           boolean titleBarButtonsVisible,
+                                           boolean titleBarVisible) {
         this.toolWindowDescriptor = toolWindowDescriptor;
         this.animating = animating;
         this.autoHide = autoHide;
@@ -54,6 +57,7 @@ public abstract class DefaultToolWindowTypeDescriptor extends PropertyChangeEven
         this.idVisibleOnTitleBar = idVisibleOnTitleBar;
         this.hideRepresentativeButtonOnVisible = hideRepresentativeButtonOnVisible;
         this.titleBarButtonsVisible = titleBarButtonsVisible;
+        this.titleBarVisible = titleBarVisible;
 
         this.toolWindowActionMap = new HashMap<String, ToolWindowAction>();
 
@@ -126,6 +130,19 @@ public abstract class DefaultToolWindowTypeDescriptor extends PropertyChangeEven
 
     public boolean isTitleBarButtonsVisible() {
         return titleBarButtonsVisible;
+    }
+
+    public void setTitleBarVisible(boolean titleBarVisible) {
+        if (this.titleBarVisible == titleBarVisible)
+            return;
+
+        boolean old = this.titleBarVisible;
+        this.titleBarVisible = titleBarVisible;
+        firePropertyChangeEvent("titleBarVisible", old, titleBarVisible);
+    }
+
+    public boolean isTitleBarVisible() {
+        return titleBarVisible;
     }
 
     public void setHideRepresentativeButtonOnVisible(boolean hideRepresentativeButtonOnVisible) {
@@ -203,6 +220,8 @@ public abstract class DefaultToolWindowTypeDescriptor extends PropertyChangeEven
             setHideRepresentativeButtonOnVisible((Boolean) evt.getNewValue());
         } else if ("titleBarButtonsVisible".equals(evt.getPropertyName())) {
             setTitleBarButtonsVisible((Boolean) evt.getNewValue());
+        } else if ("titleBarVisible".equals(evt.getPropertyName())) {
+            setTitleBarVisible((Boolean) evt.getNewValue());
         }
     }
 
