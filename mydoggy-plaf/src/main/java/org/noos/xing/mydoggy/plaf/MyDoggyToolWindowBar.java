@@ -990,7 +990,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                             animate = false;
 
                             Dockable dockable = dockableContainer.getDockable();
-                            component = dockable.getComponent();
+                            component = dockableContainer.getDockableComponent();
                             dockableContainer.removeDockable(dockable, false);
 
                             // Put the component on the new location...

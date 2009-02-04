@@ -128,7 +128,6 @@ public class ToolWindowTitleBarUI extends PanelUI implements Cleaner,
                 // modify the visible property value of the panel now...
                 toolWindowTitleBar.setVisible((Boolean) evt.getNewValue());
             }
-
         }
     }
 
