@@ -1069,6 +1069,10 @@ public class MultiSplitDockableContainer<D extends Dockable> extends JPanel {
         return getDockableEntries().get(0).dockable;
     }
 
+    public Component getDockableComponent() {
+        return getDockableEntries().get(0).component;
+    }
+
     public List<D> getDockables() {
         List<D> dockables = new ArrayList<D>(entries.size());
         for (DockableEntry dockableEntry : entries.values()) {
