@@ -120,10 +120,10 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
     void aggregate(ToolWindow onToolWindow, AggregationPosition onPosition);
 
     /**
-     * This method is used when the user want to aggregate this toolwindow to another toolwindow
+     * This method is used when the user want to aggregate the toolwindow to another toolwindow
      * whose type is FLOATING, FLOATING_FREE or FLOATING_LIVE.
      *
-     * @param refToolWindow TODO..
+     * @param refToolWindow the floating toolwindow used as aggregation target.
      * @param onPosition the position used to aggregate the tool.
      * @since 1.5.0
      */
@@ -231,14 +231,20 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
     void setAutoHide(boolean autoHide);
 
     /**
-     * TODO
-     * @param lockedOnAnchor
+     * Bounds or not the toolwindow's representative anchro to stay in a subset of the available anchors.
+     *
+     * @param lockedOnAnchor <code>true</code> if the toolwindow's representative anchor is bonded to a subset of the available anchors,
+     * <code>false</code> otherwise.
      * @since 1.5.0
      */
     void setLockedOnAnchor(boolean lockedOnAnchor);
 
     /**
+     * Returns <code>true</code> if the toolwindow's representative anchor is bonded to a subset of the available anchors,
+     * <code>false</code> otherwise.
      *
+     * @return <code>true</code> if the toolwindow's representative anchor is bonded to a subset of the available anchors,
+     * <code>false</code> otherwise.
      * @since 1.5.0
      */
     boolean isLockedOnAnchor();
@@ -331,17 +337,20 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
     ToolWindowTab[] getToolWindowTabs();
 
     /**
-     * TODO:
-     * @param toolWindowAction
+     * Adds the passed toolwindow action to all the type descriptors.
+     *
+     * @param toolWindowAction the action to be added to all the type desccriptors.
      * @since 1.5.0
+     * @see #removeToolWindowAction(String)
      */
     void addToolWindowAction(ToolWindowAction toolWindowAction);
 
     /**
-     * TODO:
+     * Removes the toolwindow action by id from all the type descriptors.
      *
-     * @param id
+     * @param id the id of the action to be removed from all the type descriptors.
      * @since 1.5.0
+     * @see #addToolWindowAction(ToolWindowAction) 
      */
     void removeToolWindowAction(String id);
 
@@ -403,8 +412,9 @@ public interface ToolWindow extends Dockable<ToolWindowManager>, DockableManager
     <T extends ToolWindowTypeDescriptor> T getTypeDescriptor(Class<T> descriptorClass);
 
     /**
-     * TODO
-     * @return
+     * Returns the representative anchor descriptor used to modify the behaviours of that object.
+     *
+     * @return the representative anchor descriptor used to modify the behaviours of that object.
      * @since 1.5.0
      */
     RepresentativeAnchorDescriptor<ToolWindow> getRepresentativeAnchorDescriptor();

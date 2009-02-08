@@ -213,8 +213,9 @@ public interface Content extends Dockable<ContentManager> {
     void reattach(Object... constraints);
 
     /**
-     * TODO
-     * @return
+     * Returns the representative anchor descriptor used to modify the behaviours of that object.
+     *
+     * @return the representative anchor descriptor used to modify the behaviours of that object.
      * @since 1.5.0
      */
     RepresentativeAnchorDescriptor<Content> getRepresentativeAnchorDescriptor();
