@@ -1,14 +1,19 @@
 package org.noos.xing.mydoggy;
 
+import javax.swing.*;
+
 /**
- * This interface is used to modify the behaviour of a dockable's representative anchor.
- * TODO: add icon support...
+ * This interface is used to modify the behaviour of a representative anchor.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.5.0
  */
 public interface RepresentativeAnchorDescriptor<D extends Dockable> extends Observable {
 
+    /**
+     * Returns the descriptor owner.
+     * @return the dockable which owns this descriptor.
+     */
     D getDockable();
     
     /**
@@ -29,18 +34,36 @@ public interface RepresentativeAnchorDescriptor<D extends Dockable> extends Obse
     boolean isVisible();
 
     /**
-     * TODO:
-     * @param title
+     * Sets the title of the representative anchor.
+     *
+     * @param title the new title of the representative anchor.
      * @since 1.5.0
      */
     void setTitle(String title);
 
     /**
+     * Returns the current title.
      *
-     * @return
+     * @return the current title.
      * @since 1.5.0
      */
     String getTitle();
+
+    /**
+     * Sets the icon of the representative anchor.
+     *
+     * @param icon the new icon of the representative anchor.
+     * @since 1.5.0
+     */
+    void setIcon(Icon icon);
+
+    /**
+     * Returns the current icon.
+     *
+     * @return the current icon.
+     * @since 1.5.0
+     */
+    Icon getIcon();
 
     /**
      * Sets the preview mode. If the preview mode is enabled then when the mouse waits
@@ -141,7 +164,7 @@ public interface RepresentativeAnchorDescriptor<D extends Dockable> extends Obse
     boolean containsLockingAnchor(ToolWindowAnchor anchor);
 
     /**
-     * TODO:...
+     * TODO: not implemented yet!
      * @param message
      */
     void showMessage(String message);

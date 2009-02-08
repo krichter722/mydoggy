@@ -3,12 +3,14 @@ package org.noos.xing.mydoggy;
 import javax.swing.*;
 
 /**
- * TODO: This abstract class is used to define a new behaviour associated to one or more toolwindows.
+ * This abstract class is used to define a new behaviour associated to one or more toolwindows.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  * @since 1.5.0
  */
 public abstract class ToolWindowAction extends AbstractAction {
+
+    // Default action ids...
 
     public static final String HIDE_ACTION_ID = "HIDE_ACTION_ID";
     public static final String DOCK_ACTION_ID = "DOCK_ACTION_ID";
@@ -16,6 +18,7 @@ public abstract class ToolWindowAction extends AbstractAction {
     public static final String MAXIMIZE_ACTION_ID = "MAXIMIZE_ACTION_ID";
     public static final String FLOATING_ACTION_ID = "FLOATING_ACTION_ID";
     public static final String FLOATING_LIVE_ACTION_ID = "FLOATING_LIVE_ACTION_ID";
+
     public static final String POPUP_ACTION_ID = "POPUP_ACTION_ID";
     public static final String MOVE_TO_ACTION_ID = "MOVE_TO_ACTION_ID";
     public static final String AGGREGATE_ACTION_ID = "AGGREGATE_ACTION_ID";
@@ -28,13 +31,16 @@ public abstract class ToolWindowAction extends AbstractAction {
      */
     protected String id;
     /**
+
      * The action name.
      */
     protected String actionName;
+
     /**
-     *
+     * The toolwindow that ownes the action.
      */
     protected ToolWindow toolWindow;
+
     protected JMenuItem menuItem;
 
     protected boolean showTextOnTitleBar;

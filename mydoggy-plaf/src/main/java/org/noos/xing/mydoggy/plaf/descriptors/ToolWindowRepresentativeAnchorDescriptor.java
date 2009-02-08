@@ -6,6 +6,7 @@ import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 
+import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,6 +24,7 @@ public class ToolWindowRepresentativeAnchorDescriptor extends PropertyChangeEven
     protected Set<ToolWindowAnchor> lockingAnchors;
 
     protected String title;
+    protected Icon icon;
     protected boolean visible;
 
 
@@ -34,6 +36,7 @@ public class ToolWindowRepresentativeAnchorDescriptor extends PropertyChangeEven
         this.lockingAnchors = new HashSet<ToolWindowAnchor>();
         this.visible = true;
         this.title = toolWindow.getId();
+        this.icon = toolWindow.getIcon();
     }
 
     public ToolWindow getDockable() {
@@ -140,4 +143,21 @@ public class ToolWindowRepresentativeAnchorDescriptor extends PropertyChangeEven
         return title;
     }
 
+    public void setIcon(Icon icon) {
+        if (icon == null)
+            icon = toolWindow.getIcon();
+
+        if (icon != null && icon.equals(this.icon))
+            return;
+
+        Icon old = this.icon;
+        this.icon = icon;
+
+        firePropertyChangeEvent("icon", old, icon);
+    }
+
+    public Icon getIcon() {
+        return icon;
+    }
+    
 }

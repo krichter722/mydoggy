@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.RepresentativeAnchorDescriptor;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 
+import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,6 +23,7 @@ public class ContentRepresentativeAnchorDescriptor extends PropertyChangeEventSo
     protected Set<ToolWindowAnchor> lockingAnchors;
 
     protected String title;
+    protected Icon icon;
     protected boolean visible;
 
 
@@ -33,6 +35,7 @@ public class ContentRepresentativeAnchorDescriptor extends PropertyChangeEventSo
         this.lockingAnchors = new HashSet<ToolWindowAnchor>();
         this.visible = true;
         this.title = content.getId();
+        this.icon = content.getIcon();
     }
 
     public Content getDockable() {
@@ -124,6 +127,23 @@ public class ContentRepresentativeAnchorDescriptor extends PropertyChangeEventSo
 
     public String getTitle() {
         return title;
+    }
+
+    public void setIcon(Icon icon) {
+        if (icon == null)
+            icon = content.getIcon();
+
+        if (icon != null && icon.equals(this.icon))
+            return;
+
+        Icon old = this.icon;
+        this.icon = icon;
+
+        firePropertyChangeEvent("icon", old, icon);
+    }
+
+    public Icon getIcon() {
+        return icon;
     }
 
 }
