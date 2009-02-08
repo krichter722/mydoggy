@@ -11,7 +11,7 @@
         <section name="Introduction">
             <div id="downloadbox">
                 <h5>Get MyDoggy 1.5.0 Now!!!</h5>
-                <span style="display: block; text-align: right; font-size: smaller">Released: October 15, 2008</span>
+                <span style="display: block; text-align: right; font-size: smaller">Released: February 28, 2009</span>
                 <p>
                     <a href="download.html">MyDoggy 1.5.0</a>
                     <small>(distro 5.0 Mb - core 775 Kb)</small>
@@ -72,16 +72,16 @@
                 </p>
                 <ul>
                     <li>
-                        <a href="./mydoggy-api/index.html">MyDoggy-Api</a>
+                        <a href="./api/index.html">MyDoggy-Api</a>
                         contains the application program interface of MyDoggy to manage every aspects of
                         the framework.
                     </li>
                     <li>
-                        <a href="./mydoggy-plaf/index.html">MyDoggy-Plaf</a>
+                        <a href="./plaf/index.html">MyDoggy-Plaf</a>
                         contains the default implementation of mydoggy-api.
                         <ul>
                             <li>
-                                MyDoggy-Res contains all resources (icons and messages) used by mydoggy-plaf. Look at
+                                <a href="./res/index.html">MyDoggy-Res</a> contains all resources (icons and messages) used by mydoggy-plaf. Look at
                                 ResourceManager link to know how to customize mydoggy in a deep way.
                             </li>
                         </ul>
@@ -93,7 +93,7 @@
                 There are also other modules that cover secondary aspects of MyDoggy.
                 <ul>
                     <li>
-                        <a href="./mydoggy-examples/index.html">MyDoggy-Examples</a>
+                        <a href="./examples/index.html">MyDoggy-Examples</a>
                         contains some examples to see MyDoggy in action.
                     </li>
                 </ul>

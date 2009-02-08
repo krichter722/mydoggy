@@ -38,8 +38,8 @@
 
                         <tr valign="top">
                             <td>MyDoggy</td>
-                            <td>1.4.2</td>
-                            <td>2008-04-29</td>
+                            <td>1.5.0</td>
+                            <td>2009-02-28</td>
                             <td>Stable</td>
                             <td>
                                 <em>
@@ -92,17 +92,17 @@
             <subsection name="Usage">
                 <ol type="1">
                     <li>Unzip
-                        <tt>mydoggy-1.4.2.zip</tt>
-                        to the directory you wish to unzip MyDoggy 1.4.2.
+                        <tt>mydoggy-1.5.0.zip</tt>
+                        to the directory you wish to unzip MyDoggy 1.5.0.
                     </li>
                     <li>Move to
                         <tt>lib</tt>
                         directory where you can found mydoggy jar files.
                     </li>
                     <li>To use mydoggy add to your classpath
-                        <tt>mydoggy_1.4.2-api.jar</tt> and
-                        <tt>mydoggy_1.4.2-plaf.jar</tt> and
-                        <tt>mydoggy_1.4.2-res.jar</tt> and
+                        <tt>mydoggy_1.5.0-api.jar</tt> and
+                        <tt>mydoggy_1.5.0-plaf.jar</tt> and
+                        <tt>mydoggy_1.5.0-res.jar</tt> and
 						<tt>TableLayout-20020517.jar</tt>
 					</li>
                 </ol>
@@ -126,14 +126,14 @@
                 <h4>Windows 2000/XP</h4>
                 <ol type="1">
                     <li>Unzip
-                        <tt>mydoggy-1.4.2.zip</tt>
-                        to the directory you wish to unzip MyDoggy 1.4.2. These instructions assume you chose
-                        <tt>C:\Program Files\mydoggy-1.4.2</tt>
+                        <tt>mydoggy-1.5.0.zip</tt>
+                        to the directory you wish to unzip MyDoggy 1.5.0. These instructions assume you chose
+                        <tt>C:\Program Files\mydoggy-1.5.0</tt>
                     </li>
                     <li>Move to
                         <tt>bin</tt>
                         directory.
-                        <tt>&quot;C:\Program Files\mydoggy-1.4.2\bin&quot;</tt>
+                        <tt>&quot;C:\Program Files\mydoggy-1.5.0\bin&quot;</tt>
                     </li>
                     <li>In the same dialog, make sure that
                         <tt>JAVA_HOME</tt>
@@ -147,14 +147,14 @@
                 <h4>Unix-based Operating Systems (Linux, Solaris and Mac OS X)</h4>
                 <ol type="1">
                     <li>Unzip
-                        <tt>mydoggy-1.4.2.zip</tt>
-                        to the directory you wish to install MyDoggy 1.4.2. These instructions assume you chose
-                        <tt>/usr/local/mydoggy-1.4.2</tt>
+                        <tt>mydoggy-1.5.0.zip</tt>
+                        to the directory you wish to install MyDoggy 1.5.0. These instructions assume you chose
+                        <tt>/usr/local/mydoggy-1.5.0</tt>
                     </li>
                     <li>Move to
                         <tt>bin</tt>
                         directory.
-                        <tt>&quot;/usr/local/mydoggy-1.4.2/bin&quot;</tt>
+                        <tt>&quot;/usr/local/mydoggy-1.5.0/bin&quot;</tt>
                     </li>
                     <li>In the same dialog, make sure that
                         <tt>JAVA_HOME</tt>
@@ -186,6 +186,19 @@
 							<td/>
 						</tr>
 
+                        <tr valign="top">
+                            <td>MyDoggy</td>
+                            <td>1.4.2</td>
+                            <td>2008-04-29</td>
+                            <td>Stable</td>
+                            <td>
+                                <em>
+                                    <a href="http://sourceforge.net/project/showfiles.php?group_id=178005&amp;package_id=205132&amp;release_id=595738">
+                                        Download
+                                    </a>
+                                </em>
+                            </td>
+                        </tr>
                         <tr valign="top">
                             <td>MyDoggy</td>
                             <td>1.4.1</td>
