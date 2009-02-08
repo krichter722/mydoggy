@@ -9,9 +9,8 @@
 
     <body>
         <section name="Contact">
-            MyDoggy is developed by
-            <a href="team-list.html#adecaro">Angelo De Caro</a>
-            , a computer science student from Italy.
+            MyDoggy is mainly developed by
+            <a href="team-list.html#adecaro">Angelo De Caro</a>.
             <br/>
             Feel free to contact me at
             <a href="mailto:adecaro@users.sourceforge.net">adecaro@users.sourceforge.net</a>.

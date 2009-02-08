@@ -73,6 +73,8 @@
   #end
   <li class="$collapse">
     #if ( $item.img )
+      <strong>WE</strong>
+
       #if ( ! ( $item.img.toLowerCase().startsWith("http") || $item.img.toLowerCase().startsWith("https") ) )
         #set ( $src = $PathTool.calculateLink( $item.img, $relativePath ) )
         #set ( $src = $item.img.replaceAll( "\\", "/" ) )
@@ -80,7 +82,9 @@
       #else
         <img src="$item.img" align="absbottom" style="border-width: 0"/>
       #end
+
     #end
+
     #if ( $alignedFileName == $currentItemHref )
       <strong>$item.name</strong>
     #else

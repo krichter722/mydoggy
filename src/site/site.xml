@@ -19,7 +19,7 @@
             <item name="Download" href="download.html"/>
             <item name="Build Howto" href="buildHowto.html"/>
             <item name="Contact" href="contact.html"/>
-            <item icon="/images/new.png" name="Tutorial" href="/tutorial/tutorial.html"/>
+            <item img="/images/new.png" name="Tutorial" href="/tutorial/tutorial.html"/>
         </menu>
 
         <menu name="Demos">
@@ -36,10 +36,11 @@
             <item name="MyDoggy-Res" href="/res/index.html"/>
         </menu>
 
-        <menu name="Core Components">
+        <menu name="API">
             <item name="ToolWindowManager" href="/api/toolwindowManager.html"/>
             <item name="ToolWindow" href="/api/toolwindow.html"/>
             <item name="ToolWindowGroup" href="/api/toolwindowGroups.html"/>
+
             <item name="ContentManager" href="/api/contentManager.html"/>
             <item name="ContentManagerUI" href="/api/contentManagerUI.html"/>
 
