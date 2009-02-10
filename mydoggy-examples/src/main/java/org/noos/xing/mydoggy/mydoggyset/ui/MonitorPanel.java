@@ -18,8 +18,9 @@ public class MonitorPanel extends JPanel {
         setMonitorSource(monitorSource);
     }
 
-    public void start() {
+    public MonitorPanel start() {
         surf.start();
+        return this;
     }
 
     public void stop() {
