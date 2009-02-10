@@ -9,7 +9,6 @@ import org.noos.common.Question;
 import org.noos.common.context.Context;
 import org.noos.common.object.ObjectCreator;
 import org.noos.xing.mydoggy.*;
-import static org.noos.xing.mydoggy.ToolWindowManagerDescriptor.Corner.*;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
 import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.mydoggyset.action.*;
@@ -62,7 +61,7 @@ public class MyDoggySet {
 
     public void setUp() {
         initComponents();
-        initToolWindowManager();
+        initToolWindows();
     }
 
     public void start(final Runnable runnable) {
@@ -114,7 +113,6 @@ public class MyDoggySet {
         long end = System.currentTimeMillis();
         System.out.println("time: " + (end - start));
 
-
         // Add MyDoggyToolWindowManager to frame
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
 
@@ -122,8 +120,11 @@ public class MyDoggySet {
         customizeToolWindowManager(myDoggyToolWindowManager);
 
         this.toolWindowManager = myDoggyToolWindowManager;
+
+        // Init the context
         this.myDoggySetContext = new MyDoggySetContext(toolWindowManager, frame);
 
+        // Load Menu Bar
         initMenuBar();
     }
 
@@ -175,7 +176,7 @@ public class MyDoggySet {
         this.frame.setJMenuBar(menuBar);
     }
 
-    protected void initToolWindowManager() {
+    protected void initToolWindows() {
         // Setup type descriptor templates...
         FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING);
 //        typeDescriptor.setAlwaysOnTop(false);
@@ -205,16 +206,11 @@ public class MyDoggySet {
 
         toolWindowManager.registerToolWindow("Tool 1", "Title 1", null, toolOnePanel, ToolWindowAnchor.BOTTOM);
         toolWindowManager.registerToolWindow("Tool 2", "Title 2", null, panel, ToolWindowAnchor.RIGHT);
-        toolWindowManager.registerToolWindow("Tool 3", "Title 3",
-                SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/save.png"),
-                new MainPanel(), ToolWindowAnchor.LEFT);
+        toolWindowManager.registerToolWindow("Tool 3", "Title 3", SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/save.png"), new MainPanel(), ToolWindowAnchor.LEFT);
         toolWindowManager.registerToolWindow("Tool 4", "Title 4", null, new JButton("Hello World 4"), ToolWindowAnchor.TOP);
         toolWindowManager.registerToolWindow("Tool 5", "Title 5", null, new JButton("Hello World 5"), ToolWindowAnchor.TOP);
         toolWindowManager.registerToolWindow("Tool 6", "Title 6", null, new JButton("Hello World 6"), ToolWindowAnchor.BOTTOM);
-
-        MonitorPanel monitorPanel = new MonitorPanel(new RuntimeMemoryMonitorSource());
-        monitorPanel.start();
-        toolWindowManager.registerToolWindow("Tool 7", "Title 7", null, monitorPanel, ToolWindowAnchor.TOP);
+        toolWindowManager.registerToolWindow("Tool 7", "Title 7", null, new MonitorPanel(new RuntimeMemoryMonitorSource()).start(), ToolWindowAnchor.TOP);
         toolWindowManager.registerToolWindow("Tool 8", "Title 8", null, new JButton("Hello World 8"), ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 9", "Title 9", null, new JButton("Hello World 9"), ToolWindowAnchor.RIGHT);
 
@@ -228,22 +224,44 @@ public class MyDoggySet {
         toolWindowManager.registerToolWindow("Tool 13", "Title 13", null, new JButton("Hello World 13"), ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Some Doggy Table", "Doggy Style", null, new JScrollPane(new DoggyTable()), ToolWindowAnchor.TOP);
 
-
-        toolWindowManager.registerToolWindow("Paramètres", "Paramètres",
-                null, new JButton("HELLOO"), ToolWindowAnchor.LEFT);
-
-        JButton jButton = new JButton("Vue gÃ©ometrique");
-        jButton.setMinimumSize(new Dimension(50,50));
-
-        toolWindowManager.registerToolWindow("Vue gÃ©ometrique", "Vue gÃ©ometrique",
-                null,jButton , ToolWindowAnchor.LEFT);
-
-
-        // Make all available
+        // Make all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows()) {
             window.setAvailable(true);
         }
 
+
+        customizeToolWindows();
+    }
+
+
+    protected void initContentManager() {
+        // Setup ContentManagerUI
+        toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
+
+        MultiSplitContentManagerUI contentManagerUI = (MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
+//        contentManagerUI.setPopupMenuEnabled(false);
+//        contentManagerUI.setCloseable(false);
+//        contentManagerUI.setDetachable(false);
+//        contentManagerUI.setMinimizable(false);
+//        contentManagerUI.setMaximizable(false);
+
+        contentManagerUI.setShowAlwaysTab(true);
+//        contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
+//        contentManagerUI.setTabLayout(TabbedContentManagerUI.TabLayout.WRAP);
+//        contentManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
+//            public boolean contentUIRemoving(ContentManagerUIEvent event) {
+//                return JOptionPane.showConfirmDialog(frame, "Are you sure?") == JOptionPane.OK_OPTION;
+//            }
+//
+//            public void contentUIDetached(ContentManagerUIEvent event) {
+//            }
+//        });
+
+//        contentManagerUI.setMinimizable(false);
+    }
+
+
+    protected void customizeToolWindows() {
         ToolWindow toolWindow;
         DockedTypeDescriptor dockedTypeDescriptor;
 
@@ -339,8 +357,10 @@ public class MyDoggySet {
             public void contentSelected(ContentManagerEvent event) {
             }
         });
+    }
 
-        // Setup ContentManagerUI
+    protected void customizeToolWindowManager(MyDoggyToolWindowManager myDoggyToolWindowManager) {
+// Setup ContentManagerUI
         toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
 
         MultiSplitContentManagerUI contentManagerUI = (MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
@@ -364,52 +384,7 @@ public class MyDoggySet {
 
 //        contentManagerUI.setMinimizable(false);
 
-        // Setup Corner Components
-        ToolWindowManagerDescriptor managerDescriptor = toolWindowManager.getToolWindowManagerDescriptor();
 
-        JButton nwButton = new JButton(SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/plus.png"));
-        nwButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int length = toolWindowManager.getToolWindowBar(ToolWindowAnchor.TOP).getLength() + 1;
-                toolWindowManager.getToolWindowBar(ToolWindowAnchor.BOTTOM).setLength(length);
-                toolWindowManager.getToolWindowBar(ToolWindowAnchor.TOP).setLength(length);
-            }
-        });
-
-        JButton swButton = new JButton(SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/minus.png"));
-        swButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int length = toolWindowManager.getToolWindowBar(ToolWindowAnchor.TOP).getLength() - 1;
-                toolWindowManager.getToolWindowBar(ToolWindowAnchor.BOTTOM).setLength(length);
-                toolWindowManager.getToolWindowBar(ToolWindowAnchor.TOP).setLength(length);
-            }
-        });
-
-        JButton neButton = new JButton(SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/plus.png"));
-        neButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int length = toolWindowManager.getToolWindowBar(ToolWindowAnchor.LEFT).getLength() + 1;
-                toolWindowManager.getToolWindowBar(ToolWindowAnchor.LEFT).setLength(length);
-                toolWindowManager.getToolWindowBar(ToolWindowAnchor.RIGHT).setLength(length);
-            }
-        });
-
-        JButton seButton = new JButton(SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/minus.png"));
-        seButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int length = toolWindowManager.getToolWindowBar(ToolWindowAnchor.LEFT).getLength() - 1;
-                toolWindowManager.getToolWindowBar(ToolWindowAnchor.LEFT).setLength(length);
-                toolWindowManager.getToolWindowBar(ToolWindowAnchor.RIGHT).setLength(length);
-            }
-        });
-
-        managerDescriptor.setCornerComponent(NORD_WEST, nwButton);
-        managerDescriptor.setCornerComponent(SOUTH_WEST, swButton);
-        managerDescriptor.setCornerComponent(NORD_EAST, neButton);
-        managerDescriptor.setCornerComponent(SOUTH_EAST, seButton);
-    }
-
-    protected void customizeToolWindowManager(MyDoggyToolWindowManager myDoggyToolWindowManager) {
         ToolWindowManagerDescriptor descriptor = myDoggyToolWindowManager.getToolWindowManagerDescriptor();
         descriptor.setShowUnavailableTools(true);
 

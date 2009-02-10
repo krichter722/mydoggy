@@ -50,6 +50,7 @@ public class ScenarioSet {
         scenarios.add(new AllUnpinnedScenario());
         scenarios.add(new RepresentativeAnchorScenario());
         scenarios.add(new LotOfContentScenario());
+        scenarios.add(new ForeignIdScenario());
     }
 
     protected void start() {
