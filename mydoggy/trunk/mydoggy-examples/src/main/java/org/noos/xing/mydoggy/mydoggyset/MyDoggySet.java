@@ -113,13 +113,14 @@ public class MyDoggySet {
         long end = System.currentTimeMillis();
         System.out.println("time: " + (end - start));
 
+        this.toolWindowManager = myDoggyToolWindowManager;
+
         // Add MyDoggyToolWindowManager to frame
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
 
         // Apply now all customization if necessary
         customizeToolWindowManager(myDoggyToolWindowManager);
 
-        this.toolWindowManager = myDoggyToolWindowManager;
 
         // Init the context
         this.myDoggySetContext = new MyDoggySetContext(toolWindowManager, frame);
@@ -177,14 +178,6 @@ public class MyDoggySet {
     }
 
     protected void initToolWindows() {
-        // Setup type descriptor templates...
-        FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindowManager.getTypeDescriptorTemplate(ToolWindowType.FLOATING);
-//        typeDescriptor.setAlwaysOnTop(false);
-//        typeDescriptor.setOsDecorated(true);
-//        typeDescriptor.setAddToTaskBar(true);
-        typeDescriptor.setTransparentDelay(0);
-//        typeDescriptor.setAlwaysOnTop(false);
-
         // Register tools
         JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{20, -1, 20}, {20, -1, 20}}));
         panel.add(new JButton("Hello World 2"), "1,1,FULL,FULL");
@@ -229,8 +222,7 @@ public class MyDoggySet {
             window.setAvailable(true);
         }
 
-
-        customizeToolWindows();
+//        customizeToolWindows();
     }
 
 
@@ -325,7 +317,7 @@ public class MyDoggySet {
 
         FloatingTypeDescriptor floatingTypeDescriptor = toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class);
         floatingTypeDescriptor.setModal(true);
-        floatingTypeDescriptor.setOsDecorated(true);
+//        floatingTypeDescriptor.setOsDecorated(true);
         floatingTypeDescriptor.setAnimating(false);
 
         // Setup ContentManager

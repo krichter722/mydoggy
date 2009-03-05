@@ -52,8 +52,6 @@ public class FloatingToolWindowAction extends ToolWindowAction implements PlafTo
     }
 
     public void actionPerformed(ActionEvent e) {
-        toolWindow.setActive(true);
-
         ToolWindowType type = toolWindow.getType();
         switch (type) {
             case FLOATING:

@@ -1,6 +1,5 @@
 package org.noos.xing.mydoggy.plaf.actions;
 
-import org.noos.xing.mydoggy.FloatingTypeDescriptor;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAction;
 import org.noos.xing.mydoggy.ToolWindowType;
@@ -109,7 +108,7 @@ public class PinToolWindowAction extends ToolWindowAction implements PlafToolWin
                     break;
                 case FLOATING:
                 case FLOATING_FREE:
-                    setVisible(!toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class).isModal());
+                    setVisible(true);
                     break;
             }
         }
