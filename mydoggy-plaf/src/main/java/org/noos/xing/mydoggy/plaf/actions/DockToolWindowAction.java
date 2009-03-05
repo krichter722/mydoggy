@@ -48,8 +48,6 @@ public class DockToolWindowAction extends ToolWindowAction implements PlafToolWi
     }
 
     public void actionPerformed(ActionEvent e) {
-        toolWindow.setActive(true);
-
         ToolWindowType type = toolWindow.getType();
         if (type == ToolWindowType.DOCKED) {
             toolWindow.setType(ToolWindowType.SLIDING);
