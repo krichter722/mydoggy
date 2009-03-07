@@ -5,9 +5,9 @@ package org.noos.xing.mydoggy;
  * during the merge.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
- * @since 1.5.0
  * @see org.noos.xing.mydoggy.PersistenceDelegate
  * @see org.noos.xing.mydoggy.PersistenceDelegate#merge(java.io.InputStream, org.noos.xing.mydoggy.PersistenceDelegate.MergePolicy, PersistenceDelegateCallback)
+ * @since 1.5.0
  */
 public interface PersistenceDelegateCallback {
 
@@ -20,44 +20,58 @@ public interface PersistenceDelegateCallback {
     interface PersistenceNode {
 
         /**
+         * Returns the node name.
          *
-         * @param name
-         * @return
+         * @return the node name.
+         * @since 1.5.0
+         */
+        String getName();
+
+        /**
+         * Returns <tt>true</tt> if this node contains an attribute for the specified
+         * name.
+         *
+         * @param name attribute name whose presence in this node is to be tested.
+         * @return <tt>true</tt> if this node contains an attributed for the specified name.
          * @since 1.5.0
          */
         boolean containsAttribute(String name);
 
         /**
+         * Returns the attribute's value.
          *
-         * @param name
-         * @return
+         * @param name attribute name whose value in this node is to be returned.
+         * @return the attribute's value.
          * @since 1.5.0
          */
         String getAttributeValue(String name);
 
         /**
+         * Returns the attribute's value as boolean.
          *
-         * @param name
-         * @param defaultValue
-         * @return
+         * @param name name attribute whose value in this node is to be returned.
+         * @param defaultValue the value to be returned if the node does not contain an attribute with the specified name.
+         * @return the attribute's value as boolean.
          * @since 1.5.0
          */
         boolean getBoolean(String name, boolean defaultValue);
 
         /**
+         * Returns the attribute's value as integer.
          *
-         * @param name
-         * @param defaultValue
-         * @return
+         * @param name name attribute whose value in this node is to be returned.
+         * @param defaultValue the value to be returned if the node does not contain an attribute with the specified name.
+         * @return the attribute's value as integer.
          * @since 1.5.0
          */
         int getInteger(String name, int defaultValue);
 
         /**
+         * Returns the attribute's value as float.
          *
-         * @param name
-         * @param defaultValue
-         * @return
+         * @param name name attribute whose value in this node is to be returned.
+         * @param defaultValue the value to be returned if the node does not contain an attribute with the specified name.
+         * @return the attribute's value as float.
          * @since 1.5.0
          */
         float getFloat(String name, float defaultValue);
@@ -70,8 +84,8 @@ public interface PersistenceDelegateCallback {
      * currently registered in the ToolWindowManager.
      *
      * @param toolWindowManager a reference to.
-     * @param toolWindowId the requested toolwindow id.
-     * @param node a node instance to retrieve all the properties related to the requested toolwindow.
+     * @param toolWindowId      the requested toolwindow id.
+     * @param node              a node instance to retrieve all the properties related to the requested toolwindow.
      * @return a instance of ToolWindow eventually registered.
      * @since 1.5.0
      */
@@ -82,8 +96,8 @@ public interface PersistenceDelegateCallback {
      * currently registered in the ContentManager.
      *
      * @param toolWindowManager a reference to.
-     * @param contentId the requested content id.
-     * @param node a node instance to retrieve all the properties related to the requested content.
+     * @param contentId         the requested content id.
+     * @param node              a node instance to retrieve all the properties related to the requested content.
      * @return a instance of Content eventually registered.
      * @since 1.5.0
      */

@@ -18,6 +18,10 @@ public class XMLPersistenceNode implements PersistenceDelegateCallback.Persisten
     }
 
 
+    public String getName() {
+        return element.getNodeName();
+    }
+
     public boolean containsAttribute(String name) {
         String attr = element.getAttribute(name);
 
