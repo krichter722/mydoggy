@@ -43,7 +43,10 @@ import java.util.*;
  * TODO: support new properties...
  */
 public class XMLPersistenceDelegate implements PersistenceDelegate {
-    protected static final String ACTIVE_TOOL_KEY = "ACTIVE_TOOL_KEY";
+    protected enum ContextKey {
+        ActiveTool,
+        MultiSplitContentManagerUILayout
+    };
 
 
     protected MyDoggyToolWindowManager toolWindowManager;
@@ -849,7 +852,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 boolean result = parseTree(element, context);
 
                 // Finalize
-                final ToolWindow activeTool = (ToolWindow) context.get(ACTIVE_TOOL_KEY);
+                final ToolWindow activeTool = (ToolWindow) context.get(ContextKey.ActiveTool);
                 if (activeTool != null) {
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
@@ -1297,7 +1300,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             }
 
             if (activeTool != null)
-                ((MutableContext) context).put(ACTIVE_TOOL_KEY, activeTool);
+                ((MutableContext) context).put(ContextKey.ActiveTool, activeTool);
 
             if (maximizedTool != null)
                 maximizedTool.setMaximized(true);
@@ -1393,6 +1396,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                         dockableContainer.setModel(model);
                     }
                 });
+            } else if (context.get(ContextKey.MultiSplitContentManagerUILayout) != null && toolWindowManager.getContentManager().isEnabled()) {
+                // Load MultiSplitContentManagerUILayout
+
+                MyDoggyMultiSplitContentManagerUI myDoggyMultiSplitContentManagerUI = (MyDoggyMultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
+                myDoggyMultiSplitContentManagerUI.setLayout(context.get(ContextKey.MultiSplitContentManagerUILayout));
             }
 
             final Content selectedContent1 = selectedContent;
@@ -1505,13 +1513,12 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                 // Load layout
                 Element layout = getElement(element, "layout");
-                MyDoggyMultiSplitContentManagerUI myDoggyMultiSplitContentManagerUI = (MyDoggyMultiSplitContentManagerUI) managerUI;
-
                 if (layout != null) {
                     String text = layout.getTextContent();
                     XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(text.getBytes()));
-                    myDoggyMultiSplitContentManagerUI.setLayout(decoder.readObject());
-                }
+                    ((MutableContext) context).put(ContextKey.MultiSplitContentManagerUILayout, decoder.readObject());
+                } else
+                    ((MutableContext) context).put(ContextKey.MultiSplitContentManagerUILayout, null);
             }
 
             return false;
