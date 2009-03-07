@@ -502,22 +502,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     }
 
     public void assignFocus() {
-        // TODO:...look at DockedToolWindowListener#propertyChange to update this code...
-/*
-        ToolWindowTitleButtonPanel toolWindowTitleButtonPanel = toolWindowPanel.getToolWindowTitleBar().getToolWindowTitleButtonPanel();
-
-        focusRequester = SwingUtil.findFocusable(getComponent());
-        if (focusRequester == null) {
-            toolWindowTitleButtonPanel.getFocusable().setFocusable(true);
-            focusRequester = toolWindowTitleButtonPanel.getFocusable();
-        } else {
-            toolWindowTitleButtonPanel.getFocusable().setFocusable(false);
-        }
-        SwingUtil.requestFocus(focusRequester);
-*/
-
-
-
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 focusRequester = toolWindowPanel.getFocusable();
@@ -525,6 +509,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
                 focusRequester.requestFocusInWindow();
             }
         });
+
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 Component toolWindowPanelFocusable = toolWindowPanel.getFocusable();
