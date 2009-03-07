@@ -22,4 +22,8 @@ public class PersistenceDelegateCallbackAdapter implements PersistenceDelegateCa
         return null;
     }
 
+    public String validate(PersistenceNode node, String attribute, String attributeValue, Object attributeDefaultValue) {
+        return attributeValue;
+    }
+
 }

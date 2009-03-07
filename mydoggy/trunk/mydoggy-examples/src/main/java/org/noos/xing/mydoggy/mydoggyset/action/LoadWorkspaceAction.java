@@ -69,6 +69,10 @@ public class LoadWorkspaceAction extends AbstractAction implements ViewContextCh
 
                                 return toolWindowManager.getContentManager().getContent(contentId);
                             }
+
+                            public String validate(PersistenceNode node, String attribute, String attributeValue, Object attributeDefaultValue) {
+                                return attributeValue;
+                            }
                         });
                 inputStream.close();
             } else

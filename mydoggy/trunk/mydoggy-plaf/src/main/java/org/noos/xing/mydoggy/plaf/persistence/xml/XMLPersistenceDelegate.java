@@ -897,12 +897,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
     }
 
 
-    public abstract class ElementParserAdapter implements ElementParser<Element> {
-        protected XMLPersistenceNode node;
+    public static abstract class ElementParserAdapter implements ElementParser<Element> {
+        protected static XMLPersistenceNode node = new XMLPersistenceNode();
 
 
         protected ElementParserAdapter() {
-            this.node = new XMLPersistenceNode();
         }
 
 
@@ -913,9 +912,28 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             return (Element) list.item(0);
         }
 
-        public boolean getBoolean(Element element, String name, boolean defaultValue) {
+        public boolean isAttributePresent(Element element, String name) {
+            String attr = element.getAttribute(name);
+            return attr != null && !"".equals(attr.trim());
+        }
+
+        public String getAttributeValue(Context context, Element element, String name, String defaultValue) {
             try {
-                String attr = element.getAttribute(name);
+                String attr = context.get(PersistenceDelegateCallback.class).validate(node.setElement(element), name, element.getAttribute(name), defaultValue);
+
+                if (attr != null && !"".equals(attr.trim()))
+                    return attr;
+                else
+                    return defaultValue;
+            } catch (Exception e) {
+                return defaultValue;
+            }
+        }
+
+        public boolean getBoolean(Context context, Element element, String name, boolean defaultValue) {
+            try {
+                String attr = context.get(PersistenceDelegateCallback.class).validate(node.setElement(element), name, element.getAttribute(name), defaultValue);
+
                 if (attr != null && !"".equals(attr.trim()))
                     return Boolean.parseBoolean(attr);
                 else
@@ -925,9 +943,10 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             }
         }
 
-        public int getInteger(Element element, String name, int defaultValue) {
+        public int getInteger(Context context, Element element, String name, int defaultValue) {
             try {
-                String attr = element.getAttribute(name);
+                String attr = context.get(PersistenceDelegateCallback.class).validate(node.setElement(element), name, element.getAttribute(name), defaultValue);
+
                 if (attr != null && !"".equals(attr.trim()))
                     return Integer.parseInt(attr);
                 else
@@ -937,9 +956,10 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             }
         }
 
-        public float getFloat(Element element, String name, float defaultValue) {
+        public float getFloat(Context context, Element element, String name, float defaultValue) {
             try {
-                String attr = element.getAttribute(name);
+                String attr = context.get(PersistenceDelegateCallback.class).validate(node.setElement(element), name, element.getAttribute(name), defaultValue);
+
                 if (attr != null && !"".equals(attr.trim()))
                     return Float.parseFloat(attr);
                 else
@@ -949,9 +969,10 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             }
         }
 
-        public ToolWindowAnchor getToolWindowAnchor(Element element, String name, ToolWindowAnchor defaultValue) {
+        public ToolWindowAnchor getToolWindowAnchor(Context context, Element element, String name, ToolWindowAnchor defaultValue) {
             try {
-                String attr = element.getAttribute(name);
+                String attr = context.get(PersistenceDelegateCallback.class).validate(node.setElement(element), name, element.getAttribute(name), defaultValue);
+
                 if (attr != null && !"".equals(attr.trim()))
                     return ToolWindowAnchor.valueOf(attr);
                 else
@@ -959,11 +980,6 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             } catch (Exception e) {
                 return defaultValue;
             }
-        }
-
-        public boolean isAttributePresent(Element element, String name) {
-            String attr = element.getAttribute(name);
-            return attr != null && !"".equals(attr.trim());
         }
 
     }
@@ -977,7 +993,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
             // Sets content manager enable property...
             ContentManager contentManager = context.get(ToolWindowManager.class).getContentManager();
-            contentManager.setEnabled(getBoolean(element, "contentManagerEnabled", true));
+            contentManager.setEnabled(getBoolean(context, element, "contentManagerEnabled", true));
 
             return true;
         }
@@ -988,9 +1004,9 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         public boolean parse(Element element, Context context) {
             ToolWindowManagerDescriptor descriptor = context.get(ToolWindowManager.class).getToolWindowManagerDescriptor();
 
-            descriptor.setNumberingEnabled(getBoolean(element, "numberingEnabled", true));
-            descriptor.setPreviewEnabled(getBoolean(element, "previewEnabled", true));
-            descriptor.setShowUnavailableTools(getBoolean(element, "showUnavailableTools", false));
+            descriptor.setNumberingEnabled(getBoolean(context, element, "numberingEnabled", true));
+            descriptor.setPreviewEnabled(getBoolean(context, element, "previewEnabled", true));
+            descriptor.setShowUnavailableTools(getBoolean(context, element, "showUnavailableTools", false));
 
             return true;
         }
@@ -1006,7 +1022,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             NodeList modes = element.getElementsByTagName("mode");
             for (int i = 0, size = modes.getLength(); i < size; i++) {
                 Element mode = (Element) modes.item(i);
-                if ("MOST_RECENT".equals(mode.getAttribute("type"))) {
+                if ("MOST_RECENT".equals(getAttributeValue(context, mode, "type", null))) {
                     MostRecentDescriptor mostRecentDescriptor = (MostRecentDescriptor) descriptor.getPushAwayModeDescriptor(PushAwayMode.MOST_RECENT);
 
                     NodeList anchors = element.getElementsByTagName("anchor");
@@ -1058,47 +1074,47 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 if (typeElement != null) {
                     DockedTypeDescriptor descriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
 
-                    applyAttributes(typeElement, descriptor);
-                    descriptor.setDockLength(getInteger(typeElement, "dockLength", 200));
-                    descriptor.setMinimumDockLength(getInteger(typeElement, "minimumDockLength", 100));
-                    descriptor.setPopupMenuEnabled(getBoolean(typeElement, "popupMenuEnabled", true));
+                    applyAttributes(context, typeElement, descriptor);
+                    descriptor.setDockLength(getInteger(context, typeElement, "dockLength", 200));
+                    descriptor.setMinimumDockLength(getInteger(context, typeElement, "minimumDockLength", 100));
+                    descriptor.setPopupMenuEnabled(getBoolean(context, typeElement, "popupMenuEnabled", true));
                 }
 
                 typeElement = getElement(tool, "sliding");
                 if (typeElement != null) {
                     SlidingTypeDescriptor descriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);
 
-                    applyAttributes(typeElement, descriptor);
-                    descriptor.setTransparentDelay(getInteger(typeElement, "transparentDelay", 0));
-                    descriptor.setTransparentMode(getBoolean(typeElement, "transparentMode", true));
-                    descriptor.setTransparentRatio(getFloat(typeElement, "transparentRatio", 0.7f));
+                    applyAttributes(context, typeElement, descriptor);
+                    descriptor.setTransparentDelay(getInteger(context, typeElement, "transparentDelay", 0));
+                    descriptor.setTransparentMode(getBoolean(context, typeElement, "transparentMode", true));
+                    descriptor.setTransparentRatio(getFloat(context, typeElement, "transparentRatio", 0.7f));
                 }
 
                 typeElement = getElement(tool, "floating");
                 if (typeElement != null) {
                     FloatingTypeDescriptor descriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
 
-                    applyAttributes(typeElement, descriptor);
-                    descriptor.setTransparentDelay(getInteger(typeElement, "transparentDelay", 0));
-                    descriptor.setTransparentMode(getBoolean(typeElement, "transparentMode", true));
-                    descriptor.setTransparentRatio(getFloat(typeElement, "transparentRatio", 0.7f));
-                    descriptor.setModal(getBoolean(typeElement, "modal", false));
-                    descriptor.setAddToTaskBar(getBoolean(typeElement, "addToTaskBar", false));
-                    descriptor.setAlwaysOnTop(getBoolean(typeElement, "alwaysOnTop", true));
-                    descriptor.setOsDecorated(getBoolean(typeElement, "osDecorated", false));
-                    descriptor.setResizable(getBoolean(typeElement, "resizable", true));
+                    applyAttributes(context, typeElement, descriptor);
+                    descriptor.setTransparentDelay(getInteger(context, typeElement, "transparentDelay", 0));
+                    descriptor.setTransparentMode(getBoolean(context, typeElement, "transparentMode", true));
+                    descriptor.setTransparentRatio(getFloat(context, typeElement, "transparentRatio", 0.7f));
+                    descriptor.setModal(getBoolean(context, typeElement, "modal", false));
+                    descriptor.setAddToTaskBar(getBoolean(context, typeElement, "addToTaskBar", false));
+                    descriptor.setAlwaysOnTop(getBoolean(context, typeElement, "alwaysOnTop", true));
+                    descriptor.setOsDecorated(getBoolean(context, typeElement, "osDecorated", false));
+                    descriptor.setResizable(getBoolean(context, typeElement, "resizable", true));
 
                     Element location = getElement(typeElement, "location");
                     if (location != null)
                         descriptor.setLocation(
-                                getInteger(location, "x", 0),
-                                getInteger(location, "y", 0)
+                                getInteger(context, location, "x", 0),
+                                getInteger(context, location, "y", 0)
                         );
                     Element dimension = getElement(typeElement, "size");
                     if (dimension != null)
                         descriptor.setSize(
-                                getInteger(dimension, "width", 100),
-                                getInteger(dimension, "height", 100)
+                                getInteger(context, dimension, "width", 100),
+                                getInteger(context, dimension, "height", 100)
                         );
                 }
 
@@ -1106,34 +1122,34 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 if (typeElement != null) {
                     FloatingLiveTypeDescriptor descriptor = (FloatingLiveTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
 
-                    applyAttributes(typeElement, descriptor);
-                    descriptor.setTransparentDelay(getInteger(typeElement, "transparentDelay", 0));
-                    descriptor.setTransparentMode(getBoolean(typeElement, "transparentMode", true));
-                    descriptor.setTransparentRatio(getFloat(typeElement, "transparentRatio", 0.7f));
+                    applyAttributes(context, typeElement, descriptor);
+                    descriptor.setTransparentDelay(getInteger(context, typeElement, "transparentDelay", 0));
+                    descriptor.setTransparentMode(getBoolean(context, typeElement, "transparentMode", true));
+                    descriptor.setTransparentRatio(getFloat(context, typeElement, "transparentRatio", 0.7f));
 
                     Element location = getElement(typeElement, "location");
                     if (location != null)
                         descriptor.setLocation(
-                                getInteger(location, "x", 0),
-                                getInteger(location, "y", 0)
+                                getInteger(context, location, "x", 0),
+                                getInteger(context, location, "y", 0)
                         );
                     Element dimension = getElement(typeElement, "size");
                     if (dimension != null)
                         descriptor.setSize(
-                                getInteger(dimension, "width", 100),
-                                getInteger(dimension, "height", 100)
+                                getInteger(context, dimension, "width", 100),
+                                getInteger(context, dimension, "height", 100)
                         );
                 }
 
                 typeElement = getElement(tool, "anchor");
                 if (typeElement != null) {
                     RepresentativeAnchorDescriptor descriptor = toolWindow.getRepresentativeAnchorDescriptor();
-                    descriptor.setPreviewEnabled(getBoolean(typeElement, "previewEnabled", true));
-                    descriptor.setPreviewDelay(getInteger(typeElement, "previewDelay", 0));
-                    descriptor.setPreviewTransparentRatio(getFloat(typeElement, "previewTransparentRatio", 0.7f));
+                    descriptor.setPreviewEnabled(getBoolean(context, typeElement, "previewEnabled", true));
+                    descriptor.setPreviewDelay(getInteger(context, typeElement, "previewDelay", 0));
+                    descriptor.setPreviewTransparentRatio(getFloat(context, typeElement, "previewTransparentRatio", 0.7f));
                     descriptor.setTitle(typeElement.getAttribute("title"));
                     if (toolWindow.getType() != ToolWindowType.FLOATING_FREE)
-                        descriptor.setVisible(getBoolean(typeElement, "visible", true));
+                        descriptor.setVisible(getBoolean(context, typeElement, "visible", true));
 
                     descriptor.removeAllLockingAnchor();
                     Element lockingAnchorsElement = getElement(typeElement, "lockingAnchors");
@@ -1154,15 +1170,15 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 if (type != ToolWindowType.EXTERN)
                     toolWindow.setType(type);
 
-                toolWindow.setAutoHide(getBoolean(tool, "autoHide", false));
-                toolWindow.setAvailable(getBoolean(tool, "available", false));
-                int index = getInteger(tool, "index", -1);
+                toolWindow.setAutoHide(getBoolean(context, tool, "autoHide", false));
+                toolWindow.setAvailable(getBoolean(context, tool, "available", false));
+                int index = getInteger(context, tool, "index", -1);
                 if (index != -1)
                     toolWindow.setIndex(index);
-                toolWindow.setAggregateMode(getBoolean(tool, "aggregateMode", false));
-                toolWindow.setFlashing(getBoolean(tool, "flashing", false));
-                toolWindow.setLockedOnAnchor(getBoolean(tool, "lockedOnAnchor", false));
-                toolWindow.setHideOnZeroTabs(getBoolean(tool, "hideOnZeroTabs", false));
+                toolWindow.setAggregateMode(getBoolean(context, tool, "aggregateMode", false));
+                toolWindow.setFlashing(getBoolean(context, tool, "flashing", false));
+                toolWindow.setLockedOnAnchor(getBoolean(context, tool, "lockedOnAnchor", false));
+                toolWindow.setHideOnZeroTabs(getBoolean(context, tool, "hideOnZeroTabs", false));
 
                 // Load tabs
                 Element tabs = getElement(tool, "tabs");
@@ -1191,8 +1207,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                         Element tabElement = (Element) tabList.item(j);
 
                         String dockableId = tabElement.getAttribute("dockableId");
-                        boolean selected = getBoolean(tabElement, "selected", false);
-                        boolean maximized = getBoolean(tabElement, "maximized", false);
+                        boolean selected = getBoolean(context, tabElement, "selected", false);
+                        boolean maximized = getBoolean(context, tabElement, "maximized", false);
 
                         Dockable dockable = context.get(ToolWindowManager.class).getDockable(dockableId);
                         if (dockable != null) {
@@ -1206,10 +1222,10 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                             tab.setSelected(false);
                             tab.setMaximized(false);
-                            tab.setCloseable(getBoolean(tabElement, "closeable", true));
-                            tab.setMinimizable(getBoolean(tabElement, "minimizable", true));
-                            tab.setFlashing(getBoolean(tabElement, "flashing", false));
-                            tab.setMinimized(getBoolean(tabElement, "minimized", false));
+                            tab.setCloseable(getBoolean(context, tabElement, "closeable", true));
+                            tab.setMinimizable(getBoolean(context, tabElement, "minimizable", true));
+                            tab.setFlashing(getBoolean(context, tabElement, "flashing", false));
+                            tab.setMinimized(getBoolean(context, tabElement, "minimized", false));
                         }
                     }
 
@@ -1233,7 +1249,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             return false;
         }
 
-        protected void apply(Context context, NodeList tools, ToolWindowAnchor anchor) {
+        protected void apply(final Context context, NodeList tools, ToolWindowAnchor anchor) {
             // Filter tools by anchor
             java.util.List<Element> toolsByAnchor = new ArrayList<Element>();
             for (int i = 0, size = tools.getLength(); i < size; i++) {
@@ -1244,8 +1260,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
             Collections.sort(toolsByAnchor, new Comparator<Element>() {
                 public int compare(Element o1, Element o2) {
-                    int anchorIndex1 = getInteger(o1, "anchorIndex", 0);
-                    int anchorIndex2 = getInteger(o2, "anchorIndex", 0);
+                    int anchorIndex1 = getInteger(context, o1, "anchorIndex", 0);
+                    int anchorIndex2 = getInteger(context, o2, "anchorIndex", 0);
 
                     ToolWindowType type1 = ToolWindowType.valueOf(o1.getAttribute("type"));
                     ToolWindowType type2 = ToolWindowType.valueOf(o2.getAttribute("type"));
@@ -1279,7 +1295,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 if (toolWindow == null)
                     continue;
 
-                int anchorIndex = getInteger(tool, "anchorIndex", Integer.MIN_VALUE);
+                int anchorIndex = getInteger(context, tool, "anchorIndex", Integer.MIN_VALUE);
                 ToolWindowAnchor toolWindowAnchor = ToolWindowAnchor.LEFT;
                 if (isAttributePresent(tool, "anchor"))
                     toolWindowAnchor = ToolWindowAnchor.valueOf(tool.getAttribute("anchor"));
@@ -1292,10 +1308,10 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                 mergePolicyApplier.applyToolWindow(toolWindow, tool);
 
-                if (getBoolean(tool, "active", false))
+                if (getBoolean(context, tool, "active", false))
                     activeTool = toolWindow;
 
-                if (getBoolean(tool, "maximized", false))
+                if (getBoolean(context, tool, "maximized", false))
                     maximizedTool = toolWindow;
             }
 
@@ -1306,13 +1322,13 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 maximizedTool.setMaximized(true);
         }
 
-        protected void applyAttributes(Element element, ToolWindowTypeDescriptor descriptor) {
-            descriptor.setAnimating(getBoolean(element, "animating", true));
-            descriptor.setAutoHide(getBoolean(element, "autoHide", false));
-            descriptor.setEnabled(getBoolean(element, "enabled", true));
-            descriptor.setHideRepresentativeButtonOnVisible(getBoolean(element, "hideRepresentativeButtonOnVisible", false));
-            descriptor.setIdVisibleOnTitleBar(getBoolean(element, "idVisibleOnTitleBar", true));
-            descriptor.setTitleBarButtonsVisible(getBoolean(element, "titleBarButtonsVisible", true));
+        protected void applyAttributes(Context context, Element element, ToolWindowTypeDescriptor descriptor) {
+            descriptor.setAnimating(getBoolean(context, element, "animating", true));
+            descriptor.setAutoHide(getBoolean(context, element, "autoHide", false));
+            descriptor.setEnabled(getBoolean(context, element, "enabled", true));
+            descriptor.setHideRepresentativeButtonOnVisible(getBoolean(context, element, "hideRepresentativeButtonOnVisible", false));
+            descriptor.setIdVisibleOnTitleBar(getBoolean(context, element, "idVisibleOnTitleBar", true));
+            descriptor.setTitleBarButtonsVisible(getBoolean(context, element, "titleBarButtonsVisible", true));
         }
     }
 
@@ -1337,47 +1353,47 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                                                                                              node.setElement(contentElement));
 
                 if (content != null) {
-                    if (getBoolean(contentElement, "selected", false))
+                    if (getBoolean(context, contentElement, "selected", false))
                         selectedContent = content;
-                    if (getBoolean(contentElement, "maximized", false))
+                    if (getBoolean(context, contentElement, "maximized", false))
                         maximizedContent = content;
 
-                    content.setEnabled(getBoolean(contentElement, "enabled", true));
-                    content.setDetached(getBoolean(contentElement, "detached", false));
+                    content.setEnabled(getBoolean(context, contentElement, "enabled", true));
+                    content.setDetached(getBoolean(context, contentElement, "detached", false));
                     content.setMaximized(false);
-                    content.setMinimized(getBoolean(contentElement, "minimized", false));
-                    content.setFlashing(getBoolean(contentElement, "flashing", false));
+                    content.setMinimized(getBoolean(context, contentElement, "minimized", false));
+                    content.setFlashing(getBoolean(context, contentElement, "flashing", false));
 
                     // Load "minimizedState" sub element if any
                     Element minimizedStateElem = getElement(contentElement, "minimizedState");
                     if (minimizedStateElem != null && content.isMinimized()) {
                         ContentDescriptor contentDescriptor = (ContentDescriptor) toolWindowManager.getDockableDescriptor(content.getId());
-                        contentDescriptor.setAnchor(getToolWindowAnchor(minimizedStateElem, "anchor", ToolWindowAnchor.LEFT),
-                                                    getInteger(minimizedStateElem, "anchorIndex", -1)
+                        contentDescriptor.setAnchor(getToolWindowAnchor(context, minimizedStateElem, "anchor", ToolWindowAnchor.LEFT),
+                                                    getInteger(context, minimizedStateElem, "anchorIndex", -1)
                         );
                     }
 
 
                     // Load contentUI
                     ContentUI contentUI = content.getContentUI();
-                    contentUI.setCloseable(getBoolean(contentElement, "closeable", true));
-                    contentUI.setDetachable(getBoolean(contentElement, "detachable", true));
-                    contentUI.setMinimizable(getBoolean(contentElement, "minimizable", true));
-                    contentUI.setMaximizable(getBoolean(contentElement, "maximizable", true));
-                    contentUI.setTransparentMode(getBoolean(contentElement, "transparentMode", true));
-                    contentUI.setTransparentDelay(getInteger(contentElement, "transparentDelay", 0));
-                    contentUI.setTransparentRatio(getFloat(contentElement, "transparentRatio", 0.7f));
-                    contentUI.setAddToTaskBarWhenDetached(getBoolean(contentElement, "addToTaskBarWhenDetached", false));
-                    contentUI.setAlwaysOnTop(getBoolean(contentElement, "alwaysOnTop", false));
+                    contentUI.setCloseable(getBoolean(context, contentElement, "closeable", true));
+                    contentUI.setDetachable(getBoolean(context, contentElement, "detachable", true));
+                    contentUI.setMinimizable(getBoolean(context, contentElement, "minimizable", true));
+                    contentUI.setMaximizable(getBoolean(context, contentElement, "maximizable", true));
+                    contentUI.setTransparentMode(getBoolean(context, contentElement, "transparentMode", true));
+                    contentUI.setTransparentDelay(getInteger(context, contentElement, "transparentDelay", 0));
+                    contentUI.setTransparentRatio(getFloat(context, contentElement, "transparentRatio", 0.7f));
+                    contentUI.setAddToTaskBarWhenDetached(getBoolean(context, contentElement, "addToTaskBarWhenDetached", false));
+                    contentUI.setAlwaysOnTop(getBoolean(context, contentElement, "alwaysOnTop", false));
 
                     // Load detachedBounds if any
                     NodeList list = contentElement.getElementsByTagName("detachedBounds");
                     if (list.getLength() > 0) {
                         Element detachedBoundsElm = (Element) list.item(0);
-                        contentUI.setDetachedBounds(new Rectangle(getInteger(detachedBoundsElm, "x", 100),
-                                                                  getInteger(detachedBoundsElm, "y", 100),
-                                                                  getInteger(detachedBoundsElm, "width", 320),
-                                                                  getInteger(detachedBoundsElm, "height", 200)));
+                        contentUI.setDetachedBounds(new Rectangle(getInteger(context, detachedBoundsElm, "x", 100),
+                                                                  getInteger(context, detachedBoundsElm, "y", 100),
+                                                                  getInteger(context, detachedBoundsElm, "width", 320),
+                                                                  getInteger(context, detachedBoundsElm, "height", 200)));
                     }
 
                 }
@@ -1426,8 +1442,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
             // load toolWindowBar properties
             ToolWindowBar toolWindowBar = context.get(ToolWindowManager.class).getToolWindowBar(anchor);
-            toolWindowBar.setDividerSize(getInteger(element, "left", 3));
-            toolWindowBar.setAggregateMode(getBoolean(element, "aggregateMode", false));
+            toolWindowBar.setDividerSize(getInteger(context, element, "left", 3));
+            toolWindowBar.setAggregateMode(getBoolean(context, element, "aggregateMode", false));
 
             Element layoutElement = getElement(element, "layout");
             if (layoutElement != null) {
@@ -1477,12 +1493,12 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             if (context.get(ToolWindowManager.class).getContentManager().getContentManagerUI() instanceof MultiSplitContentManagerUI) {
                 MultiSplitContentManagerUI managerUI = (MultiSplitContentManagerUI) context.get(ToolWindowManager.class).getContentManager().getContentManagerUI();
 
-                managerUI.setCloseable(getBoolean(element, "closeable", true));
-                managerUI.setDetachable(getBoolean(element, "detachable", false));
-                managerUI.setMinimizable(getBoolean(element, "minimizable", false));
-                managerUI.setMaximizable(getBoolean(element, "maximizable", false));
-                managerUI.setPopupMenuEnabled(getBoolean(element, "popupMenuEnabled", true));
-                managerUI.setShowAlwaysTab(getBoolean(element, "showAlwaysTab", false));
+                managerUI.setCloseable(getBoolean(context, element, "closeable", true));
+                managerUI.setDetachable(getBoolean(context, element, "detachable", false));
+                managerUI.setMinimizable(getBoolean(context, element, "minimizable", false));
+                managerUI.setMaximizable(getBoolean(context, element, "maximizable", false));
+                managerUI.setPopupMenuEnabled(getBoolean(context, element, "popupMenuEnabled", true));
+                managerUI.setShowAlwaysTab(getBoolean(context, element, "showAlwaysTab", false));
                 managerUI.setTabLayout(TabbedContentManagerUI.TabLayout.valueOf(element.getAttribute("tabLayout")));
                 managerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.valueOf(element.getAttribute("tabPlacement")));
 
@@ -1506,7 +1522,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                         if (content != null) {
                             MultiSplitContentUI multiSplitContentUI = (MultiSplitContentUI) content.getContentUI();
-                            multiSplitContentUI.setShowAlwaysTab(getBoolean(contentUIElm, "showAlwaysTab", true));
+                            multiSplitContentUI.setShowAlwaysTab(getBoolean(context, contentUIElm, "showAlwaysTab", true));
                         }
                     }
                 }
@@ -1532,12 +1548,12 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             if (context.get(ToolWindowManager.class).getContentManager().getContentManagerUI() instanceof TabbedContentManagerUI) {
                 TabbedContentManagerUI managerUI = (TabbedContentManagerUI) context.get(ToolWindowManager.class).getContentManager().getContentManagerUI();
 
-                managerUI.setCloseable(getBoolean(element, "closeable", true));
-                managerUI.setDetachable(getBoolean(element, "detachable", false));
-                managerUI.setMinimizable(getBoolean(element, "minimizable", false));
-                managerUI.setMaximizable(getBoolean(element, "maximizable", false));
-                managerUI.setPopupMenuEnabled(getBoolean(element, "popupMenuEnabled", true));
-                managerUI.setShowAlwaysTab(getBoolean(element, "showAlwaysTab", false));
+                managerUI.setCloseable(getBoolean(context, element, "closeable", true));
+                managerUI.setDetachable(getBoolean(context, element, "detachable", false));
+                managerUI.setMinimizable(getBoolean(context, element, "minimizable", false));
+                managerUI.setMaximizable(getBoolean(context, element, "maximizable", false));
+                managerUI.setPopupMenuEnabled(getBoolean(context, element, "popupMenuEnabled", true));
+                managerUI.setShowAlwaysTab(getBoolean(context, element, "showAlwaysTab", false));
                 managerUI.setTabLayout(TabbedContentManagerUI.TabLayout.valueOf(element.getAttribute("tabLayout")));
                 managerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.valueOf(element.getAttribute("tabPlacement")));
             }
@@ -1552,11 +1568,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             if (context.get(ToolWindowManager.class).getContentManager().getContentManagerUI() instanceof DesktopContentManagerUI) {
                 DesktopContentManagerUI managerUI = (DesktopContentManagerUI) context.get(ToolWindowManager.class).getContentManager().getContentManagerUI();
 
-                managerUI.setCloseable(getBoolean(element, "closeable", true));
-                managerUI.setDetachable(getBoolean(element, "detachable", false));
-                managerUI.setMinimizable(getBoolean(element, "minimizable", false));
-                managerUI.setMaximizable(getBoolean(element, "maximizable", false));
-                managerUI.setPopupMenuEnabled(getBoolean(element, "popupMenuEnabled", true));
+                managerUI.setCloseable(getBoolean(context, element, "closeable", true));
+                managerUI.setDetachable(getBoolean(context, element, "detachable", false));
+                managerUI.setMinimizable(getBoolean(context, element, "minimizable", false));
+                managerUI.setMaximizable(getBoolean(context, element, "maximizable", false));
+                managerUI.setPopupMenuEnabled(getBoolean(context, element, "popupMenuEnabled", true));
 
                 ContentManager contentManager = context.get(ToolWindowManager.class).getContentManager();
 
@@ -1573,14 +1589,14 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     
                     if (content != null) {
                         DesktopContentUI desktopContentUI = (DesktopContentUI) content.getContentUI();
-                        desktopContentUI.setIconified(getBoolean(contentUIElm, "iconified", false));
+                        desktopContentUI.setIconified(getBoolean(context, contentUIElm, "iconified", false));
                         desktopContentUI.setLocation(
-                                getInteger(contentUIElm, "x", 0),
-                                getInteger(contentUIElm, "y", 0)
+                                getInteger(context, contentUIElm, "x", 0),
+                                getInteger(context, contentUIElm, "y", 0)
                         );
                         desktopContentUI.setSize(
-                                getInteger(contentUIElm, "width", 100),
-                                getInteger(contentUIElm, "height", 1000)
+                                getInteger(context, contentUIElm, "width", 100),
+                                getInteger(context, contentUIElm, "height", 1000)
                         );
                     }
                 }

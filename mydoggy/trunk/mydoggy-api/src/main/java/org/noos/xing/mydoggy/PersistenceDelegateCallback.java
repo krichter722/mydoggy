@@ -103,4 +103,15 @@ public interface PersistenceDelegateCallback {
      */
     Content contentNotFound(ToolWindowManager toolWindowManager, String contentId, PersistenceNode node);
 
+    /**
+     * TODO
+     * @param node
+     * @param attribute
+     * @param attributeValue
+     * @param attributeDefaultValue
+     * @return
+     * @since 1.5.0
+     */
+    String validate(PersistenceNode node, String attribute, String attributeValue, Object attributeDefaultValue); 
+
 }
