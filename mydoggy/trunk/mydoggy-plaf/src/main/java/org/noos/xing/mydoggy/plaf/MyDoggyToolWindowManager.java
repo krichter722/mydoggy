@@ -1042,10 +1042,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public int getJMenuBarExtraHeight() {
-        JMenuBar jMenuBar = getRootPane().getJMenuBar();
+        if  (getRootPane() == null)
+            return 0;
 
+        JMenuBar jMenuBar = getRootPane().getJMenuBar();
         if (jMenuBar != null && jMenuBar.isVisible())
             return jMenuBar.getHeight();
+        
         return 0;
     }
 
