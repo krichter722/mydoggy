@@ -28,7 +28,6 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         visible,
     }
 
-
     protected int index;
     protected String id;
     protected ToolWindowAnchor anchor;
@@ -61,11 +60,9 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
                              String id, int index,
                              ToolWindowAnchor anchor, ToolWindowType type,
                              String title, Icon icon, Component component) {
+        super(manager.getFirePublicEvent());
+
         this.toolWindowTabs = new ArrayList<ToolWindowTab>();
-
-        rootTab = addTabInternal(title, null, component, null, true);
-        rootTab.setIcon(icon);
-
         this.id = id;
         this.index = index;
         this.anchor = anchor;
@@ -74,6 +71,9 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         this.hideOnZeroTabs = true;
 
         this.descriptor = (ToolWindowDescriptor) manager.createDescriptor(this);
+
+        rootTab = addTabInternal(title, null, component, null, true);
+        rootTab.setIcon(icon);
 
         setTitle(title);
         setIcon(icon);

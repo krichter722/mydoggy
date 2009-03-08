@@ -12,8 +12,7 @@ package org.noos.xing.mydoggy;
 public interface PersistenceDelegateCallback {
 
     /**
-     * Node interface used to analyze the properties of a reqeusted dockable.
-     * TODO
+     * The interface is used to analyze the properties of a source of persistence data.
      *
      * @since 1.5.0
      */
@@ -104,12 +103,14 @@ public interface PersistenceDelegateCallback {
     Content contentNotFound(ToolWindowManager toolWindowManager, String contentId, PersistenceNode node);
 
     /**
-     * TODO
-     * @param node
-     * @param attribute
-     * @param attributeValue
-     * @param attributeDefaultValue
-     * @return
+     * This method is invoked each time a property is loaded by the persistence delegate.
+     * So the user can decide to accept or refuse the attributeValue loaded from the persistence storage.  
+     *
+     * @param node the current source of persistence data.
+     * @param attribute the attribute whose value is to be validated.
+     * @param attributeValue the attribute value loaded from the persistence storage.
+     * @param attributeDefaultValue the default value assigned by the system to that attribute.
+     * @return the attribute value to be used.
      * @since 1.5.0
      */
     String validate(PersistenceNode node, String attribute, String attributeValue, Object attributeDefaultValue); 
