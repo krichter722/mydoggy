@@ -26,6 +26,8 @@ public class MyDoggyToolWindowManagerDescriptor extends PropertyChangeEventSourc
 
 
     public MyDoggyToolWindowManagerDescriptor(MyDoggyToolWindowManager manager) {
+        super(manager.getFirePublicEvent());
+
         this.manager = manager;
         this.pushAwayMode = PushAwayMode.VERTICAL;
         this.numberingEnabled = this.previewEnabled = true;

@@ -1,5 +1,6 @@
 package org.noos.xing.mydoggy.plaf;
 
+import org.noos.common.Question;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.support.CleanablePropertyChangeSupport;
 
@@ -15,11 +16,17 @@ import java.util.Set;
 public class PropertyChangeEventSource implements Cleaner {
     protected CleanablePropertyChangeSupport publicChangeSupport;
     protected CleanablePropertyChangeSupport plafChangeSupport;
+    protected Question<Object, Boolean> firePublicEventQuestion;
     protected boolean publicEvent;
 
 
     protected PropertyChangeEventSource() {
         this.publicEvent = true;
+    }
+
+    public PropertyChangeEventSource(Question<Object, Boolean> firePublicEventQuestion) {
+        this();
+        this.firePublicEventQuestion = firePublicEventQuestion;
     }
 
 
@@ -31,6 +38,8 @@ public class PropertyChangeEventSource implements Cleaner {
         if (plafChangeSupport != null)
             plafChangeSupport.cleanup();
         plafChangeSupport = null;
+
+        firePublicEventQuestion = null;
     }
 
 
@@ -158,7 +167,7 @@ public class PropertyChangeEventSource implements Cleaner {
         if (this.plafChangeSupport != null)
             this.plafChangeSupport.firePropertyChange(event);
 
-        if (MyDoggyToolWindowManager.firePublic && publicEvent && this.publicChangeSupport != null)
+        if (canFirePublicEvent())
             this.publicChangeSupport.firePropertyChange(event);
     }
 
@@ -166,7 +175,7 @@ public class PropertyChangeEventSource implements Cleaner {
         if (this.plafChangeSupport != null)
             this.plafChangeSupport.firePropertyChange(property, oldValue, newValue);
 
-        if (MyDoggyToolWindowManager.firePublic && publicEvent && this.publicChangeSupport != null)
+        if (canFirePublicEvent())
             this.publicChangeSupport.firePropertyChange(property, oldValue, newValue);
     }
 
@@ -174,7 +183,7 @@ public class PropertyChangeEventSource implements Cleaner {
         if (this.plafChangeSupport != null)
             this.plafChangeSupport.firePropertyChange(property, oldValue, newValue, userObject);
 
-        if (MyDoggyToolWindowManager.firePublic && publicEvent && this.publicChangeSupport != null)
+        if (canFirePublicEvent())
             this.publicChangeSupport.firePropertyChange(property, oldValue, newValue, userObject);
     }
 
@@ -193,11 +202,16 @@ public class PropertyChangeEventSource implements Cleaner {
         if (this.plafChangeSupport != null && event != null)
             this.plafChangeSupport.firePropertyChange(event);
 
-        if (MyDoggyToolWindowManager.firePublic && publicEvent && this.publicChangeSupport != null)
+        if (canFirePublicEvent())
             this.publicChangeSupport.firePropertyChange(pblEvent);
     }
 
 
+    private final boolean canFirePublicEvent() {
+        return publicEvent && this.publicChangeSupport != null && (firePublicEventQuestion == null || (firePublicEventQuestion != null && firePublicEventQuestion.getAnswer(null)));
+    }
+
+    
     public class ExcludePropertyChangeListener implements PropertyChangeListener {
         protected PropertyChangeListener delegate;
         protected Set<String> excludePropertiesSet;
@@ -214,4 +228,6 @@ public class PropertyChangeEventSource implements Cleaner {
         }
 
     }
+
+
 }

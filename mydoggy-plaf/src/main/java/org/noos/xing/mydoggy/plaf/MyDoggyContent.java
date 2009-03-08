@@ -38,6 +38,8 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
                           Component component,
                           String toolTipText,
                           Dockable dockableDelegator) {
+        super(((MyDoggyToolWindowManager) contentManager.getToolWindowManager()).getFirePublicEvent());
+
         this.contentManager = contentManager;
         this.id = id;
         this.title = title;

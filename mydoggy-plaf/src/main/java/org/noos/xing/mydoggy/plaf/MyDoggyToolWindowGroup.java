@@ -18,6 +18,7 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
     protected EventListenerList listenerList;
     protected boolean implicit;
     protected boolean tempGroup;
+    protected boolean activeteTool;
 
 
     public MyDoggyToolWindowGroup(MyDoggyToolWindowManager manager, String name, boolean tempGroup) {
@@ -27,6 +28,7 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
         this.listenerList = new EventListenerList();
         this.implicit = false;
         this.tempGroup = tempGroup;
+        this.activeteTool = true;
     }
 
 
@@ -107,7 +109,7 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
                         fireGroupHidden();
                 }
 
-                if (visible && tools.size() > 0)
+                if (activeteTool && visible && tools.size() > 0)
                     tools.get(0).setActive(true);
             }
         }
@@ -138,6 +140,14 @@ public class MyDoggyToolWindowGroup implements ToolWindowGroup {
                '}';
     }
 
+
+    public boolean isActiveteTool() {
+        return activeteTool;
+    }
+
+    public void setActiveteTool(boolean activeteTool) {
+        this.activeteTool = activeteTool;
+    }
 
     protected void fireGroupShown() {
         ToolWindowGroupEvent event = new ToolWindowGroupEvent(manager, ToolWindowGroupEvent.ActionId.GROUP_SHOWN, this);

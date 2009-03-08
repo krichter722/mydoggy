@@ -69,6 +69,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
 
     public MyDoggyToolWindowBar(MyDoggyToolWindowManager manager, JSplitPane splitPane, ToolWindowAnchor anchor) {
+        super(manager.getFirePublicEvent());
+
         this.manager = manager;
         this.splitPane = splitPane;
         if (splitPane instanceof DebugSplitPane)

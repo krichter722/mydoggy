@@ -38,6 +38,8 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
     public MyDoggyToolWindowTab(ToolWindow owner, boolean root,
                                 String title, Icon icon, Component component,
                                 Dockable dockable) {
+        super(((MyDoggyToolWindowManager) owner.getDockableManager()).getFirePublicEvent());
+
         this.root = root;
         this.id = "" + System.nanoTime();
         this.owner = owner;

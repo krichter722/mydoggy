@@ -43,8 +43,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Enumeration;
-import java.util.ResourceBundle;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -111,7 +109,7 @@ public class MyDoggySet {
         long start = System.currentTimeMillis();
         final MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager();
         long end = System.currentTimeMillis();
-        System.out.println("time: " + (end - start));
+        System.out.println("Time (millis) too load the manager : " + (end - start));
 
         this.toolWindowManager = myDoggyToolWindowManager;
 
@@ -120,7 +118,6 @@ public class MyDoggySet {
 
         // Apply now all customization if necessary
         customizeToolWindowManager(myDoggyToolWindowManager);
-
 
         // Init the context
         this.myDoggySetContext = new MyDoggySetContext(toolWindowManager, frame);
@@ -179,26 +176,27 @@ public class MyDoggySet {
 
     protected void initToolWindows() {
         // Register tools
-        JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{20, -1, 20}, {20, -1, 20}}));
-        panel.add(new JButton("Hello World 2"), "1,1,FULL,FULL");
 
         // JXDatePicker panel
+        JPanel toolOnePanel = new JPanel();
+
         final JLabel label = new JLabel();
         label.setText("Choose Date by selecting below.");
-
+        toolOnePanel.add(label, BorderLayout.NORTH);
         final JXDatePicker datePicker = new JXDatePicker(System.currentTimeMillis());
         datePicker.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 label.setText(datePicker.getDate().toString());
             }
         });
-
-        JPanel toolOnePanel = new JPanel();
-        toolOnePanel.add(label, BorderLayout.NORTH);
         toolOnePanel.add(datePicker, BorderLayout.CENTER);
 
         toolWindowManager.registerToolWindow("Tool 1", "Title 1", null, toolOnePanel, ToolWindowAnchor.BOTTOM);
-        toolWindowManager.registerToolWindow("Tool 2", "Title 2", null, panel, ToolWindowAnchor.RIGHT);
+
+        JPanel toolTwoPanel = new JPanel(new ExtendedTableLayout(new double[][]{{20, -1, 20}, {20, -1, 20}}));
+        toolTwoPanel.add(new JButton("Hello World 2"), "1,1,FULL,FULL");
+        toolWindowManager.registerToolWindow("Tool 2", "Title 2", null, toolTwoPanel, ToolWindowAnchor.RIGHT);
+
         toolWindowManager.registerToolWindow("Tool 3", "Title 3", SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/save.png"), new MainPanel(), ToolWindowAnchor.LEFT);
         toolWindowManager.registerToolWindow("Tool 4", "Title 4", null, new JButton("Hello World 4"), ToolWindowAnchor.TOP);
         toolWindowManager.registerToolWindow("Tool 5", "Title 5", null, new JButton("Hello World 5"), ToolWindowAnchor.TOP);
@@ -207,11 +205,11 @@ public class MyDoggySet {
         toolWindowManager.registerToolWindow("Tool 8", "Title 8", null, new JButton("Hello World 8"), ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 9", "Title 9", null, new JButton("Hello World 9"), ToolWindowAnchor.RIGHT);
 
-        JPanel form1 = new JPanel();
-        form1.setFocusCycleRoot(true);
-        form1.add(new JTextField(10));
+        JPanel toolTenPanel = new JPanel();
+        toolTenPanel.setFocusCycleRoot(true);
+        toolTenPanel.add(new JTextField(10));
+        toolWindowManager.registerToolWindow("Tool 10", "Title 10", null, toolTenPanel, ToolWindowAnchor.RIGHT);
 
-        toolWindowManager.registerToolWindow("Tool 10", "Title 10", null, form1, ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 11", "Title 11", null, new JButton("Hello World 11"), ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 12", "Title 12", null, new JButton("Hello World 12"), ToolWindowAnchor.RIGHT);
         toolWindowManager.registerToolWindow("Tool 13", "Title 13", null, new JButton("Hello World 13"), ToolWindowAnchor.RIGHT);
@@ -352,6 +350,7 @@ public class MyDoggySet {
     }
 
     protected void customizeToolWindowManager(MyDoggyToolWindowManager myDoggyToolWindowManager) {
+
 // Setup ContentManagerUI
         toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
 
@@ -388,6 +387,7 @@ public class MyDoggySet {
 */
         resourceManager.putProperty("ContentManagerUI.ContentManagerUiListener.import", "true");
         resourceManager.putBoolean(MyDoggyKeySpace.TOOL_WINDOW_PREVIEW_FULL, true);
+/*
         resourceManager.setUserBundle(new ResourceBundle() {
             protected Object handleGetObject(String key) {
                 if ("Tool 3".equals(key))
@@ -399,6 +399,7 @@ public class MyDoggySet {
                 return null;
             }
         });
+*/
 
 /*
         //TODO: move this property name to a class...
@@ -692,7 +693,7 @@ public class MyDoggySet {
         /**
          * Initialize the main panel
          */
-        private void init() {
+        protected void init() {
             navigatorPanel = new JXTitledPanel("Navigation");
             infoPanel = new JXTitledPanel("Information");
 

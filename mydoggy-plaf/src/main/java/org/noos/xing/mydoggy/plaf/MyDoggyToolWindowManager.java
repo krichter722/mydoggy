@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf;
 
 import info.clearthought.layout.TableLayout;
+import org.noos.common.Question;
 import org.noos.common.context.MutableContext;
 import org.noos.xing.mydoggy.*;
 import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
@@ -45,8 +46,6 @@ import java.util.List;
  * description: MyDoggyToolWindowManager
  */
 public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManager, PropertyChangeListener {
-
-    public static boolean firePublic = true; // TODO: ..This is not so good...
 
     protected final Object sync = new Object();
 
@@ -104,8 +103,12 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected CornerPanel southWestCorner;
     protected CornerPanel southEastCorner;
 
-    private Map<ToolWindow, FloatingLiveWindow> livePanelMap = new HashMap<ToolWindow, FloatingLiveWindow>();
-    private Map<ToolWindow, ModalWindow> modalWindowMap = new HashMap<ToolWindow, ModalWindow>();
+    protected Map<ToolWindow, FloatingLiveWindow> livePanelMap = new HashMap<ToolWindow, FloatingLiveWindow>();
+    protected Map<ToolWindow, ModalWindow> modalWindowMap = new HashMap<ToolWindow, ModalWindow>();
+
+    // Public event support
+    protected boolean firePublic = true;
+    protected Question<Object, Boolean> firePublicEvent; // TODO: extend support to the question...
 
 
     public MyDoggyToolWindowManager() {
@@ -738,6 +741,17 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     }
 
+    public Question<Object, Boolean> getFirePublicEvent() {
+        if (firePublicEvent == null) {
+            firePublicEvent = new Question<Object, Boolean>() {
+                public Boolean getAnswer(Object param) {
+                    return firePublic;
+                }
+            };
+        }
+
+        return firePublicEvent;
+    }
 
     protected void initPersistenceDelegate() {
         this.persistenceDelegate = new XMLPersistenceDelegate(this);
@@ -1469,13 +1483,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         public void propertyChange(final PropertyChangeEvent evt) {
             if (evt.getSource() instanceof ContentManager) {
-                //TODO (+) support request from Elvis...there are focus problem...                
-
                 final MyDoggyToolWindowGroup group = new MyDoggyToolWindowGroup(MyDoggyToolWindowManager.this, "temp", true);
+                group.setActiveteTool(false);
                 for (ToolWindow toolWindow : getToolWindows()) {
                     if (toolWindow.isVisible() && toolWindow.getType() == ToolWindowType.DOCKED)
                         group.addToolWindow(toolWindow);
                 }
+                ToolWindow activeTool = getToolWindow(getActiveToolWindowId());
 
                 if (group.getToolsWindow().length > 0) {
                     try {
@@ -1484,6 +1498,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                         group.setVisible(false);
                         setDockableMainContentMode(!(Boolean) evt.getNewValue());
                         group.setVisible(true);
+                        if (activeTool != null)
+                            activeTool.setActive(true);
                     } finally {
                         firePublic = true;
                     }

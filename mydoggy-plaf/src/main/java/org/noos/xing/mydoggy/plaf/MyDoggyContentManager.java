@@ -29,6 +29,8 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
 
 
     public MyDoggyContentManager(MyDoggyToolWindowManager windowManager) {
+        super(windowManager.getFirePublicEvent());
+
         this.toolWindowManager = windowManager;
         this.contents = new ArrayList<Content>();
         this.contentMap = new HashMap<Object, Content>();
