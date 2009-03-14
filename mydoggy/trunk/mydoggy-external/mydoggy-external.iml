@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module relativePaths="true" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
+    </content>
+    <orderEntry type="jdk" jdkName="1.6" jdkType="JavaSDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="dj">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib/dj/jna-3.0.7.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib/dj/DJNativeSwing-SWTDemo.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib/dj/jna_WindowUtils.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib/dj/MozillaInterfaces-1.8.1.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib/dj/DJNativeSwing-SWT.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib/dj/DJNativeSwing.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module" module-name="mydoggy-api" />
+    <orderEntry type="module" module-name="mydoggy-plaf" />
+    <orderEntry type="module" module-name="mydoggy-res" />
+  </component>
+</module>
+
