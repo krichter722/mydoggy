@@ -1192,14 +1192,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 modalWindow = new ModalFrame(this,
                                              toolWindow,
                                              floatingTypeDescriptor.isAlwaysOnTop()
-                                             ? windowAncestor instanceof Window ? (Window) windowAncestor : null
-                                             : null,
+                                                ? windowAncestor instanceof Window ? (Window) windowAncestor : null
+                                                : null,
                                              floatingTypeDescriptor.isModal());
             } else
                 modalWindow = new ModalDialog(this,
                                               floatingTypeDescriptor.isAlwaysOnTop()
-                                              ? windowAncestor instanceof Window ? (Window) windowAncestor : null
-                                              : null,
+                                                ? windowAncestor instanceof Window ? (Window) windowAncestor : null
+                                                : null,
                                               floatingTypeDescriptor.isModal());
 
             modalWindow.setName("toolWindow.floating.window." + toolWindow.getId());
