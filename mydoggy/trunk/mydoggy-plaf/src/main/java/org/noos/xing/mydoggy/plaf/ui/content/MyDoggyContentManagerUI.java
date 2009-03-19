@@ -281,8 +281,8 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
                     }
                 }
 
-                newSelected.setSelected(true);
                 lastSelected = newSelected;
+                newSelected.setSelected(true);
             }
         }
 

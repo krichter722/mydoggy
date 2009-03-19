@@ -718,7 +718,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
             JPopupMenu popupMenu = contentAt.getPopupMenu();
             if (popupMenu == null)
-                popupMenu = getComponentPopupMenu();
+                popupMenu = toolWindowManager.getContentManager().getPopupMenu();
 
             if (popupMenu == null) {
                 // Init stdPopupMenu

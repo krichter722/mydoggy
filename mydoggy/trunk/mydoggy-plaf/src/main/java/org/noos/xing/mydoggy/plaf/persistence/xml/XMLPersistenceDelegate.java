@@ -332,7 +332,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         public void write(XMLWriter writer, Context context) {
             try {
                 ToolWindow toolWindow = context.get(ToolWindow.class);
-                
+
                 AttributesImpl toolAttributes = new AttributesImpl();
                 toolAttributes.addAttribute(null, "id", null, null, String.valueOf(toolWindow.getId()));
                 toolAttributes.addAttribute(null, "available", null, null, String.valueOf(toolWindow.isAvailable()));
@@ -1586,7 +1586,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                         content = context.get(PersistenceDelegateCallback.class).contentNotFound(context.get(ToolWindowManager.class),
                                                                                                  contentId,
                                                                                                  node.setElement(contentUIElm));
-                    
+
                     if (content != null) {
                         DesktopContentUI desktopContentUI = (DesktopContentUI) content.getContentUI();
                         desktopContentUI.setIconified(getBoolean(context, contentUIElm, "iconified", false));
