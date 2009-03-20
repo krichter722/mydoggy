@@ -24,7 +24,6 @@ import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
-import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowRepresentativeAnchorUI;
 import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTitleBarUI;
@@ -220,21 +219,25 @@ public class MyDoggySet {
             window.setAvailable(true);
         }
 
+        TabbedContentManagerUI contentManagerUI = (TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
+        contentManagerUI.setShowAlwaysTab(true);
+
 //        customizeToolWindows();
     }
 
 
     protected void initContentManager() {
         // Setup ContentManagerUI
-        toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
+//        toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
 
-        MultiSplitContentManagerUI contentManagerUI = (MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
+//        MultiSplitContentManagerUI contentManagerUI = (MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
 //        contentManagerUI.setPopupMenuEnabled(false);
 //        contentManagerUI.setCloseable(false);
 //        contentManagerUI.setDetachable(false);
 //        contentManagerUI.setMinimizable(false);
 //        contentManagerUI.setMaximizable(false);
 
+        TabbedContentManagerUI contentManagerUI = (TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
         contentManagerUI.setShowAlwaysTab(true);
 //        contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
 //        contentManagerUI.setTabLayout(TabbedContentManagerUI.TabLayout.WRAP);
@@ -352,16 +355,16 @@ public class MyDoggySet {
     protected void customizeToolWindowManager(MyDoggyToolWindowManager myDoggyToolWindowManager) {
 
 // Setup ContentManagerUI
-        toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
+//        toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
 
-        MultiSplitContentManagerUI contentManagerUI = (MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
+//        MultiSplitContentManagerUI contentManagerUI = (MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
 //        contentManagerUI.setPopupMenuEnabled(false);
 //        contentManagerUI.setCloseable(false);
 //        contentManagerUI.setDetachable(false);
 //        contentManagerUI.setMinimizable(false);
 //        contentManagerUI.setMaximizable(false);
 
-        contentManagerUI.setShowAlwaysTab(true);
+//        contentManagerUI.setShowAlwaysTab(true);
 //        contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
 //        contentManagerUI.setTabLayout(TabbedContentManagerUI.TabLayout.WRAP);
 //        contentManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
@@ -437,7 +440,7 @@ public class MyDoggySet {
 //        UIManager.put("ToolWindowRepresentativeAnchorUI", "org.noos.xing.mydoggy.mydoggyset.MyDoggySet$CustomToolWindowRepresentativeAnchorUI");
 
         UIManager.put(MyDoggyKeySpace.MODAL_WINDOW_BORDER_LENGTH, 4);
-        UIManager.put(MyDoggyKeySpace.DND_CONTENT_OUTSIDE_FRAME, false);
+        UIManager.put(MyDoggyKeySpace.DND_CONTENT_OUTSIDE_FRAME, true);
 
         UIManager.put(MyDoggyKeySpace.TWRA_ROTATE_ICON_ON_ANCHOR, true);
 

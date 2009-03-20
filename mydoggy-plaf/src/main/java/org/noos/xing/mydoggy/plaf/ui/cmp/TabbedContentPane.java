@@ -984,7 +984,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
                 setGhostImage(dge.getDragOrigin(), image);
             }
 
-            removeTabAt(dragTabIndex);
+//            removeTabAt(dragTabIndex);
         }
 
         public void dragMouseMoved(DragSourceDragEvent dsde) {
@@ -1019,28 +1019,32 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
                     // Finalize drag action...
                     if (lastDropPanel != null) {
                         lastDropPanel.drop(e.getDragSourceContext().getTransferable());
-                    } else if (lastBarAnchor == null  && SwingUtil.getBoolean(MyDoggyKeySpace.DND_CONTENT_OUTSIDE_FRAME, true)) {
-                        // Detach content
+                    } else if (lastBarAnchor == null) {
+                        if (SwingUtil.getBoolean(MyDoggyKeySpace.DND_CONTENT_OUTSIDE_FRAME, true)) {
+                            // Detach content
 
-                        Content content = getContentAt(dragTabIndex);
-                        ContentUI contentUI = content.getContentUI();
+                            Content content = getContentAt(dragTabIndex);
+                            ContentUI contentUI = content.getContentUI();
 
-                        Rectangle bounds = contentUI.getDetachedBounds();
-                        if (bounds != null) {
-                            bounds.setLocation(e.getLocation());
-                        } else {
-                            bounds = new Rectangle();
-                            bounds.setLocation(e.getLocation());
-                            bounds.setSize(toolWindowManager.getBoundsToScreen(content.getComponent().getBounds(),
-                                                                               content.getComponent().getParent()).getSize());
+                            Rectangle bounds = contentUI.getDetachedBounds();
+                            if (bounds != null) {
+                                bounds.setLocation(e.getLocation());
+                            } else {
+                                bounds = new Rectangle();
+                                bounds.setLocation(e.getLocation());
+                                bounds.setSize(toolWindowManager.getBoundsToScreen(content.getComponent().getBounds(),
+                                                                                   content.getComponent().getParent()).getSize());
+                            }
+
+                            contentUI.setDetachedBounds(bounds);
+                            content.setDetached(true);
                         }
-
-                        contentUI.setDetachedBounds(bounds);
-                        content.setDetached(true);
                     } else {
                         // restore content at the same position
-                        addTab(draggingContent, draggingContent.getComponent(), dragTabIndex);
-                        draggingContent.setSelected(true);
+//                        addTab(draggingContent, draggingContent.getComponent(), dragTabIndex);
+//                        draggingContent.setSelected(true);
+                        if (draggingContent != null && dragTabIndex != -1)
+                            setIndex(draggingContent, dragTabIndex);
                     }
                 }   
                 releaseLocksTwo();
