@@ -1020,10 +1020,6 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                 this.oldRoot = getRootComponent();
                 this.oldParent = (DockablePanel) dockable.getComponent().getParent();
 
-//                JPanel panel = new JPanel(new ExtendedTableLayout(new double[][]{{-1},{-1}}));
-//                panel.add(, "0,0,FULL,FULL");
-
-                //   TODO:
                 JComponent panel = (JComponent) forceWrapperForComponent(dockable, dockable.getComponent());
                 panel.setOpaque(true);
                 setRootComponent(panel);
