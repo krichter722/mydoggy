@@ -71,6 +71,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     boolean dockLengthValueAdjusting = false;
     boolean internalFocusValueAdjusting;
     public boolean externalFocusValueAdjusting = false;
+    public static boolean fullExternalFocusValueAdjusting = false;
 
     // Popup menu fiedls
     protected ToolWindowType oldType;
@@ -799,6 +800,14 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         });
     }
 
+    public void disableFullExternalFocusValueAdjustingLater() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                fullExternalFocusValueAdjusting = false;
+            }
+        });
+    }
+
 
     public class ToolWindowDescriptorCleaner extends DefaultCleanerAggregator {
 
@@ -851,7 +860,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            if (!toolWindow.isVisible() || internalFocusValueAdjusting || externalFocusValueAdjusting)
+            if (!toolWindow.isVisible() || internalFocusValueAdjusting || externalFocusValueAdjusting || fullExternalFocusValueAdjusting)
                 return;
 
 //            System.out.println(toolWindow.getId() + " internalFocusValueAdjusting = " + internalFocusValueAdjusting);
@@ -866,7 +875,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
 //            System.out.println(toolWindow.getId() + " - cmp = " + component);
 
             if (parentOf.getAnswer(component)) {
-
                 toolWindow.setActive(true);
                 if (focusRequester == null)
                     focusRequester = component;
@@ -881,10 +889,13 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
                     }
                 }
             } else {
-                getToolBar().deactiveTool(toolWindow);
+                if (toolWindow.isActive()) {
+                    getToolBar().deactiveTool(toolWindow);
+                }
 
-                if (toolWindow.isAutoHide() && toolWindow.getType() != ToolWindowType.EXTERN)
+                if (toolWindow.isAutoHide() && toolWindow.getType() != ToolWindowType.EXTERN) {
                     toolWindow.setVisible(false);
+                }
             }
 
             internalFocusValueAdjusting = false;

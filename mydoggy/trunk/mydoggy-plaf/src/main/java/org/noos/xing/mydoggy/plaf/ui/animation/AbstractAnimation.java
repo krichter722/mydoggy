@@ -114,6 +114,12 @@ public abstract class AbstractAnimation implements ActionListener {
         listenerList.add(AnimationListener.class, animationListener);
     }
 
+    public void removeAnimationListener(AnimationListener animationListener) {
+        if (listenerList == null)
+            return;
+        listenerList.remove(AnimationListener.class, animationListener);
+    }
+
 
     private void startAnimation(Direction direction) {
         synchronized (SYNC) {
