@@ -900,8 +900,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
             final ToolWindowDescriptor descriptor = manager.getDescriptor((ToolWindow) evt.getSource());
             boolean visible = (Boolean) evt.getNewValue();
-            if (visible)
-                descriptor.externalFocusValueAdjusting = true;
+
+            ToolWindowDescriptor.fullExternalFocusValueAdjusting = true;
 
             // Check if we should hide the representative anchor button
             if (descriptor.getTypeDescriptor().isHideRepresentativeButtonOnVisible()) {
@@ -1077,7 +1077,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                 SwingUtil.repaint(splitPane);
             }
 
-            descriptor.disableExternalFocusValueAdjustingLater();
+//            if (visible)
+                descriptor.disableFullExternalFocusValueAdjustingLater();
         }
 
         public void disabledContentManagerPropertyChange(PropertyChangeEvent evt) {
@@ -1086,34 +1087,40 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             ToolWindowDescriptor descriptor = manager.getDescriptor((ToolWindow) evt.getSource());
             boolean visible = (Boolean) evt.getNewValue();
 
-            if (visible) {
-                AggregationPosition aggregationPosition;
-                ToolWindow aggregationOnTool = null;
+            ToolWindowDescriptor.fullExternalFocusValueAdjusting = true;
 
-                if (evt instanceof UserPropertyChangeEvent) {
-                    // Load parameter 
-                    UserPropertyChangeEvent upce = (UserPropertyChangeEvent) evt;
-                    Object[] args = ((Object[]) upce.getUserObject());
+            try {
+                if (visible) {
+                    AggregationPosition aggregationPosition;
+                    ToolWindow aggregationOnTool = null;
 
-                    aggregationPosition = (AggregationPosition) args[1];
-                    aggregationOnTool = (ToolWindow) args[2];
+                    if (evt instanceof UserPropertyChangeEvent) {
+                        // Load parameter
+                        UserPropertyChangeEvent upce = (UserPropertyChangeEvent) evt;
+                        Object[] args = ((Object[]) upce.getUserObject());
+
+                        aggregationPosition = (AggregationPosition) args[1];
+                        aggregationOnTool = (ToolWindow) args[2];
+                    } else
+                        aggregationPosition = AggregationPosition.valueOf(anchor.toString());
+
+    //                if (aggregationOnTool == null)
+    //                    aggregationPosition = AggregationPosition.valueOf(anchor.toString());
+
+
+                    managerDockableContainer.addDockable(descriptor.getToolWindow(),
+                                                         descriptor.getToolWindowPanel(),
+                                                         aggregationOnTool,
+                                                         -1,
+                                                         aggregationPosition
+                    );
                 } else
-                    aggregationPosition = AggregationPosition.valueOf(anchor.toString());
+                    managerDockableContainer.removeDockable(descriptor.getToolWindow());
 
-//                if (aggregationOnTool == null)
-//                    aggregationPosition = AggregationPosition.valueOf(anchor.toString());
-
-
-                managerDockableContainer.addDockable(descriptor.getToolWindow(),
-                                                     descriptor.getToolWindowPanel(),
-                                                     aggregationOnTool,
-                                                     -1,
-                                                     aggregationPosition
-                );
-            } else
-                managerDockableContainer.removeDockable(descriptor.getToolWindow());
-
-            SwingUtil.repaint(managerDockableContainer);
+                SwingUtil.repaint(managerDockableContainer);
+            } finally {
+                descriptor.disableFullExternalFocusValueAdjustingLater();
+            }
         }
 
 
