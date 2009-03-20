@@ -158,17 +158,25 @@ public class FlashingWindowsOnContentRestoreScenario extends JFrame {
             // create content
             addNewContent("" + System.currentTimeMillis());
         }
-        // detach it
-        for (Content content : contentManager.getContents()) {
-            content.setDetached(true);
-        }
-/*
+    }
+
+    @Override
+    public void setVisible(boolean b) {
+        super.setVisible(b);    //To change body of overridden methods use File | Settings | File Templates.
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                // detach it
+                for (Content content : toolWindowManager.getContentManager().getContents()) {
+                    content.setDetached(true);
+                }
         // save
         onSave();
-        for (Content content : contentManager.getContents()) {
-            contentManager.removeContent(content);
+        for (Content content : toolWindowManager.getContentManager().getContents()) {
+            toolWindowManager.getContentManager().removeContent(content);
         }
         // reload it
-        onLoad();*/
+        onLoad();
+            }
+        });
     }
 }
