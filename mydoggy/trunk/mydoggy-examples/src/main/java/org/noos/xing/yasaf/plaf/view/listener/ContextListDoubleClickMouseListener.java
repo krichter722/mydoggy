@@ -19,10 +19,8 @@ public class ContextListDoubleClickMouseListener implements MouseListener {
     }
 
     public void mouseClicked(MouseEvent e) {
-        System.out.println("e = " + e);
-        if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
+        if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2)
             viewContext.put(key, e);
-        }
     }
 
     public void mousePressed(MouseEvent e) {

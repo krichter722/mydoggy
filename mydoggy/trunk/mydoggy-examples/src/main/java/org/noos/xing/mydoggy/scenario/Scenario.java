@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.scenarioset.scenario;
+package org.noos.xing.mydoggy.scenario;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -6,6 +6,8 @@ package org.noos.xing.mydoggy.scenarioset.scenario;
 public interface Scenario {
 
     String getName();
+
+    String getDescription();
 
     void launch();
 

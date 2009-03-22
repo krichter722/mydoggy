@@ -8,26 +8,24 @@
     </properties>
 
     <body>
-        <section name="MyDoggySet">
+        <section name="TutorialSet">
             <table>
                 <tbody>
                     <tr>
                         <td>
-                            <img src="./../images/examples/mydoggyset.png" alt="MyDoggySet" border="0" hspace="18"/>
+                            <img src="./../images/examples/tutorialSet.png" alt="TutorialSet" border="0" hspace="18"/>
                         </td>
                         <td>
                             <p>
-                                MyDoggySet is a sample application to see in action many functionalities of MyDoggy.
-                                You can modify tool window properties, show or hide groups and manage main window's
-                                contents.
+                                TutorialSet is the result of the
+                                <a href="./../tutorial/tutorial.html">tutorial</a>
+                                based on the
+                                <a href="./../mydoggy-plaf/index.html">default implementation</a>
+                                of mydoggy api.
                                 <br/>
                                 Launch
-                                <a href="./jnlp/mydoggyset.jnlp">MyDoggySet</a>
-                                using Java Web Start.
-								<br/>
-								On Windows Platform to see in action the transparency you have to
-								<a href="./../download.html">download</a>
-								a distribution of mydoggy.
+                                <a href="./jnlp/tutorialset.jnlp">TutorialSet</a>
+                                using Java Web Start to see all the tutorial examples.
                             </p>
                         </td>
                     </tr>

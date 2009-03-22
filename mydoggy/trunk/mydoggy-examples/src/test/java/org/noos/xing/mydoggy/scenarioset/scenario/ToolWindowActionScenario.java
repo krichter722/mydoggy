@@ -4,6 +4,7 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+import org.noos.xing.mydoggy.scenario.Scenario;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -30,6 +31,10 @@ public class ToolWindowActionScenario implements Scenario {
                 start();
             }
         });
+    }
+
+    public String getDescription() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     protected void setUp() {
