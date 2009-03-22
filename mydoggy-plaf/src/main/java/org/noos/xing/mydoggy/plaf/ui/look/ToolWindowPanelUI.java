@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
 import info.clearthought.layout.TableLayout;
+import org.noos.xing.mydoggy.ToolWindowTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowPanel;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
@@ -10,11 +11,13 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicPanelUI;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ToolWindowPanelUI extends BasicPanelUI {
+public class ToolWindowPanelUI extends BasicPanelUI implements PropertyChangeListener {
 
     public static ComponentUI createUI(JComponent c) {
         return new ToolWindowPanelUI();
@@ -22,6 +25,7 @@ public class ToolWindowPanelUI extends BasicPanelUI {
 
 
     protected ToolWindowPanel toolWindowPanel;
+    protected TableLayout toolWindowPanelLayout;
 
 
     @Override
@@ -45,8 +49,30 @@ public class ToolWindowPanelUI extends BasicPanelUI {
         super.installDefaults(p);
 
         installComponents();
+        installListeners();
     }
 
+    @Override
+    protected void uninstallDefaults(JPanel p) {
+        super.uninstallDefaults(p);
+
+        uninstallListeners();
+    }
+
+
+    public void propertyChange(PropertyChangeEvent evt) {
+        String propertyName = evt.getPropertyName();
+
+        if ("titleBarVisible".equals(propertyName)) {
+            if (((ToolWindowTypeDescriptor) evt.getSource()).getType() == toolWindowPanel.getToolWindowDescriptor().getToolWindow().getType()) {
+                if ((Boolean) evt.getNewValue()) {
+                    toolWindowPanelLayout.setColumn(0, SwingUtil.getInt("ToolWindowTitleBarUI.length", 16));
+                } else {
+                    toolWindowPanelLayout.setRow(0, 0);
+                }
+            }
+        }
+    }
 
     public void setComponent(Component component) {
         JPanel componentContainer = toolWindowPanel.getComponentContainer();
@@ -68,9 +94,9 @@ public class ToolWindowPanelUI extends BasicPanelUI {
 
 
     protected void installComponents() {
-        toolWindowPanel.setLayout(new ExtendedTableLayout(new double[][]{{TableLayout.FILL},
-                                                                         {SwingUtil.getInt("ToolWindowTitleBarUI.length", 16), TableLayout.FILL}},
-                                                          false));
+        toolWindowPanel.setLayout(toolWindowPanelLayout = new ExtendedTableLayout(new double[][]{{TableLayout.FILL},
+                                                                                                 {SwingUtil.getInt("ToolWindowTitleBarUI.length", 16), TableLayout.FILL}},
+                                                                                  false));
         toolWindowPanel.setBorder(new LineBorder(Color.GRAY, 1, true, 3, 3));
 
         JPanel componentContainer = toolWindowPanel.getComponentContainer();
@@ -82,6 +108,14 @@ public class ToolWindowPanelUI extends BasicPanelUI {
         toolWindowPanel.add(componentContainer, "0,1");
 
         toolWindowPanel.getToolWindowDescriptor().getToolWindow().getToolWindowTabs()[0].setSelected(true);
+    }
+
+    protected void installListeners() {
+        toolWindowPanel.getToolWindowDescriptor().addTypeDescriptorChangePropertyListener(this);
+    }
+
+    protected void uninstallListeners() {
+        toolWindowPanel.getToolWindowDescriptor().removeTypeDescriptorChangePropertyListener(this);
     }
 
 }
