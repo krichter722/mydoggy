@@ -52,6 +52,7 @@ public class ScenarioSet {
         scenarios.add(new LotOfContentScenario());
         scenarios.add(new ForeignIdScenario());
         scenarios.add(new InfiniteLoopFocusScenario());
+        scenarios.add(new DragSingleContentScenario());
     }
 
     protected void start() {

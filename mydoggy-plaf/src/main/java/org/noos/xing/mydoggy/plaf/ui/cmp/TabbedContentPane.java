@@ -718,7 +718,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
 
             JPopupMenu popupMenu = contentAt.getPopupMenu();
             if (popupMenu == null)
-                popupMenu = toolWindowManager.getContentManager().getPopupMenu();
+                popupMenu = getComponentPopupMenu();
 
             if (popupMenu == null) {
                 // Init stdPopupMenu
@@ -900,8 +900,8 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
                         e.dropComplete(true);
                     } else {
                         if (targetIndex >= 0) {
-//                            setIndex(getContentAt(dragTabIndex), targetIndex);
-                            addTab(dragContent, dragContent.getComponent(), targetIndex);
+                            setIndex(getContentAt(dragTabIndex), targetIndex);
+//                            addTab(dragContent, dragContent.getComponent(), targetIndex);
                             dragContent.setSelected(true);
                             e.dropComplete(true);
                         } else
@@ -1064,4 +1064,4 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         }
 
     }
-}                                                       
+}

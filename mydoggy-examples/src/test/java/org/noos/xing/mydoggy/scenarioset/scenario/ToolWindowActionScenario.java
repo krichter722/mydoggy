@@ -80,10 +80,10 @@ public class ToolWindowActionScenario implements Scenario {
 
         // Register a Tool.
         ToolWindow toolWindow = toolWindowManager.registerToolWindow("Debug",                      // Id
-                                             "Debug Tool",                 // Title
-                                             null,                         // Icon
-                                             new JButton("Debug Tool"),    // Component
-                                             ToolWindowAnchor.LEFT);       // Anchor
+                                                                     "Debug Tool",                 // Title
+                                                                     null,                         // Icon
+                                                                     new JButton("Debug Tool"),    // Component
+                                                                     ToolWindowAnchor.LEFT);       // Anchor
 
 
         toolWindow.getTypeDescriptor(DockedTypeDescriptor.class).addToolWindowAction(new CustomAction());

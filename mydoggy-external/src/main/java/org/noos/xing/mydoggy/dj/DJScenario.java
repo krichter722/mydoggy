@@ -12,7 +12,7 @@ import chrriis.dj.nativeswing.swtimpl.NativeInterface;
  *
  * @author Jens
  */
-public class Main
+public class DJScenario
 {
     /**
      * @param args the command line arguments
