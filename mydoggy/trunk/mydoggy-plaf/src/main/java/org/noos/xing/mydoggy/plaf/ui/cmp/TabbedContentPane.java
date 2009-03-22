@@ -63,7 +63,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
     protected DragSource dragSource = new DragSource();
     protected DragListener dragListener;
 
-    protected Point tabPointerLocation = new Point();
+    protected Point tabPointerLocation = new Point(-1, 0);
     protected Image tabPointer;
     protected int dragTabIndex = -1;
     protected int indexAtLocation;
@@ -138,11 +138,6 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             return;
 
         if (pointerVisible && indexAtLocation != -1) {
-            if (getTabPlacement() == JTabbedPane.TOP || getTabPlacement() == JTabbedPane.BOTTOM)
-                initTargetLeftRightLine(indexAtLocation);
-            else
-                initTargetTopBottomLine(indexAtLocation);
-
             g.drawImage(tabPointer, tabPointerLocation.x, tabPointerLocation.y, this);
         }
 
@@ -271,6 +266,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         removeNotifyDragListener.cleanup();
         toolWindowManager.removeRemoveNotifyListener(removeNotifyDragListener);
     }
+
 
     public void setToolWindowManager(MyDoggyToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
@@ -465,7 +461,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         else if (next == getTabCount()) {
             Rectangle rect = getBoundsAt(getTabCount() - 1);
             tabPointerLocation.setLocation(rect.x + rect.width - LINEWIDTH / 2, rect.y);
-        } else if (dragTabIndex == next || next - dragTabIndex == 1) {
+        } else if (dragTabIndex == next) {
             tabPointerLocation.setLocation(-1, 0);
         } else if (next == 0) {
             Rectangle rect = getBoundsAt(0);
@@ -479,11 +475,11 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
     protected void initTargetTopBottomLine(int next) {
         if  (next < 0)
             tabPointerLocation.setLocation(-1, 0);
-        else if (dragTabIndex == next || next - dragTabIndex == 1) {
-            tabPointerLocation.setLocation(-1, 0);
-        } else if (next == getTabCount()) {
+        else if (next == getTabCount()) {
             Rectangle rect = getBoundsAt(getTabCount() - 1);
             tabPointerLocation.setLocation(rect.x, rect.y + rect.height - LINEWIDTH / 2);
+        } else if (dragTabIndex == next) {
+            tabPointerLocation.setLocation(-1, 0);
         } else if (next == 0) {
             Rectangle rect = getBoundsAt(0);
             tabPointerLocation.setLocation(rect.x, 0);

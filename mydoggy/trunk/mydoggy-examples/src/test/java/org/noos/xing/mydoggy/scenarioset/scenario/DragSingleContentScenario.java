@@ -4,6 +4,7 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ContentManager;
 import org.noos.xing.mydoggy.TabbedContentManagerUI;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -41,7 +42,7 @@ public class DragSingleContentScenario implements Scenario {
                 frame.setSize(800, 600);
 
                 frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//                frame.pack();
+                SwingUtil.centrePositionOnScreen(frame);
                 frame.setVisible(true);
             }
         });
