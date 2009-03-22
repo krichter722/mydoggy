@@ -129,6 +129,8 @@ public class ScenarioSet {
         protected void initListeners() {
             viewContext.addViewContextChangeListener("Execute", new ViewContextChangeListener() {
                 public void contextChange(ViewContextChangeEvent evt) {
+                    frame.setState(Frame.ICONIFIED);
+
                     ((Scenario) viewContext.get("Scenario")).launch();
                 }
             });
