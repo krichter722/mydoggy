@@ -47,7 +47,7 @@ public class TutorialSet1 {
     }
 
     public static void main(String[] args) {
-        TutorialSet test = new TutorialSet();
+        TutorialSet1 test = new TutorialSet1();
         try {
             test.setUp();
             test.start();

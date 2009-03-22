@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.scenarioset.scenario;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.scenario.Scenario;
 
 import javax.swing.*;
 
@@ -27,6 +28,10 @@ public class ForeignIdScenario implements Scenario {
         });
     }
 
+
+    public String getDescription() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
     @Override
     public String toString() {

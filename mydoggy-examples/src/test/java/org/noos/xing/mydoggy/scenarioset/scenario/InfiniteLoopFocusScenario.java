@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.scenario.Scenario;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,6 +30,10 @@ public class InfiniteLoopFocusScenario implements Scenario {
                 start();
             }
         });
+    }
+
+    public String getDescription() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     protected void setUp() {

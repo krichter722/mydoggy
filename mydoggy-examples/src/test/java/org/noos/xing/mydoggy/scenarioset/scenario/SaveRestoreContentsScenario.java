@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
+import org.noos.xing.mydoggy.scenario.Scenario;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -40,6 +41,9 @@ public class SaveRestoreContentsScenario implements Scenario {
         });
     }
 
+    public String getDescription() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
     public static void main(String[] args) {
     }

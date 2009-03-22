@@ -1,8 +1,6 @@
-package org.noos.xing.mydoggy.scenarioset;
+package org.noos.xing.mydoggy.scenario;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.scenario.Scenario;
-import org.noos.xing.mydoggy.scenarioset.scenario.*;
 import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.plaf.view.ComponentView;
 import org.noos.xing.yasaf.plaf.view.listener.ContextListDoubleClickMouseListener;
@@ -27,7 +25,12 @@ public class ScenarioSet {
     protected List<Scenario> scenarios;
 
 
-    protected void run() {
+    public ScenarioSet() {
+        scenarios = new ArrayList<Scenario>();
+    }
+
+
+    public void run() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 setUp();
@@ -36,24 +39,13 @@ public class ScenarioSet {
         });
     }
 
-
-    protected void setUp() {
-        initScenarios();
-        initComponents();
+    public void addScenario(Scenario scenario) {
+        scenarios.add(scenario);
     }
 
-    protected void initScenarios() {
-        scenarios = new ArrayList<Scenario>();
 
-        scenarios.add(new OnForBarScenario());
-        scenarios.add(new SaveRestoreContentsScenario());
-        scenarios.add(new ToolWindowActionScenario());
-        scenarios.add(new AllUnpinnedScenario());
-        scenarios.add(new RepresentativeAnchorScenario());
-        scenarios.add(new LotOfContentScenario());
-        scenarios.add(new ForeignIdScenario());
-        scenarios.add(new InfiniteLoopFocusScenario());
-        scenarios.add(new DragSingleContentScenario());
+    protected void setUp() {
+        initComponents();
     }
 
     protected void start() {
@@ -62,7 +54,7 @@ public class ScenarioSet {
 
     protected void initComponents() {
         // Init the frame
-        this.frame = new JFrame("ScenarioSet...");
+        this.frame = new JFrame(getFrameTitle());
         this.frame.setSize(640, 480);
         this.frame.setLocation(100, 100);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -87,27 +79,24 @@ public class ScenarioSet {
 
     }
 
-
-    public static void main(String[] args) {
-        ScenarioSet scenarioSet = new ScenarioSet();
-        try {
-            scenarioSet.run();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    protected String getFrameTitle() {
+        return "ScenarioSet...";
     }
 
+    protected String getScenariosPanelBorderTitle() {
+        return "Scenarios";
+    }
 
     protected class ListScenarioView extends ComponentView {
         protected JList scenariosList;
+        protected JTextArea descriptionArea;
 
         protected Component initComponent() {
             JPanel mainPanel = new JPanel(new TableLayout(new double[][]{{0, -1, 0}, {0, -1, 1, -1, 0}}));
 
-
             // Scenarios Panel
             JPanel scenariosPanel = new JPanel(new TableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
-            scenariosPanel.setBorder(new TitledBorder("Scenarios"));
+            scenariosPanel.setBorder(new TitledBorder(getScenariosPanelBorderTitle()));
 
             scenariosList = new JList(new ListScenarioListModel());
             scenariosList.addListSelectionListener(new ContextPutListSelectionListener(viewContext, "Scenario", scenariosList));
@@ -117,6 +106,7 @@ public class ScenarioSet {
             // Descriptions Panel
             JPanel descriptionsPanel = new JPanel(new TableLayout(new double[][]{{0, -1, 120, 0}, {0, -1, 1, 20, 0}}));
             descriptionsPanel.setBorder(new TitledBorder("Description"));
+            descriptionsPanel.add(new JScrollPane(descriptionArea = new JTextArea()), "1,1,2,1");
             descriptionsPanel.add(new JButton(new ViewContextAction("Execute", null, viewContext, "Execute", "Scenario")), "2,3,FULL,FULL");
 
             mainPanel.add(scenariosPanel, "1,1,FULL,FULL");
@@ -135,6 +125,11 @@ public class ScenarioSet {
                     ((Scenario) viewContext.get("Scenario")).launch();
                 }
             });
+            viewContext.addViewContextChangeListener("Scenario", new ViewContextChangeListener() {
+                public void contextChange(ViewContextChangeEvent evt) {
+                    descriptionArea.setText(((Scenario) viewContext.get("Scenario")).getDescription());
+                }
+            });
         }
 
         protected class ListScenarioListModel extends DefaultListModel {
@@ -144,7 +139,6 @@ public class ScenarioSet {
                     addElement(scenario);
                 }
             }
-
 
         }
 

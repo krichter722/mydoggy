@@ -24,16 +24,19 @@
                         <a href="download.html#usage">MyDoggy Usage</a>
                     </li>
                     <li>
-                        <a href="./mydoggy-examples/mydoggyset.html">MyDoggySet (WebStart)</a>
+                        <a href="./examples/mydoggyset.html">MyDoggySet</a>
                         <small>
-                            <a href="./mydoggy-examples/mydoggysetScreenshots.html">Screenshots</a>,
-                            <img src="./images/new.png" alt=""/>
-                            <a href="./mydoggy-examples/mydoggysetVideos.html">Videos</a>
+                            <a href="./examples/jnlp/mydoggyset.jnlp">WebStart</a>,
+                            <a href="./examples/mydoggysetScreenshots.html">Screenshots</a>,
+                            <a href="./examples/mydoggysetVideos.html">Videos</a>
                         </small>
                     </li>
                     <li>
                         <img src="./images/new.png" alt=""/>
                         <a href="tutorial/tutorial.html">Tutorial</a>
+                        <small>
+                            <a href="./examples/jnlp/tutorials.jnlp">WebStart</a>
+                        </small>
                     </li>
                     <li>
                         <img src="./images/new.png" alt=""/>
@@ -51,7 +54,7 @@
             </div>
 
             <p>
-                <a href="./mydoggy-examples/mydoggyset.html">
+                <a href="./examples/mydoggyset.html">
                     <img src="./images/mydoggy.png" alt="MyDoggy" border="0" hspace="18" align="left"/>
                 </a>
                 MyDoggy is a Java docking framework to be used in cross-platform Swing applications.

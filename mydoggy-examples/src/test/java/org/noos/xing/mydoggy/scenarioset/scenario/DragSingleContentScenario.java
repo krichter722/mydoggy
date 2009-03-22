@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.ContentManager;
 import org.noos.xing.mydoggy.TabbedContentManagerUI;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.scenario.Scenario;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -48,6 +49,9 @@ public class DragSingleContentScenario implements Scenario {
         });
     }
 
+    public String getDescription() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
     public JPanel buildToolBar() {
         double[][] size = {{p, 2, p, 2, p}, {p}};
