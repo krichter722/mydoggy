@@ -17,7 +17,7 @@ public class FlickeringTitlebarsScenario extends JFrame {
 
     public FlickeringTitlebarsScenario() throws HeadlessException {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setSize(500,500);
+        setSize(500, 500);
 
         MyDoggyToolWindowManager mgr = new MyDoggyToolWindowManager();
         getContentPane().add(mgr);

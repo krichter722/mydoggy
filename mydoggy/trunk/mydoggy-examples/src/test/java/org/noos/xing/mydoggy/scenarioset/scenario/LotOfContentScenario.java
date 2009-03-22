@@ -39,7 +39,7 @@ public class LotOfContentScenario implements Scenario {
                 content.add(buildToolWindow(), "0,2");
 
                 frame.getContentPane().add(content);
-                frame.setSize(800,600);
+                frame.setSize(800, 600);
 
                 frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 //                frame.pack();
@@ -90,23 +90,22 @@ public class LotOfContentScenario implements Scenario {
     }
 
     public MyDoggyToolWindowManager buildToolWindow() {
-            this.toolW= new MyDoggyToolWindowManager();
-            ContentManager contentManager = toolW.getContentManager();
+        this.toolW = new MyDoggyToolWindowManager();
+        ContentManager contentManager = toolW.getContentManager();
 
-            MyDoggyMultiSplitContentManagerUI contentUI=new
-    MyDoggyMultiSplitContentManagerUI();
-            this.toolW.getContentManager().setContentManagerUI(contentUI);
+        MyDoggyMultiSplitContentManagerUI contentUI = new MyDoggyMultiSplitContentManagerUI();
+        this.toolW.getContentManager().setContentManagerUI(contentUI);
 
 
-            for (int i=0;i<18;i++) {
-                JPanel pane = new JPanel();
-                //	pane.setPreferredSize(new Dimension(400,400));
-                Content cont = contentManager.addContent("content"+i, "content"+i,
-    null, pane);
-            }
-
-            return this.toolW;
+        for (int i = 0; i < 18; i++) {
+            JPanel pane = new JPanel();
+            //	pane.setPreferredSize(new Dimension(400,400));
+            Content cont = contentManager.addContent("content" + i, "content" + i,
+                                                     null, pane);
         }
+
+        return this.toolW;
+    }
 
 
     private File getFileSelection(String action) {

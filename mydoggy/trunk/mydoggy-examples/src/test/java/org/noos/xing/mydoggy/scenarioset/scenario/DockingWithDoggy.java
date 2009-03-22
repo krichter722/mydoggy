@@ -27,16 +27,16 @@ public class DockingWithDoggy extends JFrame {
 
 // Register a Tool.
         vDockingToolWindow.registerToolWindow("Docking-Demo", // Id
-                "Docking-Demo", // Title
-                null, // Icon
-                createDockablePanel(), ToolWindowAnchor.LEFT); // Anchor
+                                              "Docking-Demo", // Title
+                                              null, // Icon
+                                              createDockablePanel(), ToolWindowAnchor.LEFT); // Anchor
 
         ToolWindow vToolWindow = vDockingToolWindow.getToolWindow(1);
         vToolWindow.getTypeDescriptor(DockedTypeDescriptor.class).setDockLength(250);
         vToolWindow.setVisible(true);
 
         vDockingToolWindow.getContentManager().addContent("Hello World", "Hello World", null,
-                new JLabel("Hello World!"));
+                                                          new JLabel("Hello World!"));
 
 // Make all tools available
         for (ToolWindow window : vDockingToolWindow.getToolWindows()) {
@@ -116,8 +116,8 @@ public class DockingWithDoggy extends JFrame {
 
         int vCounter = 0;
         while ((vCurrentComponent != mFocusStart) && (vCurrentComponent != null) && (vCounter++ < 20)) {
-            System.out.println("NŠchste Komponente: " + vCurrentComponent.getClass() + ", Name: "
-                    + vCurrentComponent.getName());
+            System.out.println("Nï¿½chste Komponente: " + vCurrentComponent.getClass() + ", Name: "
+                               + vCurrentComponent.getName());
             vCurrentComponent = vPolicy.getComponentAfter(vContainer, vCurrentComponent);
         }
     }

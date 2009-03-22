@@ -10,6 +10,6 @@ public class FocusTraversalScenario implements Scenario {
     }
 
     public void launch() {
-        
+
     }
 }

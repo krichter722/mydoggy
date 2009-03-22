@@ -38,8 +38,8 @@ public class ForeignIdScenario implements Scenario {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(640, 480);
 
-        toolWindowManager.registerToolWindow("Param�tres", "Param�tres", null, new JButton("Param�tres"), ToolWindowAnchor.LEFT);
-        toolWindowManager.registerToolWindow("Vue g̩ometrique", "Vue g̩ometrique", null, new JButton("Vue g̩ometrique") , ToolWindowAnchor.LEFT);
+        toolWindowManager.registerToolWindow("Param�tres", "Param�tres", null, new JButton("Param�tres"), ToolWindowAnchor.LEFT);
+        toolWindowManager.registerToolWindow("Vue g̩ometrique", "Vue g̩ometrique", null, new JButton("Vue g̩ometrique"), ToolWindowAnchor.LEFT);
 
         frame.getContentPane().add(toolWindowManager);
     }

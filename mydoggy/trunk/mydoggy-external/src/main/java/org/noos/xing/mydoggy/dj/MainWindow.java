@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.dj;
 import org.noos.xing.mydoggy.ContentManagerUIListener;
 import org.noos.xing.mydoggy.TabbedContentManagerUI;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +40,10 @@ public class MainWindow extends JFrame
         setSize(d.width, d.height);
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+//        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setSize(800,600);
+        SwingUtil.centrePositionOnScreen(this);
+        
         setVisible(true);
     }
 

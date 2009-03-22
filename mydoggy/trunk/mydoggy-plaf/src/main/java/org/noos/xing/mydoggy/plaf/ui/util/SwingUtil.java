@@ -36,7 +36,7 @@ public class SwingUtil {
 
     // Repaint/revalidate support methods
 
-    public static void repaint(final Component component) {       
+    public static void repaint(final Component component) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 component.invalidate();
@@ -399,12 +399,54 @@ public class SwingUtil {
 
     // Bounds and window support methods
 
+    /**
+     * Convert a point from a component's coordinate system to
+     * screen coordinates.
+     *
+     * @param p a Point object (converted to the new coordinate system)
+     * @param c a Component object
+     */
+    public static void convertPointToScreen(Point p, Component c) {
+        if (c == null)
+            return;
+
+        Rectangle b;
+        int x, y;
+
+        do {
+            if (c instanceof JComponent) {
+                x = ((JComponent) c).getX();
+                y = ((JComponent) c).getY();
+            } else if (c instanceof java.applet.Applet ||
+                       c instanceof java.awt.Window) {
+                try {
+                    Point pp = c.getLocationOnScreen();
+                    x = pp.x;
+                    y = pp.y;
+                } catch (IllegalComponentStateException icse) {
+                    x = c.getX();
+                    y = c.getY();
+                }
+            } else {
+                x = c.getX();
+                y = c.getY();
+            }
+
+            p.x += x;
+            p.y += y;
+
+            if (c instanceof java.awt.Window || c instanceof java.applet.Applet)
+                break;
+            c = c.getParent();
+        } while (c != null);
+    }
+
     public static Rectangle getVirtualScreenBounds() {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 //        GraphicsDevice[] gs = ge.getScreenDevices();
 
 //        if (gs.length == 1) {
-            return ge.getMaximumWindowBounds();
+        return ge.getMaximumWindowBounds();
 //        } else {
 //            Rectangle virtualBounds = new Rectangle();
 //
@@ -591,7 +633,7 @@ public class SwingUtil {
         DragEntry dragEntry = dragEntryMap.remove(c);
         if (dragEntry == null)
             return;
-        
+
         dragEntry.dragGestureRecognizer.getDragSource().removeDragSourceMotionListener(dragEntry.dragListener);
         dragEntry.dragGestureRecognizer.removeDragGestureListener(dragEntry.dragListener);
     }
@@ -704,9 +746,9 @@ public class SwingUtil {
 
                 if (c instanceof RootPaneContainer) {
                     try {
-                        JMenuBar menuBar = ((RootPaneContainer)c).getRootPane().getJMenuBar();
+                        JMenuBar menuBar = ((RootPaneContainer) c).getRootPane().getJMenuBar();
                         if (menuBar != null)
-                           y += menuBar.getHeight();
+                            y += menuBar.getHeight();
                     } catch (Exception e) {
                     }
                 }
@@ -779,7 +821,7 @@ public class SwingUtil {
     }
 
     public static ResourceBundle getResourceBundle() {
-        return (ResourceBundle) UIManager.get("mydoggy.resourceBundle"); 
+        return (ResourceBundle) UIManager.get("mydoggy.resourceBundle");
     }
 
     public static String getString(String key) {
@@ -812,7 +854,7 @@ public class SwingUtil {
         return defaultValue;
     }
 
-    public static <T> T getAt(PropertyChangeEvent e , int index, T defaultValue) {
+    public static <T> T getAt(PropertyChangeEvent e, int index, T defaultValue) {
         if (e instanceof UserPropertyChangeEvent) {
             UserPropertyChangeEvent event = (UserPropertyChangeEvent) e;
 
