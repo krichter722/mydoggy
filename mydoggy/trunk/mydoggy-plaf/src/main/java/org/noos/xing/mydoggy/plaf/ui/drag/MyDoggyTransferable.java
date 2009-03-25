@@ -10,11 +10,11 @@ import java.util.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyTransferable implements Transferable, ClipboardOwner {
-    public static final DataFlavor TOOL_WINDOW_MANAGER = new DataFlavor("String/toolWindowManager", "toolWindowManager");
-    public static final DataFlavor TOOL_WINDOW_ID_DF = new DataFlavor("String/toolWindowId", "toolWindowId");
-    public static final DataFlavor TOOL_WINDOW_TAB_ID_DF = new DataFlavor("String/toolWindowTabId", "toolWindowTabId");
-    public static final DataFlavor CONTENT_ID_DF = new DataFlavor("String/contentId", "contentId");
-    public static final DataFlavor CUSTOM_DESCRIPTOR_ID = new DataFlavor("String/customDescriptorId", "customDescriptorId");
+    public static final DataFlavor TOOL_WINDOW_MANAGER = new DataFlavor(DataFlavor.javaSerializedObjectMimeType, "toolWindowManager");
+    public static final DataFlavor TOOL_WINDOW_ID_DF = new DataFlavor(DataFlavor.javaSerializedObjectMimeType, "toolWindowId");
+    public static final DataFlavor TOOL_WINDOW_TAB_ID_DF = new DataFlavor(DataFlavor.javaSerializedObjectMimeType, "toolWindowTabId");
+    public static final DataFlavor CONTENT_ID_DF = new DataFlavor(DataFlavor.javaSerializedObjectMimeType, "contentId");
+    public static final DataFlavor CUSTOM_DESCRIPTOR_ID = new DataFlavor(DataFlavor.javaSerializedObjectMimeType, "customDescriptorId");
 
     protected Map<DataFlavor, Object> map;
     protected List<DataFlavor> supportedFlavors;

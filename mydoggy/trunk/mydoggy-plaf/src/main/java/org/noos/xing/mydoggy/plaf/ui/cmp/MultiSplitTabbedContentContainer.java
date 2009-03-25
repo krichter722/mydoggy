@@ -184,9 +184,7 @@ public class MultiSplitTabbedContentContainer<D extends Dockable> extends MultiS
 
                 if (dockable != null) {
                     dge.startDrag(DragSource.DefaultMoveDrop,
-                                  new MyDoggyTransferable(manager,
-                                                          MyDoggyTransferable.CONTENT_ID_DF,
-                                                          dockable.getId()),
+                                  new MyDoggyTransferable(manager, MyDoggyTransferable.CONTENT_ID_DF, dockable.getId()),
                                   this);
 
                     // Setup ghostImage
@@ -272,7 +270,7 @@ public class MultiSplitTabbedContentContainer<D extends Dockable> extends MultiS
         public boolean dragStart(Transferable transferable, int action) {
             try {
                 if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {
-                    if (System.identityHashCode(toolWindowManager) == (Integer) transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {
+                    if (transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_MANAGER).equals(System.identityHashCode(toolWindowManager))) {
                         if (transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF))
                             return super.dragStart(transferable, action);
                     }

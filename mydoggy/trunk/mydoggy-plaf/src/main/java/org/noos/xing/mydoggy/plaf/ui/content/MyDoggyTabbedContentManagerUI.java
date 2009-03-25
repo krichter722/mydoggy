@@ -934,9 +934,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                 Content content = tabbedContentPane.getContentAt(index);
                 if (content.getDockableDelegator() != null) {
                     dge.startDrag(DragSource.DefaultMoveDrop,
-                                  new MyDoggyTransferable(manager,
-                                                          MyDoggyTransferable.CONTENT_ID_DF,
-                                                          content.getId()),
+                                  new MyDoggyTransferable(manager, MyDoggyTransferable.CONTENT_ID_DF, content.getId()),
                                   this);
 
                     // Setup ghostImage
