@@ -514,7 +514,9 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         }
 
         public void onResizable(PropertyChangeEvent evt) {
-            if (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE && window != null) {
+            if (toolWindow.getType() == ToolWindowType.FLOATING ||
+                toolWindow.getType() == ToolWindowType.FLOATING_FREE &&
+                window != null) {
                 // TODO: what with this...
 //                applyResizableBorder((Boolean) evt.getNewValue(), true);
 //                pack();
