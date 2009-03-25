@@ -229,8 +229,6 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
     }
 
     public synchronized void setSelected(Content content, boolean selected) {
-        System.out.println("content = " + content.getId() + " selected =  " + selected);    // TODO: remove this comment...
-
         if (selected) {
             if (lastSelected != null)
                 lastSelected.setSelected(false);

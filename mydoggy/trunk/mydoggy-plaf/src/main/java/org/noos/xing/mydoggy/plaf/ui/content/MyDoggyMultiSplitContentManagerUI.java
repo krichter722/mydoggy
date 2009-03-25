@@ -1046,7 +1046,6 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
             }
         }
 
-
-    }
+   }
 
 }

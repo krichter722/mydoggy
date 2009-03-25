@@ -297,6 +297,8 @@ public class MultiSplitTabbedContentContainer<D extends Dockable> extends MultiS
                         Content onDockable = (Content) getOnDockable();
                         int onIndex = getOnIndex();
 
+//                        System.out.println("onDockable = " + onDockable + "; onIndex = " + onIndex);
+
                         if (content == onDockable) {
                             if (onIndex == -1) {
                                 rejectDrop = true;
