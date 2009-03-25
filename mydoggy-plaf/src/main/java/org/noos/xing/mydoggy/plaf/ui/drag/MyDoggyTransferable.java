@@ -10,11 +10,11 @@ import java.util.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyTransferable implements Transferable, ClipboardOwner {
-    public static final DataFlavor TOOL_WINDOW_MANAGER = new DataFlavor(Integer.class, "toolWindowManager");
-    public static final DataFlavor TOOL_WINDOW_ID_DF = new DataFlavor(String.class, "toolWindowId");
-    public static final DataFlavor TOOL_WINDOW_TAB_ID_DF = new DataFlavor(String.class, "toolWindowTabId");
-    public static final DataFlavor CONTENT_ID_DF = new DataFlavor(String.class, "contentId");
-    public static final DataFlavor CUSTOM_DESCRIPTOR_ID = new DataFlavor(String.class, "customDescriptorId");
+    public static final DataFlavor TOOL_WINDOW_MANAGER = new MyDoggyDataFlavor(Integer.class, "toolWindowManager");
+    public static final DataFlavor TOOL_WINDOW_ID_DF = new MyDoggyDataFlavor(String.class, "toolWindowId");
+    public static final DataFlavor TOOL_WINDOW_TAB_ID_DF = new MyDoggyDataFlavor(String.class, "toolWindowTabId");
+    public static final DataFlavor CONTENT_ID_DF = new MyDoggyDataFlavor(String.class, "contentId");
+    public static final DataFlavor CUSTOM_DESCRIPTOR_ID = new MyDoggyDataFlavor(String.class, "customDescriptorId");
 
     protected Map<DataFlavor, Object> map;
     protected List<DataFlavor> supportedFlavors;
@@ -64,4 +64,7 @@ public class MyDoggyTransferable implements Transferable, ClipboardOwner {
         map.put(dataFlavor, value);
         supportedFlavors.add(dataFlavor);
     }
+
+
+    
 }
