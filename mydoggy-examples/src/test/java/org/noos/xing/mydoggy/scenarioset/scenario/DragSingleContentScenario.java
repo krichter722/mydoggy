@@ -4,6 +4,7 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ContentManager;
 import org.noos.xing.mydoggy.TabbedContentManagerUI;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.scenario.Scenario;
 
@@ -95,6 +96,9 @@ public class DragSingleContentScenario implements Scenario {
 
     public MyDoggyToolWindowManager buildToolWindow() {
         this.toolW = new MyDoggyToolWindowManager();
+
+        toolW.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
+
         ContentManager contentManager = toolW.getContentManager();
 
         ((TabbedContentManagerUI) contentManager.getContentManagerUI()).setShowAlwaysTab(true);
@@ -116,6 +120,11 @@ public class DragSingleContentScenario implements Scenario {
 
         File selected = fileChooser.getSelectedFile();
         return selected;
+    }
+
+    public static void main(String[] args) {
+        DragSingleContentScenario scenario = new DragSingleContentScenario();
+        scenario.launch();
     }
 
 }

@@ -9,9 +9,9 @@ import java.awt.*;
  */
 public interface MultiDockableOwner extends DockableOwner {
 
-    Dockable getDockableAt(Point point);
+    Dockable getDockable(int index);
 
-    int getDockableIndex();
+    int getDockableIndex(Point point);
 
     void setPointerVisible(boolean visible);
 

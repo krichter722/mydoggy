@@ -104,22 +104,12 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         return null;
     }
 
-    public Dockable getDockableAt(Point point) {
-        indexAtLocation = indexAtLocation(point.x, point.y);
+    public Dockable getDockable(int index) {
+        return getContentAt(index);
+    }
 
-        Dockable onDockable;
-
-        DockableOwner dockableOwner = SwingUtil.getParent(this, DockableOwner.class);
-        if (dockableOwner != null)
-            onDockable = dockableOwner.getDockable();
-        else {
-            if (indexAtLocation != -1)
-                onDockable = ((DockableOwner) getComponentAt(indexAtLocation)).getDockable();
-            else
-                onDockable = ((DockableOwner) getComponentAt(0)).getDockable();
-        }
-
-        return onDockable;
+    public int getDockableIndex(Point point) {
+        return indexAtLocation(point.x, point.y);
     }
 
     public int getDockableIndex() {
@@ -368,6 +358,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         try {
             int index = indexOfContent(content);
             if (index != -1) {
+                content.setSelected(false);
                 removeTabAt(index);
                 addTab(content, content.getComponent(), newIndex);
             }
@@ -897,8 +888,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
                     } else {
                         if (targetIndex >= 0) {
                             setIndex(getContentAt(dragTabIndex), targetIndex);
-//                            addTab(dragContent, dragContent.getComponent(), targetIndex);
-                            dragContent.setSelected(true);
+
                             e.dropComplete(true);
                         } else
                             e.dropComplete(false);

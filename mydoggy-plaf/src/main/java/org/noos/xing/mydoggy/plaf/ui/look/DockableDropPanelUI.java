@@ -140,12 +140,8 @@ public class DockableDropPanelUI extends BasicPanelUI {
                             if (oldMultiDockableOwner != null && oldMultiDockableOwner != multiDockableOwner)
                                 oldMultiDockableOwner.setPointerVisible(false);
 
-                            onDockable = multiDockableOwner.getDockableAt(
-                                    SwingUtilities.convertPoint(dockableDropPanel,
-                                                                new Point(mouseLocation),
-                                                                onDockableContainer));
-
-                            onIndex = multiDockableOwner.getDockableIndex();
+                            onIndex = multiDockableOwner.getDockableIndex(mouseLocation);
+                            onDockable = multiDockableOwner.getDockable(onIndex);
 
                             multiDockableOwner.setPointerVisible(true);
 
