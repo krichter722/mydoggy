@@ -171,9 +171,7 @@ public class RepresentativeAnchorDragListener extends DragListenerAdapter {
 
 
     protected Transferable createTransferable() {
-        return new MyDoggyTransferable(manager,
-                                       MyDoggyTransferable.CUSTOM_DESCRIPTOR_ID,
-                                       descriptor.getDockable().getId()
+        return new MyDoggyTransferable(manager, MyDoggyTransferable.CUSTOM_DESCRIPTOR_ID, descriptor.getDockable().getId()
         );
     }
 

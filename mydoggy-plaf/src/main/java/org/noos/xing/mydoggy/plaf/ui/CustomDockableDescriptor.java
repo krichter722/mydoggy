@@ -220,9 +220,7 @@ public abstract class CustomDockableDescriptor implements DockableDescriptor {
         }
 
         protected Transferable createTransferable() {
-            return new MyDoggyTransferable(manager,
-                                           MyDoggyTransferable.CUSTOM_DESCRIPTOR_ID,
-                                           id);
+            return new MyDoggyTransferable(manager, MyDoggyTransferable.CUSTOM_DESCRIPTOR_ID, id);
         }
     }
 

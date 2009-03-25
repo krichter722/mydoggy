@@ -827,17 +827,18 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         private final DataFlavor FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, TRANSFERABLE_NAME);
 
         public Object getTransferData(DataFlavor flavor) {
-            return TabbedContentPane.this;
+            if (isDataFlavorSupported(flavor))
+                return TabbedContentPane.this;
+            
+            throw new IllegalArgumentException("Invalid data flavor!!!");
         }
 
         public DataFlavor[] getTransferDataFlavors() {
-            DataFlavor[] f = new DataFlavor[1];
-            f[0] = this.FLAVOR;
-            return f;
+            return new DataFlavor[]{this.FLAVOR};
         }
 
         public boolean isDataFlavorSupported(DataFlavor flavor) {
-            return flavor.getHumanPresentableName().equals(TRANSFERABLE_NAME);
+            return TRANSFERABLE_NAME.equals(flavor.getHumanPresentableName());
         }
     }
 
@@ -947,9 +948,7 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
             draggingContent = getContentAt(dragTabIndex);
 
             dge.startDrag(DragSource.DefaultMoveDrop,
-                          new MyDoggyTransferable(manager,
-                                                  MyDoggyTransferable.CONTENT_ID_DF,
-                                                  draggingContent.getId()),
+                          new MyDoggyTransferable(manager, MyDoggyTransferable.CONTENT_ID_DF, draggingContent.getId()),
                           this);
 
             // Setup ghostImage
