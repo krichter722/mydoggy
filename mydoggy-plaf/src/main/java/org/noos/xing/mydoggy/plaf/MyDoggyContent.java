@@ -273,6 +273,10 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
             firePlafPropertyChangeEvent("ensureVisible", null, this);
     }
 
+    public boolean isVisible() {
+        return true;
+    }
+
     public ContentUI getContentUI() {
         if (contentManager == null)
             return null;

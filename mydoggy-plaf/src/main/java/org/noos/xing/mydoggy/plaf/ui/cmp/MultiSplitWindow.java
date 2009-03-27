@@ -26,6 +26,9 @@ public interface MultiSplitWindow<D extends Dockable> {
 
     boolean containsDockable(D dockable);
 
-    Object getModel();
+    
+    Object getMultiSplitLayout();
+
+    void setMultiSplitLayout(Object model);
 
 }

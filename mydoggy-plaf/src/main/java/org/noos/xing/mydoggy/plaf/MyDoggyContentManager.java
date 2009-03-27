@@ -44,6 +44,10 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
         return getContents();
     }
 
+    public Content getDockable(String id) {
+        return getContent(id);
+    }
+
     public void addAlias(Content content, Object alias) {
         if (contentMap.containsKey(alias))
             throw new IllegalArgumentException("There is a content whose id is the passed alias. Cannot add that alias.");

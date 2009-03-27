@@ -702,7 +702,7 @@ public class MyDoggySet {
 
 
             double size[][] = {{TableLayoutConstants.FILL}, // Columns
-                    {20, 20, 20, 20, TableLayoutConstants.FILL}}; // Rows
+                    {25, 25, 25, 25, TableLayoutConstants.FILL}}; // Rows
             infoPanel.setLayout(new TableLayout(size));
             infoPanel.add(new JTextField("textfield1"), "0,0");
             infoPanel.add(new JTextField("textfield2"), "0,1");
