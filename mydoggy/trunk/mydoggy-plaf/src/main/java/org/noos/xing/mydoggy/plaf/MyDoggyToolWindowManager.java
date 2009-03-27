@@ -137,6 +137,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return getToolWindows();
     }
 
+    public ToolWindow getDockable(String id) {
+        return getToolWindow(id);
+    }
+
     public void addAlias(ToolWindow toolWindow, Object alias) {
         if (tools.containsKey(alias))
             throw new IllegalArgumentException("There is a tool whose id is the passed alias. Cannot add that alias.");

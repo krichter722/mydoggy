@@ -187,4 +187,13 @@ public interface Dockable<M extends DockableManager> extends Observable {
      * @since 1.4.2
      */
     void ensureVisible();
+
+    /**
+     * TODO
+     * @return
+     * @since 1.4.0
+     */
+    boolean isVisible();
+
+
 }

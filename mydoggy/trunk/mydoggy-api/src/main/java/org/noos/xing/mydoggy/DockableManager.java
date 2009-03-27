@@ -16,7 +16,15 @@ public interface DockableManager<D extends Dockable> {
      * @since 1.5.0
      */
     D[] getDockables();
-    
+
+    /**
+     * TODO
+     * @param id
+     * @return
+     * @since 1.5.0
+     */
+    D getDockable(String id);
+
     /**
      * Associates the specified dockable with the specified alias in this manager.
      * If the manager previously contained a mapping for this alias, the old dockable is replaced

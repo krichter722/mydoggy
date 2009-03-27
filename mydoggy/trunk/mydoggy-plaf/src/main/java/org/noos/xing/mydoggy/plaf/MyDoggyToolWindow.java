@@ -84,6 +84,10 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         return getToolWindowTabs();
     }
 
+    public ToolWindowTab getDockable(String id) {
+        throw new RuntimeException("Cannot call this method!!!");
+    }
+
     public void addAlias(ToolWindowTab toolWindowTab, Object alias) {
         if (aliases == null)
             this.aliases = new HashMap<Object, ToolWindowTab>();

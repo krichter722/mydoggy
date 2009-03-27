@@ -1,8 +1,7 @@
 package org.noos.xing.mydoggy.plaf.persistence.xml.merge;
 
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowType;
-import org.w3c.dom.Element;
+import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.plaf.persistence.xml.SharedWindows;
 
 import javax.swing.*;
 
@@ -11,8 +10,8 @@ import javax.swing.*;
  */
 public class ResetMergePolicy implements MergePolicyApplier {
 
-    public void applyToolWindow(final ToolWindow toolWindow, Element toolElement) {
-        boolean visible = Boolean.parseBoolean(toolElement.getAttribute("visible"));
+    public void applyToolWindow(final ToolWindow toolWindow, PersistenceDelegateCallback.PersistenceNode toolNode, SharedWindows sharedWindows) {
+        boolean visible = toolNode.getBoolean("visible", toolWindow.isVisible());
 
         if (toolWindow.getType() == ToolWindowType.FLOATING || 
             toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
@@ -25,9 +24,20 @@ public class ResetMergePolicy implements MergePolicyApplier {
                         toolWindow.setVisible(true);
                     }
                 });
-            } else
-                toolWindow.setVisible(visible);
+            } else {
+                if (visible) {
+                    if (sharedWindows.isInSharedWindow(toolWindow)) {
+                        Dockable refDockable = sharedWindows.getRefDockable(toolWindow);
 
+                        if (refDockable != null)
+                            toolWindow.aggregateByReference((ToolWindow) refDockable, AggregationPosition.DEFAULT);
+                        else
+                            toolWindow.setVisible(visible);
+                    } else
+                        toolWindow.setVisible(visible);
+                } else
+                    toolWindow.setVisible(visible);
+            }
         } else {
             if (visible)
                 toolWindow.aggregate();

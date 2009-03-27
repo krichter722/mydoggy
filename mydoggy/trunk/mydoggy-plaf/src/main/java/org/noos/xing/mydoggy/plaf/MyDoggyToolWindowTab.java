@@ -229,6 +229,10 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
             firePlafPropertyChangeEvent("ensureVisible", null, this);
     }
 
+    public boolean isVisible() {
+        return isSelected();
+    }
+
     public Dockable getDockableDelegator() {
         return dockable;
     }
