@@ -212,11 +212,11 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
 
     public Object getLayout() {
-        return multiSplitDockableContainer.getModel();
+        return multiSplitDockableContainer.getMultiSplitLayout();
     }
 
     public void setLayout(Object layout) {
-        multiSplitDockableContainer.setModel((MultiSplitLayout.Node) layout);
+        multiSplitDockableContainer.setMultiSplitLayout((MultiSplitLayout.Node) layout);
     }
 
     public Container getContainer() {

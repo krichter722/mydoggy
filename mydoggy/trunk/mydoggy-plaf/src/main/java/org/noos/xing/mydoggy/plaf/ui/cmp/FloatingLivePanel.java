@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -29,7 +30,7 @@ public class FloatingLivePanel extends TranslucentPanel implements FloatingLiveW
     protected JLayeredPane layeredPane;
 
     protected DockableDropPanel dockableDropPanel;
-    protected MultiSplitDockableContainer multiSplitDockableContainer;
+    protected MultiSplitDockableContainer<ToolWindow> multiSplitDockableContainer;
 
     protected TransparencyAnimation animation;
     protected Timer timer;
@@ -103,6 +104,7 @@ public class FloatingLivePanel extends TranslucentPanel implements FloatingLiveW
         layout.setRow(2, 2);
     }
 
+
     public void addDockable(ToolWindow toolWindow,
                             Component content) {
         addDockable(toolWindow, content, null, AggregationPosition.DEFAULT);
@@ -127,6 +129,31 @@ public class FloatingLivePanel extends TranslucentPanel implements FloatingLiveW
             toolWindow.removePropertyChangeListener(this);
         }
     }
+
+    public int getDockableCount() {
+        return multiSplitDockableContainer.getDockableCount();
+    }
+
+    public ToolWindow getDockable() {
+        return (ToolWindow) multiSplitDockableContainer.getDockableEntries().get(0).dockable;
+    }
+
+    public List<ToolWindow> getDockables() {
+        return multiSplitDockableContainer.getDockables();
+    }
+
+    public boolean containsDockable(ToolWindow toolWindow) {
+        return multiSplitDockableContainer.containsDockable(toolWindow);
+    }
+
+    public Object getMultiSplitLayout() {
+        return multiSplitDockableContainer.getMultiSplitLayout();
+    }
+
+    public void setMultiSplitLayout(Object model) {
+        multiSplitDockableContainer.setMultiSplitLayout((MultiSplitLayout.Node) model);
+    }
+
 
     public void mount() {
         if (getParent() == layeredPane)

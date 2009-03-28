@@ -288,13 +288,13 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
 
     public Object getLayout() {
-        return multiSplitContainer.getModel();
+        return multiSplitContainer.getMultiSplitLayout();
     }
 
     public void setLayout(final Object layout) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                multiSplitContainer.setModel((MultiSplitLayout.Node) layout);
+                multiSplitContainer.setMultiSplitLayout((MultiSplitLayout.Node) layout);
             }
         });
     }

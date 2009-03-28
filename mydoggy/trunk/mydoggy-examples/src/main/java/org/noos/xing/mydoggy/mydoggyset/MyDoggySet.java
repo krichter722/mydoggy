@@ -462,9 +462,18 @@ public class MyDoggySet {
     public static void main(String[] args) {
         MyDoggySet test = new MyDoggySet();
         try {
-            test.run(null);
+//            test.run(null);
 //            test.run(new MultiSplitRandomConstraints(test));
 //            test.run(new TabbedRandomConstraints(test));
+            test.run(new Runnable() {
+                public void run() {
+                    KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", new PropertyChangeListener() {
+                        public void propertyChange(PropertyChangeEvent evt) {
+                            System.out.println("focusOwner = " + evt.getNewValue());
+                        }
+                    });
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -698,16 +707,17 @@ public class MyDoggySet {
          */
         protected void init() {
             navigatorPanel = new JXTitledPanel("Navigation");
-            infoPanel = new JXTitledPanel("Information");
 
 
+            JPanel jPanel = new JPanel();
             double size[][] = {{TableLayoutConstants.FILL}, // Columns
                     {25, 25, 25, 25, TableLayoutConstants.FILL}}; // Rows
-            infoPanel.setLayout(new TableLayout(size));
-            infoPanel.add(new JTextField("textfield1"), "0,0");
-            infoPanel.add(new JTextField("textfield2"), "0,1");
-            infoPanel.add(new JTextField("textfield3"), "0,2");
-            infoPanel.add(new JTextField("textfield4"), "0,3");
+            jPanel.setLayout(new TableLayout(size));
+            jPanel.add(new JTextField("textfield1"), "0,0");
+            jPanel.add(new JTextField("textfield2"), "0,1");
+            jPanel.add(new JTextField("textfield3"), "0,2");
+            jPanel.add(new JTextField("textfield4"), "0,3");
+            infoPanel = new JXTitledPanel("Information", jPanel);
 
 
             JSplitPane mainSP = createSplitPane(200, JSplitPane.HORIZONTAL_SPLIT);

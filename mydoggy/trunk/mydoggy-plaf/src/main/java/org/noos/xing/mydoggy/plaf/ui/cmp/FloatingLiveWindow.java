@@ -1,6 +1,5 @@
 package org.noos.xing.mydoggy.plaf.ui.cmp;
 
-import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.ToolWindow;
 
 import java.awt.*;
@@ -8,21 +7,12 @@ import java.awt.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public interface FloatingLiveWindow {
+public interface FloatingLiveWindow extends MultiSplitWindow<ToolWindow> {
     
     void resetLayout();
 
     void setLayout();
 
-    void addDockable(ToolWindow toolWindow,
-                            Component content);
-
-    void addDockable(ToolWindow toolWindow,
-                                                    Component content,
-                                                    ToolWindow aggregationOnDockable,
-                                                    AggregationPosition aggregationPosition);
-
-    void removeDockable(ToolWindow toolWindow);
 
     void mount();
 
