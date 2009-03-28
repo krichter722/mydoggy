@@ -97,7 +97,7 @@ public class ContentFrame extends JFrame implements ContentWindow {
     }
 
     public Object getMultiSplitLayout() {
-        return multiSplitDockableContainer.getModel();
+        return multiSplitDockableContainer.getMultiSplitLayout();
     }
 
     public List<Content> getDockables() {
@@ -105,7 +105,7 @@ public class ContentFrame extends JFrame implements ContentWindow {
     }
 
     public void setMultiSplitLayout(Object model) {
-        multiSplitDockableContainer.setModel((MultiSplitLayout.Node) model);
+        multiSplitDockableContainer.setMultiSplitLayout((MultiSplitLayout.Node) model);
     }
 
     

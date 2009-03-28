@@ -406,7 +406,7 @@ public class MultiSplitDockableContainer<D extends Dockable> extends JPanel {
 
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        setModel(decodedModel);
+                        setMultiSplitLayout(decodedModel);
                     }
                 });
             } else {
@@ -807,11 +807,11 @@ public class MultiSplitDockableContainer<D extends Dockable> extends JPanel {
     }
 
 
-    public Node getModel() {
+    public Node getMultiSplitLayout() {
         return multiSplitPaneModelRoot;
     }
 
-    public void setModel(Node root) {
+    public void setMultiSplitLayout(Node root) {
         if (root == null)
             return;
 

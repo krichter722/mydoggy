@@ -101,11 +101,11 @@ public class ContentDialog extends JDialog implements ContentWindow {
     }
 
     public Object getMultiSplitLayout() {
-        return multiSplitDockableContainer.getModel();
+        return multiSplitDockableContainer.getMultiSplitLayout();
     }
 
     public void setMultiSplitLayout(Object model) {
-        multiSplitDockableContainer.setModel((MultiSplitLayout.Node) model);
+        multiSplitDockableContainer.setMultiSplitLayout((MultiSplitLayout.Node) model);
     }
 
 

@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.DockableManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitWindow;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -61,11 +62,20 @@ public class SharedWindows {
         return null;
     }
 
-    public void applyLayout() {
-        for (SharedWindowEntry sharedWindowEntry : sharedWindows) {
+    public void applyLayouts() {
+        for (final SharedWindowEntry sharedWindowEntry : sharedWindows) {
             // Get the window for the entry
-            MultiSplitWindow multiSplitWindow = (MultiSplitWindow) SwingUtilities.getWindowAncestor(dockableManager.getDockable(sharedWindowEntry.ids[0]).getComponent());
-            multiSplitWindow.setMultiSplitLayout(sharedWindowEntry.node);
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            MultiSplitWindow multiSplitWindow = SwingUtil.getParent(dockableManager.getDockable(sharedWindowEntry.ids[0]).getComponent(), MultiSplitWindow.class);
+                            if (multiSplitWindow != null)
+                                multiSplitWindow.setMultiSplitLayout(sharedWindowEntry.node);
+                        }
+                    });
+                }
+            });
         }
     }
 

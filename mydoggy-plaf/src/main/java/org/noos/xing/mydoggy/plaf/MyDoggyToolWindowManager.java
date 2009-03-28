@@ -1186,6 +1186,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         livePanelMap.remove(toolWindow);
     }
 
+    public Map<ToolWindow, FloatingLiveWindow> getLivePanelMap() {
+        return livePanelMap;
+    }
+
     public ModalWindow getModalWindow(ToolWindow toolWindow) {
         ModalWindow modalWindow = modalWindowMap.get(toolWindow);
 
@@ -1216,13 +1220,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return modalWindow;
     }
 
+    public void removeModalWindow(ToolWindow toolWindow) {
+        modalWindowMap.remove(toolWindow);
+    }
+
     public Map<ToolWindow, ModalWindow> getModalWindowMap() {
         return modalWindowMap;
     }
 
-    public void removeModalWindow(ToolWindow toolWindow) {
-        modalWindowMap.remove(toolWindow);
-    }
 
 
     public class AvailablePropertyChangeListener implements PropertyChangeListener {

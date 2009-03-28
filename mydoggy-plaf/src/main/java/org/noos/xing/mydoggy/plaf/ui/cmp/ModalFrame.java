@@ -282,11 +282,11 @@ public class ModalFrame extends JFrame implements ModalWindow,
     }
 
     public Object getMultiSplitLayout() {
-        return multiSplitDockableContainer.getModel();
+        return multiSplitDockableContainer.getMultiSplitLayout();
     }
 
     public void setMultiSplitLayout(Object model) {
-        multiSplitDockableContainer.setModel((MultiSplitLayout.Node) model);
+        multiSplitDockableContainer.setMultiSplitLayout((MultiSplitLayout.Node) model);
     }
 
     
