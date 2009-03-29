@@ -607,7 +607,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     }
 
     public void removeFloatingLivePanel() {
-        manager.removeFloatingLivePanel(toolWindow);
+        manager.removeFloatingLiveWindow(toolWindow);
     }
 
     public FloatingLiveWindow getFloatingLivePanel() {
@@ -615,11 +615,11 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     }
 
     public void removeModalWindow() {
-        manager.removeModalWindow(toolWindow);
+        manager.removeFloatingWindow(toolWindow);
     }
 
     public FloatingWindow getModalWindow() {
-        return manager.getModalWindow(toolWindow);
+        return manager.getFloatingWindow(toolWindow);
     }
 
     public Rectangle getScreenWindowBounds() {
