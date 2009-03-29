@@ -46,7 +46,7 @@ public class TutorialSet9 {
         this.frame = new JFrame("Sample App...");
         this.frame.setSize(640, 480);
         this.frame.setLocation(100, 100);
-        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // Create a simple JMenuBar
         JMenuBar menuBar = new JMenuBar();
