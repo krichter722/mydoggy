@@ -163,9 +163,17 @@ public interface RepresentativeAnchorDescriptor<D extends Dockable> extends Obse
      */
     boolean containsLockingAnchor(ToolWindowAnchor anchor);
 
+
+    /**
+     *
+     * @since 1.5.0
+     */
+    void ensureVisible();
+
     /**
      * TODO: not implemented yet!
      * @param message
+     * @since 1.5.0
      */
     void showMessage(String message);
 
