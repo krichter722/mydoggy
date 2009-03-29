@@ -6,6 +6,16 @@
         <title>My Java Docking Framework : Statistics</title>
         <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
     </properties>
+    <head>
+        <script type="text/javascript" xml:space="preserve">
+            var time=new Date();
+            var year=time.getYear();
+            if (year &lt; 2000)
+                year = year + 1900;
+            var month = time.getMonth() + 1;
+            var today = year + "-" + month + "-" + time.getDate();
+        </script>
+    </head>
 
     <body>
         <section name="Statistics">
