@@ -23,13 +23,14 @@ public class InfiniteLoopFocusScenario implements Scenario {
         return this.getClass().getName();
     }
 
-    public void launch() {
+    public Window launch() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 setUp();
                 start();
             }
         });
+        return frame;
     }
 
     public String getDescription() {

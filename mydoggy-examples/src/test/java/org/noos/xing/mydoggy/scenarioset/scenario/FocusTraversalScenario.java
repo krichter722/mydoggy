@@ -2,6 +2,8 @@ package org.noos.xing.mydoggy.scenarioset.scenario;
 
 import org.noos.xing.mydoggy.scenario.Scenario;
 
+import java.awt.*;
+
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
@@ -15,7 +17,7 @@ public class FocusTraversalScenario implements Scenario {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void launch() {
-
+    public Window launch() {
+        return null;
     }
 }

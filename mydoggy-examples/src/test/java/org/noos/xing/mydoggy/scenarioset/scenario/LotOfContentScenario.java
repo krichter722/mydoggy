@@ -8,6 +8,7 @@ import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.noos.xing.mydoggy.scenario.Scenario;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -34,7 +35,7 @@ public class LotOfContentScenario implements Scenario {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void launch() {
+    public Window launch() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 double size[][] = {{f}, {p, 2, f}};
@@ -51,6 +52,7 @@ public class LotOfContentScenario implements Scenario {
                 frame.setVisible(true);
             }
         });
+        return frame;
     }
 
 

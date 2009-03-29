@@ -7,6 +7,7 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.scenario.Scenario;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -21,13 +22,14 @@ public class OnForBarScenario implements Scenario {
         return this.getClass().getName();
     }
 
-    public void launch() {
+    public Window launch() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 setUp();
                 start();
             }
         });
+        return frame;
     }
 
     public String getDescription() {

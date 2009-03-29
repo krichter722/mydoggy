@@ -6,6 +6,7 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.scenario.Scenario;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -19,13 +20,14 @@ public class ForeignIdScenario implements Scenario {
         return this.getClass().getName();
     }
 
-    public void launch() {
+    public Window launch() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 setUp();
                 start();
             }
         });
+        return frame;
     }
 
 

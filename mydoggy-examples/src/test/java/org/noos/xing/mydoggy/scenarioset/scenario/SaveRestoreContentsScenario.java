@@ -8,6 +8,7 @@ import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.noos.xing.mydoggy.scenario.Scenario;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -32,13 +33,14 @@ public class SaveRestoreContentsScenario implements Scenario {
         return this.getClass().getName();
     }
 
-    public void launch() {
+    public Window launch() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 setUp();
                 start();
             }
         });
+        return frame;
     }
 
     public String getDescription() {

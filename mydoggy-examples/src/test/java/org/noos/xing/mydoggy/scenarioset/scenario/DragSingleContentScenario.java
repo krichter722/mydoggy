@@ -9,6 +9,7 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.noos.xing.mydoggy.scenario.Scenario;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -31,7 +32,7 @@ public class DragSingleContentScenario implements Scenario {
         return DragSingleContentScenario.class.getName();
     }
 
-    public void launch() {
+    public Window launch() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 double size[][] = {{f}, {p, 2, f}};
@@ -48,6 +49,7 @@ public class DragSingleContentScenario implements Scenario {
                 frame.setVisible(true);
             }
         });
+        return frame;
     }
 
     public String getDescription() {
