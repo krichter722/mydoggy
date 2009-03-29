@@ -1,0 +1,29 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>My Java Docking Framework : Statistics</title>
+        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+    </properties>
+
+    <body>
+        <section name="Statistics">
+            <subsection name="Last Visits Graph">
+                <div id="widgetIframe1">
+                    <iframe width="100%" height="180"
+                            src="https://apps.sourceforge.net/piwik/mydoggy/index.php?module=Widgetize&amp;action=iframe&amp;moduleToWidgetize=VisitsSummary&amp;actionToWidgetize=getLastVisitsGraph&amp;idSite=1&amp;period=day&amp;date=2009-03-29&amp;disableLink=1"
+                            scrolling="no" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+                </div>
+            </subsection>
+
+            <subsection name="Visitor Countries">
+                <div id="widgetIframe2">
+                    <iframe width="100%" height="280"
+                            src="https://apps.sourceforge.net/piwik/mydoggy/index.php?module=Widgetize&amp;action=iframe&amp;moduleToWidgetize=UserCountry&amp;actionToWidgetize=getCountry&amp;idSite=1&amp;period=year&amp;date=2009-03-29&amp;disableLink=1"
+                            scrolling="no" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+                </div>
+            </subsection>
+        </section>
+    </body>
+</document>

@@ -20,6 +20,7 @@
             <item name="Build Howto" href="buildHowto.html"/>
             <item name="Contact" href="contact.html"/>
             <item img="/images/new.png" name="Tutorial" href="/tutorial/tutorial.html"/>
+            <item img="/images/new.png" name="Statistics" href="statistics.html"/>
         </menu>
 
         <menu name="Demos">
