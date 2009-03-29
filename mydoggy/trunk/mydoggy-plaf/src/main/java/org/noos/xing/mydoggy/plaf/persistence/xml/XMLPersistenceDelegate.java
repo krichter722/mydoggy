@@ -16,9 +16,13 @@ import org.noos.xing.mydoggy.plaf.persistence.xml.merge.MergePolicyApplier;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.ResetMergePolicy;
 import org.noos.xing.mydoggy.plaf.persistence.xml.merge.UnionMergePolicy;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
-import org.noos.xing.mydoggy.plaf.ui.cmp.*;
+import org.noos.xing.mydoggy.plaf.ui.cmp.DockableDropPanel;
+import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitDockableContainer;
+import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitLayout;
+import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitWindow;
 import org.noos.xing.mydoggy.plaf.ui.content.ContentDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -164,6 +168,35 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         }
     }
 
+    protected void storeMultiSplitWindow(XMLWriter writer, MultiSplitWindow<? extends Dockable> sharedWindow) {
+        if (sharedWindow.getDockableCount() > 1) {
+            try {
+                writer.startElement("sharedWindow");
+                for (Dockable dockable : sharedWindow.getDockables()) {
+                    AttributesImpl attributes = new AttributesImpl();
+                    attributes.addAttribute(null, "id", null, null, dockable.getId());
+                    writer.dataElement("dockable", attributes);
+                }
+
+                // store layout of the window ...
+
+                writer.startElement("layout");
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                XMLEncoder encoder = new XMLEncoder(os);
+                encoder.writeObject(sharedWindow.getMultiSplitLayout());
+                encoder.flush();
+                encoder.close();
+                String model = os.toString();
+                writer.cdata(model.substring(model.indexOf('\n')));
+                writer.endElement("layout");
+
+                writer.endElement("sharedWindow");
+            } catch (SAXException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
 
     // Writing
 
@@ -201,18 +234,14 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 writer.startElement("toolWindows");
 
                 // Write SharedWindows
-                Map<ToolWindow, FloatingWindow> modalWindowMap = toolWindowManager.getModalWindowMap();
-
                 writer.startElement("sharedWindows");
 
-                for (ToolWindow toolWindow : modalWindowMap.keySet()) {
-                    MultiSplitWindow<? extends Dockable> modalWindow = modalWindowMap.get(toolWindow);
-                    storeMultiSplitWindow(writer, modalWindow);
+                for (MultiSplitWindow<? extends Dockable> multiSplitWindow : toolWindowManager.getFloatingWindows()) {
+                    storeMultiSplitWindow(writer, multiSplitWindow);
                 }
 
-                for (ToolWindow toolWindow : toolWindowManager.getLivePanelMap().keySet()) {
-                    MultiSplitWindow<? extends Dockable> modalWindow = toolWindowManager.getLivePanelMap().get(toolWindow);
-                    storeMultiSplitWindow(writer, modalWindow);
+                for (MultiSplitWindow<? extends Dockable> multiSplitWindow : toolWindowManager.getFloatingLiveWindows()) {
+                    storeMultiSplitWindow(writer, multiSplitWindow);
                 }
 
                 writer.endElement("sharedWindows");
@@ -303,34 +332,6 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             elementWriterMap.put(ToolWindowAnchor.class, new ToolWindowAnchorEntityWriter());
         }
 
-        protected void storeMultiSplitWindow(XMLWriter writer, MultiSplitWindow<? extends Dockable> sharedWindow) {
-            if (sharedWindow.getDockableCount() > 1) {
-                try {
-                    writer.startElement("sharedWindow");
-                    for (Dockable dockable : sharedWindow.getDockables()) {
-                        AttributesImpl attributes = new AttributesImpl();
-                        attributes.addAttribute(null, "id", null, null, dockable.getId());
-                        writer.dataElement("dockable", attributes);
-                    }
-
-                    // store layout of the window ...
-
-                    writer.startElement("layout");
-                    ByteArrayOutputStream os = new ByteArrayOutputStream();
-                    XMLEncoder encoder = new XMLEncoder(os);
-                    encoder.writeObject(sharedWindow.getMultiSplitLayout());
-                    encoder.flush();
-                    encoder.close();
-                    String model = os.toString();
-                    writer.cdata(model.substring(model.indexOf('\n')));
-                    writer.endElement("layout");
-
-                    writer.endElement("sharedWindow");
-                } catch (SAXException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
     }
 
     public class ToolWindowEntityWriter implements ElementWriter<XMLWriter> {
@@ -590,7 +591,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                 writer.startElement("contentManager");
 
-                // TODO: write SharedWindows
+                writer.startElement("sharedWindows");
+                for (MultiSplitWindow<? extends Dockable> multiSplitWindow : SwingUtil.getContentWindows()) {
+                    storeMultiSplitWindow(writer, multiSplitWindow);
+                }
+                writer.endElement("sharedWindows");
 
                 // write contents
                 writer.startElement("contents");

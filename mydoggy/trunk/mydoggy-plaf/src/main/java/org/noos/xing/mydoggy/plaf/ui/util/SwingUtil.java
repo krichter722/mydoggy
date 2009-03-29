@@ -136,6 +136,23 @@ public class SwingUtil {
         return containers;
     }
 
+    public static List<ContentWindow> getContentWindows() {
+        List<ContentWindow> containers = new ArrayList<ContentWindow>();
+
+        Frame frames[] = Frame.getFrames();
+        for (Frame frame : frames) {
+            if (frame instanceof ContentWindow)
+                containers.add((ContentWindow) frame);
+
+            Window[] windows = frame.getOwnedWindows();
+            for (Window window : windows) {
+                if (window instanceof ContentWindow)
+                    containers.add((ContentWindow) window);
+            }
+        }
+
+        return containers;
+    }
 
     public static Object getDeepestObjectAt(Object parent, int x, int y) {
         if (parent != null && parent instanceof Container) {
