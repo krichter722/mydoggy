@@ -151,7 +151,7 @@ public abstract class DragListenerAdapter implements DragListener, Cleaner {
         Container source = manager.getLayeredPane();
         Component deepestCmp = null;
 
-        // Check is the point is on a mydoggy window. (ModalWindow or ContentWindow)
+        // Check is the point is on a mydoggy window. (FloatingWindow or ContentWindow)
         for (Window window : SwingUtil.getMyDoggyTopContainers()) {
             if (!window.isVisible())
                 continue;

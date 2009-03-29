@@ -2,7 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui.util;
 
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ContentWindow;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ModalWindow;
+import org.noos.xing.mydoggy.plaf.ui.cmp.FloatingWindow;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragListener;
 import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 
@@ -123,12 +123,12 @@ public class SwingUtil {
 
         Frame frames[] = Frame.getFrames();
         for (Frame frame : frames) {
-            if (frame instanceof ModalWindow || frame instanceof ContentWindow)
+            if (frame instanceof FloatingWindow || frame instanceof ContentWindow)
                 containers.add(frame);
 
             Window[] windows = frame.getOwnedWindows();
             for (Window window : windows) {
-                if (window instanceof ModalWindow || window instanceof ContentWindow)
+                if (window instanceof FloatingWindow || window instanceof ContentWindow)
                     containers.add(window);
             }
         }
