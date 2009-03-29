@@ -98,6 +98,7 @@ public class RepresentativeAnchorBalloonTip extends JPanel {
     }
 
     public void show(int x, int y) {
+        System.out.println("x = " + x + " - " + "y = " + y);
         Dimension size = getPreferredSize();
 
         if (y + size.height > layeredPane.getHeight()) {

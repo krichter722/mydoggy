@@ -784,6 +784,32 @@ public class SwingUtil {
         return p;
     }
 
+    public static Point convertPoint(Component source,Point aPoint,Component destination) {
+        Point p;
+
+        if(source == null && destination == null)
+            return aPoint;
+
+        if(source == null) {
+            source = SwingUtilities.getWindowAncestor(destination);
+            if(source == null)
+                throw new Error("Source component not connected to component tree hierarchy");
+        }
+
+        p = new Point(aPoint);
+        convertPointToScreen(p,source);
+
+        if(destination == null) {
+            destination = getWindowAncestor(source);
+            if(destination == null)
+                throw new Error("Destination component not connected to component tree hierarchy");
+        }
+
+        convertPointFromScreen2(p,destination);
+
+        return p;
+    }
+
     public static void setWindowTitle(Component component, String title) {
         Window window = SwingUtilities.windowForComponent(component);
         if (window instanceof Dialog) {
@@ -884,6 +910,7 @@ public class SwingUtil {
 
         return defaultValue;
     }
+
 
 
     public static class DragEntry {

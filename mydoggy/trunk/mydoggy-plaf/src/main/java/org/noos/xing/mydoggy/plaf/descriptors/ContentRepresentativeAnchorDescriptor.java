@@ -101,6 +101,10 @@ public class ContentRepresentativeAnchorDescriptor extends PropertyChangeEventSo
         return lockingAnchors.contains(anchor);
     }
 
+    public void ensureVisible() {
+        firePlafPropertyChangeEvent("ensureRepresentativeAnchorVisible", false, true);
+    }
+
     public void showMessage(String message) {
         firePropertyChangeEvent("showMessage", null, message);
     }

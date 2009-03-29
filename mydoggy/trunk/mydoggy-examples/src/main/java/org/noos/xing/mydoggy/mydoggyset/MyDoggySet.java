@@ -460,7 +460,7 @@ public class MyDoggySet {
 
 
     public static void main(String[] args) {
-        MyDoggySet test = new MyDoggySet();
+        final MyDoggySet test = new MyDoggySet();
         try {
 //            test.run(null);
 //            test.run(new MultiSplitRandomConstraints(test));
@@ -472,6 +472,8 @@ public class MyDoggySet {
                             System.out.println("focusOwner = " + evt.getNewValue());
                         }
                     });
+
+                    test.toolWindowManager.getToolWindow("Tool 7").getRepresentativeAnchorDescriptor().showMessage("Hello World!!! hio fhiqowehfipoqwehf ioqwehfioqwehfioqwehfioqhwefioqwheiof hqwiof hqwiofhqiwoe");
                 }
             });
         } catch (Exception e) {

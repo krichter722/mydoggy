@@ -102,6 +102,11 @@ public class ToolWindowRepresentativeAnchorDescriptor extends PropertyChangeEven
         return lockingAnchors.contains(anchor);
     }
 
+    public void ensureVisible() {
+        // TODO: implement it
+        firePlafPropertyChangeEvent("ensureRepresentativeAnchorVisible", false, true);
+    }
+
     public void showMessage(String message) {
         firePropertyChangeEvent("showMessage", null, message);
     }

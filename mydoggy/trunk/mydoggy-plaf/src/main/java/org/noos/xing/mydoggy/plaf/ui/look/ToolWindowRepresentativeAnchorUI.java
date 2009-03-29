@@ -73,7 +73,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     }
 
 
-    public void propertyChange(PropertyChangeEvent e) {
+    public void propertyChange(final PropertyChangeEvent e) {
         String propertyName = e.getPropertyName();
 
         if ("visible".equals(propertyName)) {
@@ -102,12 +102,27 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                 }
             }
         } else if ("showMessage".equals(propertyName)) {
-//            System.out.println("ToolWindowRepresentativeAnchorUI.propertyChange");
-//
-//            balloonTip.setText((String) e.getNewValue());
-//            balloonTip.show(representativeAnchor.getX(), representativeAnchor.getY());
+            representativeAnchorDescriptor.ensureVisible();
 
-        } 
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    balloonTip.setRootPaneContainer(descriptor.getManager().getRootPaneContainer());
+                    balloonTip.setPreferredSize(new Dimension(150, 50));
+                    balloonTip.setText((String) e.getNewValue());
+
+                    Point source = representativeAnchor.getLocation();
+                    Dimension size = representativeAnchor.getSize();
+
+                    source.setLocation(source.x + (size.width / 2),
+                                       source.y + (size.height / 2));
+
+                    Point point = SwingUtil.convertPoint(representativeAnchor,
+                                                         source,
+                                                         (Component) descriptor.getManager().getRootPaneContainer());
+                    balloonTip.show(point.x, point.y);
+                }
+            });
+        }
     }
 
     public void cleanup() {
@@ -205,7 +220,6 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
         super.installDefaults(c);
 
         this.balloonTip = new RepresentativeAnchorBalloonTip(descriptor.getManager().getRootPaneContainer());
-        balloonTip.setPreferredSize(new Dimension(120,50));
 
         // Flashing animation fields
         this.flashingAnimation = new GradientAnimation();
@@ -377,7 +391,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
         public ToolWindowRepresentativeAnchorMouseAdapter() {
             previewTimer = new Timer(0, this);
-            
+
             descriptor.getCleaner().addBefore(ToolWindowRepresentativeAnchorUI.this, this);
         }
 
@@ -498,9 +512,8 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                         }
                     }
                     firstPreview = false;
-                } else
-                if (representativeAnchorDescriptor.isPreviewEnabled() &&
-                    descriptor.getManager().getToolWindowManagerDescriptor().isPreviewEnabled()) {
+                } else if (representativeAnchorDescriptor.isPreviewEnabled() &&
+                           descriptor.getManager().getToolWindowManagerDescriptor().isPreviewEnabled()) {
                     Container contentContainer = descriptor.getToolWindowPanel();
 
                     // Show Preview
@@ -588,14 +601,14 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                             (jMenuBar != null ? jMenuBar.getHeight() : 0) +
                             containerRect.y +
                             containerRect.height -
-                                                      previewPanel.getHeight() - 26
+                            previewPanel.getHeight() - 26
                     );
                     break;
                 case RIGHT:
                     previewPanel.setLocation(
                             containerRect.x +
                             containerRect.width -
-                                                     previewPanel.getWidth() - 26,
+                            previewPanel.getWidth() - 26,
 
                             (jMenuBar != null ? jMenuBar.getHeight() : 0) +
                             containerRect.y +
@@ -614,8 +627,8 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                         (jMenuBar != null ? jMenuBar.getHeight() : 0) +
                         containerRect.y +
                         containerRect.height -
-                                                  (descriptor.getToolBar(BOTTOM).getSize()) -
-                                                  previewPanel.getHeight() - 3
+                        (descriptor.getToolBar(BOTTOM).getSize()) -
+                        previewPanel.getHeight() - 3
                 );
             }
 
@@ -625,8 +638,8 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                 previewPanel.setLocation(
                         containerRect.x +
                         containerRect.width -
-                                                 (descriptor.getToolBar(RIGHT).getSize()) -
-                                                 previewPanel.getWidth() - 3,
+                        (descriptor.getToolBar(RIGHT).getSize()) -
+                        previewPanel.getWidth() - 3,
 
                         previewPanel.getY()
                 );
