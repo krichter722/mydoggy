@@ -618,7 +618,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         manager.removeModalWindow(toolWindow);
     }
 
-    public ModalWindow getModalWindow() {
+    public FloatingWindow getModalWindow() {
         return manager.getModalWindow(toolWindow);
     }
 

@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ModalDialog extends JDialog implements ModalWindow,
+public class FloatingDialog extends JDialog implements FloatingWindow,
                                                     PropertyChangeListener,
                                                     ActionListener {
     protected MyDoggyToolWindowManager toolWindowManager;
@@ -39,7 +39,7 @@ public class ModalDialog extends JDialog implements ModalWindow,
     protected TransparencyAnimation transparencyAnimation;
 
 
-    public ModalDialog(MyDoggyToolWindowManager toolWindowManager, Window owner, boolean modal) {
+    public FloatingDialog(MyDoggyToolWindowManager toolWindowManager, Window owner, boolean modal) {
         super(owner instanceof Frame ? (Frame) owner : null);
 
         this.toolWindowManager = toolWindowManager;
@@ -63,9 +63,9 @@ public class ModalDialog extends JDialog implements ModalWindow,
                 transparencyTimer.stop();
                 if (transparencyAnimation.isAnimating()) {
                     synchronized (transparencyManager) {
-                        if (transparencyManager.isAlphaModeEnabled(ModalDialog.this)) {
+                        if (transparencyManager.isAlphaModeEnabled(FloatingDialog.this)) {
                             transparencyAnimation.stop();
-                            transparencyManager.setAlphaModeRatio(ModalDialog.this, 1.0f);
+                            transparencyManager.setAlphaModeRatio(FloatingDialog.this, 1.0f);
                         }
                     }
                 }
@@ -90,9 +90,9 @@ public class ModalDialog extends JDialog implements ModalWindow,
 
                     if (transparencyAnimation != null) {
                         synchronized (transparencyManager) {
-                            if (transparencyManager.isAlphaModeEnabled(ModalDialog.this)) {
+                            if (transparencyManager.isAlphaModeEnabled(FloatingDialog.this)) {
                                 transparencyAnimation.stop();
-                                transparencyManager.setAlphaModeRatio(ModalDialog.this, 1.0f);
+                                transparencyManager.setAlphaModeRatio(FloatingDialog.this, 1.0f);
                             }
                         }
                     }
@@ -102,13 +102,13 @@ public class ModalDialog extends JDialog implements ModalWindow,
 /*
         else if (evt.getPropertyName().startsWith("visible")) {
             synchronized (transparencyManager) {
-                if (evt.getNewValue() == Boolean.FALSE && transparencyManager.isAlphaModeEnabled(ModalDialog.this)) {
+                if (evt.getNewValue() == Boolean.FALSE && transparencyManager.isAlphaModeEnabled(FloatingDialog.this)) {
                     if (transparencyTimer != null)
                         transparencyTimer.stop();
 
-                    if (transparencyManager.isAlphaModeEnabled(ModalDialog.this)) {
+                    if (transparencyManager.isAlphaModeEnabled(FloatingDialog.this)) {
                         transparencyAnimation.stop();
-                        transparencyManager.setAlphaModeRatio(ModalDialog.this, 0.0f);
+                        transparencyManager.setAlphaModeRatio(FloatingDialog.this, 0.0f);
                     }
                 }
             }
@@ -148,17 +148,17 @@ public class ModalDialog extends JDialog implements ModalWindow,
         super.setVisible(visible);
     }
 
-    public void importFrom(ModalWindow oldWindow) {
+    public void importFrom(FloatingWindow oldWindow) {
         setName(oldWindow.getName());
         setBounds(oldWindow.getBounds());
         setContentPane(oldWindow.getContentPane());
 
         Component child = getContentPane().getComponent(0);
-        if (child instanceof ModalWindowDockableDropPanel) {
-            ModalWindowDockableDropPanel modalWindowDockableDropPanel = (ModalWindowDockableDropPanel) child;
-            modalWindowDockableDropPanel.setModalWindow(this);
+        if (child instanceof FloatingWindowDockableDropPanel) {
+            FloatingWindowDockableDropPanel floatingWindowDockableDropPanel = (FloatingWindowDockableDropPanel) child;
+            floatingWindowDockableDropPanel.setModalWindow(this);
 
-            this.dockableDropPanel = modalWindowDockableDropPanel;
+            this.dockableDropPanel = floatingWindowDockableDropPanel;
             this.multiSplitDockableContainer = (MultiSplitDockableContainer<ToolWindow>) dockableDropPanel.getComponent();
         } else
             throw new IllegalArgumentException("Cannot recognize old window.");
@@ -271,7 +271,7 @@ public class ModalDialog extends JDialog implements ModalWindow,
     protected void initComponents() {
         multiSplitDockableContainer = new MultiSplitDockableContainer<ToolWindow>(toolWindowManager, JSplitPane.VERTICAL_SPLIT);
 
-        dockableDropPanel = new ModalWindowDockableDropPanel(this, toolWindowManager);
+        dockableDropPanel = new FloatingWindowDockableDropPanel(this, toolWindowManager);
         dockableDropPanel.setComponent(multiSplitDockableContainer);
 
         ((JComponent) getContentPane()).setBorder(BorderFactory.createLineBorder(Color.GRAY));
@@ -291,11 +291,11 @@ public class ModalDialog extends JDialog implements ModalWindow,
         addMouseListener(resizeMouseInputHandler);
         addMouseMotionListener(resizeMouseInputHandler);
 
-        addWindowListener(new ModalWindowListener());
+        addWindowListener(new FloatingWindowListener());
     }
 
 
-    public class ModalWindowListener extends WindowAdapter {
+    public class FloatingWindowListener extends WindowAdapter {
 
         @Override
         public void windowClosing(WindowEvent e) {

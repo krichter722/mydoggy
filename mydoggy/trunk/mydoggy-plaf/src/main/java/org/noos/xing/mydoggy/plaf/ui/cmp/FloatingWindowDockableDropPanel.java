@@ -10,15 +10,15 @@ import java.awt.dnd.DnDConstants;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
 */
-public class ModalWindowDockableDropPanel extends DockableDropPanel {
+public class FloatingWindowDockableDropPanel extends DockableDropPanel {
     protected ToolWindowManager toolWindowManager;
-    protected ModalWindow modalWindow;
+    protected FloatingWindow floatingWindow;
 
 
-    public ModalWindowDockableDropPanel(ModalWindow modalWindow, ToolWindowManager toolWindowManager) {
+    public FloatingWindowDockableDropPanel(FloatingWindow floatingWindow, ToolWindowManager toolWindowManager) {
         super(ToolWindow.class);
         
-        this.modalWindow = modalWindow;
+        this.floatingWindow = floatingWindow;
         this.toolWindowManager = toolWindowManager;
     }
 
@@ -94,7 +94,7 @@ public class ModalWindowDockableDropPanel extends DockableDropPanel {
                                         toolWindow.aggregate(onToolWindow, AggregationPosition.LEFT);
                                     } else {
                                         if (checkCondition(toolWindow)) {
-                                            toolWindow.aggregateByReference(modalWindow.getDockable(), AggregationPosition.LEFT
+                                            toolWindow.aggregateByReference(floatingWindow.getDockable(), AggregationPosition.LEFT
                                             );
                                         }
                                     }
@@ -104,7 +104,7 @@ public class ModalWindowDockableDropPanel extends DockableDropPanel {
                                         toolWindow.aggregate(onToolWindow, AggregationPosition.RIGHT);
                                     } else {
                                         if (checkCondition(toolWindow)) {
-                                            toolWindow.aggregateByReference(modalWindow.getDockable(), AggregationPosition.RIGHT
+                                            toolWindow.aggregateByReference(floatingWindow.getDockable(), AggregationPosition.RIGHT
                                             );
                                         }
                                     }
@@ -114,7 +114,7 @@ public class ModalWindowDockableDropPanel extends DockableDropPanel {
                                         toolWindow.aggregate(onToolWindow, AggregationPosition.BOTTOM);
                                     } else {
                                         if (checkCondition(toolWindow)) {
-                                            toolWindow.aggregateByReference(modalWindow.getDockable(), AggregationPosition.BOTTOM
+                                            toolWindow.aggregateByReference(floatingWindow.getDockable(), AggregationPosition.BOTTOM
                                             );
 
                                         }
@@ -125,7 +125,7 @@ public class ModalWindowDockableDropPanel extends DockableDropPanel {
                                         toolWindow.aggregate(onToolWindow, AggregationPosition.TOP);
                                     } else {
                                         if (checkCondition(toolWindow)) {
-                                            toolWindow.aggregateByReference(modalWindow.getDockable(), AggregationPosition.TOP
+                                            toolWindow.aggregateByReference(floatingWindow.getDockable(), AggregationPosition.TOP
                                             );
 
                                         }
@@ -138,7 +138,7 @@ public class ModalWindowDockableDropPanel extends DockableDropPanel {
                                 onToolWindow.addToolWindowTab(toolWindow).setSelected(true);
                                 onToolWindow.setActive(true);
                             } else {
-                                toolWindow.aggregateByReference(modalWindow.getDockable(), AggregationPosition.DEFAULT
+                                toolWindow.aggregateByReference(floatingWindow.getDockable(), AggregationPosition.DEFAULT
                                 );
                                 toolWindow.setActive(true);
                             }
@@ -160,12 +160,12 @@ public class ModalWindowDockableDropPanel extends DockableDropPanel {
     }
 
 
-    public ModalWindow getModalWindow() {
-        return modalWindow;
+    public FloatingWindow getModalWindow() {
+        return floatingWindow;
     }
 
-    public void setModalWindow(ModalWindow modalWindow) {
-        this.modalWindow = modalWindow;
+    public void setModalWindow(FloatingWindow floatingWindow) {
+        this.floatingWindow = floatingWindow;
     }
 
     

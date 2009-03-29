@@ -201,7 +201,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 writer.startElement("toolWindows");
 
                 // Write SharedWindows
-                Map<ToolWindow, ModalWindow> modalWindowMap = toolWindowManager.getModalWindowMap();
+                Map<ToolWindow, FloatingWindow> modalWindowMap = toolWindowManager.getModalWindowMap();
 
                 writer.startElement("sharedWindows");
 

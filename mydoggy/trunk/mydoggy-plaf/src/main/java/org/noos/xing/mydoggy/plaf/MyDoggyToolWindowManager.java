@@ -104,7 +104,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected CornerPanel southEastCorner;
 
     protected Map<ToolWindow, FloatingLiveWindow> livePanelMap = new HashMap<ToolWindow, FloatingLiveWindow>();
-    protected Map<ToolWindow, ModalWindow> modalWindowMap = new HashMap<ToolWindow, ModalWindow>();
+    protected Map<ToolWindow, FloatingWindow> modalWindowMap = new HashMap<ToolWindow, FloatingWindow>();
 
     // Public event support
     protected boolean firePublic = true;
@@ -1190,41 +1190,41 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return livePanelMap;
     }
 
-    public ModalWindow getModalWindow(ToolWindow toolWindow) {
-        ModalWindow modalWindow = modalWindowMap.get(toolWindow);
+    public FloatingWindow getModalWindow(ToolWindow toolWindow) {
+        FloatingWindow floatingWindow = modalWindowMap.get(toolWindow);
 
-        if (modalWindow == null) {
+        if (floatingWindow == null) {
             FloatingTypeDescriptor floatingTypeDescriptor = toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class);
 
             if (floatingTypeDescriptor.isAddToTaskBar()) {
-                modalWindow = new ModalFrame(this,
+                floatingWindow = new FloatingFrame(this,
                                              toolWindow,
                                              floatingTypeDescriptor.isAlwaysOnTop()
                                                 ? windowAncestor instanceof Window ? (Window) windowAncestor : null
                                                 : null,
                                              floatingTypeDescriptor.isModal());
             } else
-                modalWindow = new ModalDialog(this,
+                floatingWindow = new FloatingDialog(this,
                                               floatingTypeDescriptor.isAlwaysOnTop()
                                                 ? windowAncestor instanceof Window ? (Window) windowAncestor : null
                                                 : null,
                                               floatingTypeDescriptor.isModal());
 
-            modalWindow.setName("toolWindow.floating.window." + toolWindow.getId());
-            modalWindow.setAlwaysOnTop(floatingTypeDescriptor.isAlwaysOnTop());
-            modalWindow.setUndecorated(!floatingTypeDescriptor.isOsDecorated());
+            floatingWindow.setName("toolWindow.floating.window." + toolWindow.getId());
+            floatingWindow.setAlwaysOnTop(floatingTypeDescriptor.isAlwaysOnTop());
+            floatingWindow.setUndecorated(!floatingTypeDescriptor.isOsDecorated());
 
-            modalWindowMap.put(toolWindow, modalWindow);
+            modalWindowMap.put(toolWindow, floatingWindow);
         }
 
-        return modalWindow;
+        return floatingWindow;
     }
 
     public void removeModalWindow(ToolWindow toolWindow) {
         modalWindowMap.remove(toolWindow);
     }
 
-    public Map<ToolWindow, ModalWindow> getModalWindowMap() {
+    public Map<ToolWindow, FloatingWindow> getModalWindowMap() {
         return modalWindowMap;
     }
 

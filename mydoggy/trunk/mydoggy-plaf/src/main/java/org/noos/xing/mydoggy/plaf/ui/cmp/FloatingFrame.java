@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ModalFrame extends JFrame implements ModalWindow,
+public class FloatingFrame extends JFrame implements FloatingWindow,
                                                   PropertyChangeListener,
                                                   ActionListener {
     protected MyDoggyToolWindowManager toolWindowManager;
@@ -43,7 +43,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
     protected TransparencyAnimation transparencyAnimation;
 
 
-    public ModalFrame(MyDoggyToolWindowManager toolWindowManager, ToolWindow toolWindow, Window owner, boolean modal) {
+    public FloatingFrame(MyDoggyToolWindowManager toolWindowManager, ToolWindow toolWindow, Window owner, boolean modal) {
         super(toolWindow.getTitle());
 
         this.toolWindowManager = toolWindowManager;
@@ -51,7 +51,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
         setFocusableWindowState(true);
         setTitle(toolWindow.getTitle());
 
-        synchronized (ModalFrame.this) {
+        synchronized (FloatingFrame.this) {
             if (modal)
                 modalToWindow = owner;
 
@@ -73,10 +73,10 @@ public class ModalFrame extends JFrame implements ModalWindow,
             if (transparencyTimer != null) {
                 transparencyTimer.stop();
                 if (transparencyAnimation.isAnimating()) {
-                    synchronized (ModalFrame.this) {
-                        if (transparencyManager.isAlphaModeEnabled(ModalFrame.this)) {
+                    synchronized (FloatingFrame.this) {
+                        if (transparencyManager.isAlphaModeEnabled(FloatingFrame.this)) {
                             transparencyAnimation.stop();
-                            transparencyManager.setAlphaModeRatio(ModalFrame.this, 1.0f);
+                            transparencyManager.setAlphaModeRatio(FloatingFrame.this, 1.0f);
                         }
                     }
                 }
@@ -100,10 +100,10 @@ public class ModalFrame extends JFrame implements ModalWindow,
                         transparencyTimer.stop();
 
                     if (transparencyAnimation != null) {
-                        synchronized (ModalFrame.this) {
-                            if (transparencyManager.isAlphaModeEnabled(ModalFrame.this)) {
+                        synchronized (FloatingFrame.this) {
+                            if (transparencyManager.isAlphaModeEnabled(FloatingFrame.this)) {
                                 transparencyAnimation.stop();
-                                transparencyManager.setAlphaModeRatio(ModalFrame.this, 1.0f);
+                                transparencyManager.setAlphaModeRatio(FloatingFrame.this, 1.0f);
                             }
                         }
                     }
@@ -113,13 +113,13 @@ public class ModalFrame extends JFrame implements ModalWindow,
 /*
         else if (evt.getPropertyName().startsWith("visible")) {
             synchronized (transparencyManager) {
-                if (evt.getNewValue() == Boolean.FALSE && transparencyManager.isAlphaModeEnabled(ModalDialog.this)) {
+                if (evt.getNewValue() == Boolean.FALSE && transparencyManager.isAlphaModeEnabled(FloatingDialog.this)) {
                     if (transparencyTimer != null)
                         transparencyTimer.stop();
 
-                    if (transparencyManager.isAlphaModeEnabled(ModalDialog.this)) {
+                    if (transparencyManager.isAlphaModeEnabled(FloatingDialog.this)) {
                         transparencyAnimation.stop();
-                        transparencyManager.setAlphaModeRatio(ModalDialog.this, 0.0f);
+                        transparencyManager.setAlphaModeRatio(FloatingDialog.this, 0.0f);
                     }
                 }
             }
@@ -158,7 +158,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
             restoreOwner();
         } else {
             if (!isVisible()) {
-                synchronized (ModalFrame.this) {
+                synchronized (FloatingFrame.this) {
                     if ((modalToWindow != null) && notifiedModalToWindow) {
                         modalToWindow.setEnabled(false);
                         notifiedModalToWindow = false;
@@ -170,17 +170,17 @@ public class ModalFrame extends JFrame implements ModalWindow,
         super.setVisible(visible);
     }
 
-    public void importFrom(ModalWindow oldWindow) {
+    public void importFrom(FloatingWindow oldWindow) {
         setName(oldWindow.getName());
         setBounds(oldWindow.getBounds());
         setContentPane(oldWindow.getContentPane());
 
         Component child = getContentPane().getComponent(0);
-        if (child instanceof ModalWindowDockableDropPanel) {
-            ModalWindowDockableDropPanel modalWindowDockableDropPanel = (ModalWindowDockableDropPanel) child;
-            modalWindowDockableDropPanel.setModalWindow(this);
+        if (child instanceof FloatingWindowDockableDropPanel) {
+            FloatingWindowDockableDropPanel floatingWindowDockableDropPanel = (FloatingWindowDockableDropPanel) child;
+            floatingWindowDockableDropPanel.setModalWindow(this);
 
-            this.dockableDropPanel = modalWindowDockableDropPanel;
+            this.dockableDropPanel = floatingWindowDockableDropPanel;
             this.multiSplitDockableContainer = (MultiSplitDockableContainer<ToolWindow>) dockableDropPanel.getComponent();
         } else
             throw new IllegalArgumentException("Cannot recognize old window.");
@@ -226,7 +226,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
     }
 
     public void setModal(boolean modal) {
-        synchronized (ModalFrame.this) {
+        synchronized (FloatingFrame.this) {
             modalToWindow = modal ? getOwner() : null;
         }
     }
@@ -291,7 +291,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
 
     
     public boolean isModal() {
-        synchronized (ModalFrame.this) {
+        synchronized (FloatingFrame.this) {
             return modalToWindow != null;
         }
     }
@@ -313,7 +313,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
     protected void initComponents() {
         multiSplitDockableContainer = new MultiSplitDockableContainer<ToolWindow>(toolWindowManager, JSplitPane.VERTICAL_SPLIT);
 
-        dockableDropPanel = new ModalWindowDockableDropPanel(this, toolWindowManager);
+        dockableDropPanel = new FloatingWindowDockableDropPanel(this, toolWindowManager);
         dockableDropPanel.setComponent(multiSplitDockableContainer);
 
         ((JComponent) getContentPane()).setBorder(BorderFactory.createLineBorder(Color.GRAY));
@@ -332,11 +332,11 @@ public class ModalFrame extends JFrame implements ModalWindow,
 
         addMouseMotionListener(resizeMouseInputHandler);
         addMouseListener(resizeMouseInputHandler);
-        addWindowListener(new ModalWindowListener());
+        addWindowListener(new FloatingWindowListener());
     }
 
     protected void restoreOwner() {
-        synchronized (ModalFrame.this) {
+        synchronized (FloatingFrame.this) {
             if ((modalToWindow != null) && !notifiedModalToWindow) {
                 modalToWindow.setEnabled(true);
                 modalToWindow.toFront();
@@ -367,7 +367,7 @@ public class ModalFrame extends JFrame implements ModalWindow,
     }
 
 
-    public class ModalWindowListener extends WindowAdapter {
+    public class FloatingWindowListener extends WindowAdapter {
 
         @Override
         public void windowClosing(WindowEvent e) {

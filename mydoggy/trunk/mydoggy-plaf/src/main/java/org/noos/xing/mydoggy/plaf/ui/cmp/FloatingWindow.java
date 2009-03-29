@@ -7,7 +7,7 @@ import java.awt.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public interface ModalWindow extends MultiSplitWindow<ToolWindow> {
+public interface FloatingWindow extends MultiSplitWindow<ToolWindow> {
 
     Window getWindow();
 
@@ -57,6 +57,6 @@ public interface ModalWindow extends MultiSplitWindow<ToolWindow> {
 
     void setLocation(Point location);
 
-    void importFrom(ModalWindow oldWindow);
+    void importFrom(FloatingWindow oldWindow);
 
 }

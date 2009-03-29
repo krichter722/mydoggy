@@ -6,7 +6,7 @@ import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
 import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
 import org.noos.xing.mydoggy.plaf.ui.animation.AnimationListener;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ModalWindow;
+import org.noos.xing.mydoggy.plaf.ui.cmp.FloatingWindow;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.FloatingMoveMouseInputHandler;
 import org.noos.xing.mydoggy.plaf.ui.util.DynamicPropertyChangeListener;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -22,7 +22,7 @@ import java.beans.PropertyChangeListener;
  * @author Angelo De Caro
  */
 public class FloatingContainer extends MyDoggyToolWindowContainer {
-    protected ModalWindow window;
+    protected FloatingWindow window;
 
     protected FloatingMoveMouseInputHandler moveMouseInputHandler;
     protected WindowComponentAdapter windowComponentAdapter;
@@ -174,7 +174,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         }
     }
 
-    public ModalWindow getWindow() {
+    public FloatingWindow getWindow() {
         return window;
     }
 
@@ -212,7 +212,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         windowComponentAdapter = new WindowComponentAdapter();
     }
 
-    protected void reinitWindow(ModalWindow oldWindow) {
+    protected void reinitWindow(FloatingWindow oldWindow) {
         // Init new window
         window = descriptor.getModalWindow();
         window.importFrom(oldWindow);
@@ -435,7 +435,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 return;
 
             if (window.isVisible()) {
-                ModalWindow oldWindow = window;
+                FloatingWindow oldWindow = window;
 
                 // Clean
                 uninstallWindowListeners();
@@ -456,7 +456,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 if (focusOwner != null)
                     SwingUtil.requestFocus(focusOwner);
             } else {
-                ModalWindow oldWindow = window;
+                FloatingWindow oldWindow = window;
 
                 // Clean old window
                 uninstallWindowListeners();
@@ -481,7 +481,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 return;
 
             if (window.isVisible()) {
-                ModalWindow oldWindow = window;
+                FloatingWindow oldWindow = window;
 
                 // Clean
                 uninstallWindowListeners();
@@ -502,7 +502,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 if (focusOwner != null)
                     SwingUtil.requestFocus(focusOwner);
             } else {
-                ModalWindow oldWindow = window;
+                FloatingWindow oldWindow = window;
 
                 // Clean old window
                 uninstallWindowListeners();

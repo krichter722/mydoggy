@@ -5,7 +5,7 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowTab;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.cmp.ModalWindow;
+import org.noos.xing.mydoggy.plaf.ui.cmp.FloatingWindow;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
@@ -22,17 +22,17 @@ import java.beans.PropertyChangeListener;
  */
 public class DetachedContentDropTarget extends DropTarget {
 
-    public DetachedContentDropTarget(ModalWindow modalWindow,
+    public DetachedContentDropTarget(FloatingWindow floatingWindow,
                                      JComponent component,
                                      MyDoggyToolWindowManager toolWindowManager) throws HeadlessException {
-        super(modalWindow.getWindow(),
+        super(floatingWindow.getWindow(),
               DnDConstants.ACTION_MOVE,
-              new ToolWindowFloatingDropTargetListener(modalWindow, component, toolWindowManager));
+              new ToolWindowFloatingDropTargetListener(floatingWindow, component, toolWindowManager));
     }
 
     public static class ToolWindowFloatingDropTargetListener implements DropTargetListener, PropertyChangeListener {
         protected MyDoggyToolWindowManager toolWindowManager;
-        protected ModalWindow modalWindow;
+        protected FloatingWindow floatingWindow;
         protected ToolWindowAnchor anchor;
         protected int anchorIndex;
         protected JComponent component;
@@ -43,8 +43,8 @@ public class DetachedContentDropTarget extends DropTarget {
         protected Border oldBorder;
         protected Border dragBorder = new LineBorder(Color.BLUE, 3);
 
-        public ToolWindowFloatingDropTargetListener(ModalWindow modalWindow, JComponent component, MyDoggyToolWindowManager toolWindowManager) {
-            this.modalWindow = modalWindow;
+        public ToolWindowFloatingDropTargetListener(FloatingWindow floatingWindow, JComponent component, MyDoggyToolWindowManager toolWindowManager) {
+            this.floatingWindow = floatingWindow;
             this.component = component;
             this.toolWindowManager = toolWindowManager;
             this.anchor = ToolWindowAnchor.BOTTOM;
@@ -161,7 +161,7 @@ public class DetachedContentDropTarget extends DropTarget {
                                                     toolWindow.aggregate(onToolWindow, AggregationPosition.LEFT);
                                                 } else {
                                                     if (checkCondition(toolWindow)) {
-                                                        toolWindow.aggregateByReference(modalWindow.getDockable(), AggregationPosition.LEFT);
+                                                        toolWindow.aggregateByReference(floatingWindow.getDockable(), AggregationPosition.LEFT);
                                                     }
                                                 }
                                                 break;
@@ -170,7 +170,7 @@ public class DetachedContentDropTarget extends DropTarget {
                                                     toolWindow.aggregate(onToolWindow, AggregationPosition.RIGHT);
                                                 } else {
                                                     if (checkCondition(toolWindow)) {
-                                                        toolWindow.aggregateByReference(modalWindow.getDockable(), AggregationPosition.RIGHT);
+                                                        toolWindow.aggregateByReference(floatingWindow.getDockable(), AggregationPosition.RIGHT);
                                                     }
                                                 }
                                                 break;
@@ -179,7 +179,7 @@ public class DetachedContentDropTarget extends DropTarget {
                                                     toolWindow.aggregate(onToolWindow, AggregationPosition.BOTTOM);
                                                 } else {
                                                     if (checkCondition(toolWindow)) {
-                                                        toolWindow.aggregateByReference(modalWindow.getDockable(), AggregationPosition.BOTTOM);
+                                                        toolWindow.aggregateByReference(floatingWindow.getDockable(), AggregationPosition.BOTTOM);
 
                                                     }
                                                 }
@@ -189,7 +189,7 @@ public class DetachedContentDropTarget extends DropTarget {
                                                     toolWindow.aggregate(onToolWindow, AggregationPosition.TOP);
                                                 } else {
                                                     if (checkCondition(toolWindow)) {
-                                                        toolWindow.aggregateByReference(modalWindow.getDockable(), AggregationPosition.TOP);
+                                                        toolWindow.aggregateByReference(floatingWindow.getDockable(), AggregationPosition.TOP);
                                                     }
                                                 }
                                                 break;
@@ -200,7 +200,7 @@ public class DetachedContentDropTarget extends DropTarget {
                                             onToolWindow.addToolWindowTab(toolWindow).setSelected(true);
                                             onToolWindow.setActive(true);
                                         } else {
-                                            toolWindow.aggregateByReference(modalWindow.getDockable(), AggregationPosition.DEFAULT);
+                                            toolWindow.aggregateByReference(floatingWindow.getDockable(), AggregationPosition.DEFAULT);
                                             toolWindow.setActive(true);
                                         }
                                     }
