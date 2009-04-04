@@ -157,6 +157,10 @@ public class MultiSplitTabbedContentContainer<D extends Dockable> extends MultiS
         return new MultiSplitTabbedDockableDropPanel();
     }
 
+    protected boolean isDockableContainerDragEnabled() {
+        return true;
+    }
+
 
     public class TabbedDragListener extends DragListenerAdapter {
         protected TabbedContentPane tabbedContentPane;
@@ -258,6 +262,11 @@ public class MultiSplitTabbedContentContainer<D extends Dockable> extends MultiS
             }
         }
 
+
+        @Override
+        protected boolean isDragEnabled() {
+            return super.isDragEnabled() && isDockableContainerDragEnabled();
+        }
     }
 
     public class MultiSplitTabbedDockableDropPanel extends DockableDropPanel {
