@@ -137,7 +137,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         return getToolWindows();
     }
 
-    public ToolWindow getDockable(String id) {
+    public ToolWindow getDockableById(String id) {
         return getToolWindow(id);
     }
 
@@ -211,7 +211,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         if (index > 9)
             index = -1;
 
-        if (getDockable(id) != null)
+        if (getDockableById(id) != null)
             throw new IllegalArgumentException("Cannot register tool window with passed id. An already registered dockable exists. [id : " + id + "]");
 
         MyDoggyToolWindow toolWindow = new MyDoggyToolWindow(this,
@@ -438,7 +438,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         if (source instanceof DockableDescriptor) {
             DockableDescriptor descriptor = (DockableDescriptor) source;
             if (descriptor.getDockableType() != DockableDescriptor.DockableType.CUSTOM) {
-                if (getDockable(descriptor.getDockable().getId()) != descriptor.getDockable()) {
+                if (getDockableById(descriptor.getDockable().getId()) != descriptor.getDockable()) {
                     throw new RuntimeException("Manager doesn't contain that ToolWindow. [id : " + descriptor.getDockable().getId() + "]");
                 }
             }

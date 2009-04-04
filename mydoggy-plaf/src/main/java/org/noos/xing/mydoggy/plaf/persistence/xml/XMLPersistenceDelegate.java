@@ -1254,7 +1254,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                         boolean selected = getBoolean(context, tabElement, "selected", false);
                         boolean maximized = getBoolean(context, tabElement, "maximized", false);
 
-                        Dockable dockable = context.get(ToolWindowManager.class).getDockable(dockableId);
+                        Dockable dockable = context.get(ToolWindowManager.class).getDockableById(dockableId);
                         if (dockable != null) {
                             ToolWindowTab tab = toolWindow.addToolWindowTab(dockable);
 
@@ -1464,8 +1464,12 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             } else if (context.get(ContextKey.MultiSplitContentManagerUILayout) != null && toolWindowManager.getContentManager().isEnabled()) {
                 // Load MultiSplitContentManagerUILayout
 
-                MyDoggyMultiSplitContentManagerUI myDoggyMultiSplitContentManagerUI = (MyDoggyMultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
-                myDoggyMultiSplitContentManagerUI.setLayout(context.get(ContextKey.MultiSplitContentManagerUILayout));
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        MyDoggyMultiSplitContentManagerUI myDoggyMultiSplitContentManagerUI = (MyDoggyMultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
+                        myDoggyMultiSplitContentManagerUI.setLayout(context.get(ContextKey.MultiSplitContentManagerUILayout));
+                    }
+                });
             }
 
             final Content selectedContent1 = selectedContent;

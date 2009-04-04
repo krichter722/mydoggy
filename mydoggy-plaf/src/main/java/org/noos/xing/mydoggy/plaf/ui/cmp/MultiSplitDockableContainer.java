@@ -438,7 +438,7 @@ public class MultiSplitDockableContainer<D extends Dockable> extends JPanel {
                     DockableLeaf leaf = (DockableLeaf) dockableConstraint.getNode();
 
                     for (String leafDockableId : leaf.getDockables()) {
-                        Dockable leafDockable = toolWindowManager.getDockable(leafDockableId);
+                        Dockable leafDockable = toolWindowManager.getDockableById(leafDockableId);
                         if (leafDockable != null && !leafDockable.isDetached()) {
                             addDockable(dockable, component, leafDockable, dockableConstraint.getIndex(), dockableConstraint.getAggregationPosition());
                             return;
@@ -862,7 +862,7 @@ public class MultiSplitDockableContainer<D extends Dockable> extends JPanel {
 
                 Component component = currentChildMap.get(leaf.getName());
 
-                Dockable dockable = toolWindowManager.getDockable(dockId);
+                Dockable dockable = toolWindowManager.getDockableById(dockId);
                 setConstraints(dockable,
                                getComponentFromWrapper(component, dockable),
                                null,
@@ -888,7 +888,7 @@ public class MultiSplitDockableContainer<D extends Dockable> extends JPanel {
 
                             Component component = currentChildMap.get(leaf.getName());
 
-                            Dockable dockable = toolWindowManager.getDockable(dockId);
+                            Dockable dockable = toolWindowManager.getDockableById(dockId);
                             setConstraints(dockable,
                                            getComponentFromWrapper(component, dockable),
                                            null,
@@ -961,11 +961,11 @@ public class MultiSplitDockableContainer<D extends Dockable> extends JPanel {
             DockableLeaf leaf = (DockableLeaf) root;
 
             List<String> dockIds = leaf.getDockables();
-            Dockable masterDockable = toolWindowManager.getDockable(leaf.getDockable());
+            Dockable masterDockable = toolWindowManager.getDockableById(leaf.getDockable());
             for (int i = 1; i < dockIds.size(); i++) {
                 String dockId = dockIds.get(i);
 
-                Dockable dockable = toolWindowManager.getDockable(dockId);
+                Dockable dockable = toolWindowManager.getDockableById(dockId);
                 setConstraints(dockable,
                                getComponentFromWrapper(currentChildMap.get(getLeaf(dockable).getName()), dockable),
                                masterDockable,

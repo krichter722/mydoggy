@@ -203,7 +203,7 @@ public interface ToolWindowManager extends DockableManager<ToolWindow> {
     boolean containsGroup(String name);
 
     /**
-     * TOOD: check javadoc
+     * TODO: check javadoc
      * Returns the dockable to which this manager maps the specified id.
      * Returns <tt>null</tt> if the manager contains no mapping for this id.
      *

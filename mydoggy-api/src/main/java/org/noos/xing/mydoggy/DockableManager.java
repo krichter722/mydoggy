@@ -23,7 +23,7 @@ public interface DockableManager<D extends Dockable> {
      * @return
      * @since 1.5.0
      */
-    D getDockable(String id);
+    D getDockableById(String id);
 
     /**
      * Associates the specified dockable with the specified alias in this manager.
