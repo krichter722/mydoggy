@@ -95,6 +95,8 @@ public interface MyDoggyKeySpace {
     String DRAG_ENABLED = "drag.enabled";
     String DRAG_USE_DEFAULT_ICON = "drag.icon.useDefault";
     String DRAG_ICON_TRANSPARENCY = "drag.icon.transparency.enabled";
+
+    String CONTENT_MANAGER_UI_DRAG_ENABLED = "ContentManagerUI.drag.enabled";
     
     String TOOL_WINDOW_DETACH_TYPE = "toolwindow.detached.type";
     String TOOL_WINDOW_PREVIEW_FULL = "toolwindowl.preview.full";

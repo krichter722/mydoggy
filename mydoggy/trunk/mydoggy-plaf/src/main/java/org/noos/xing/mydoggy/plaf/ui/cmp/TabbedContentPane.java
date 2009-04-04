@@ -1048,5 +1048,10 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
         public void dropActionChanged(DragSourceDragEvent e) {
         }
 
+
+        @Override
+        protected boolean isDragEnabled() {
+            return super.isDragEnabled() && SwingUtil.getBoolean(MyDoggyKeySpace.CONTENT_MANAGER_UI_DRAG_ENABLED, true);
+        }
     }
 }

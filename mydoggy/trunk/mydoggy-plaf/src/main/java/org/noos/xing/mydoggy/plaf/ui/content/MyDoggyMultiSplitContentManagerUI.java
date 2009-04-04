@@ -4,6 +4,7 @@ import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
+import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.cmp.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneEvent;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.TabbedContentPaneListener;
@@ -945,6 +946,48 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
             super.setRootComponent(component);
         }
 
+        public void setMaximizedDockable(Dockable dockable) {
+            if (dockable == null) {
+                if (oldRoot != null) {
+                    oldParent.setComponent(currentMaximizedDockable.getComponent());
+                    setRootComponent(oldRoot);
+
+                    this.oldRoot = null;
+                    this.oldParent = null;
+                    this.currentMaximizedDockable = null;
+                }
+            } else {
+                this.currentMaximizedDockable = dockable;
+                this.oldRoot = getRootComponent();
+                this.oldParent = (DockablePanel) dockable.getComponent().getParent();
+
+                JComponent panel = (JComponent) forceWrapperForComponent(dockable, dockable.getComponent());
+                panel.setOpaque(true);
+                setRootComponent(panel);
+            }
+
+            SwingUtil.repaint(this);
+        }
+
+        public void setTabPlacement(TabPlacement tabPlacement) {
+            for (Component c : multiSplitContainer.getTabbedComponents()) {
+                if (c instanceof TabbedContentPane) {
+                    TabbedContentPane tabbedContentPane = ((TabbedContentPane) c);
+                    tabbedContentPane.setTabPlacement(tabPlacement.ordinal() + 1);
+                }
+            }
+        }
+
+        public void setTabLayout(TabLayout tabLayout) {
+            for (Component c : multiSplitContainer.getTabbedComponents()) {
+                if (c instanceof TabbedContentPane) {
+                    TabbedContentPane tabbedContentPane = ((TabbedContentPane) c);
+                    tabbedContentPane.setTabLayoutPolicy(tabLayout.ordinal());
+                }
+            }
+        }
+
+
         protected Component forceWrapperForComponent(Dockable dockable, Component component) {
             final TabbedContentPane tabbedContentPane = (TabbedContentPane) super.forceWrapperForComponent(dockable, component);
 
@@ -1005,47 +1048,10 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
             return useAlwaysContentWrapper;
         }
 
-        public void setMaximizedDockable(Dockable dockable) {
-            if (dockable == null) {
-                if (oldRoot != null) {
-                    oldParent.setComponent(currentMaximizedDockable.getComponent());
-                    setRootComponent(oldRoot);
-
-                    this.oldRoot = null;
-                    this.oldParent = null;
-                    this.currentMaximizedDockable = null;
-                }
-            } else {
-                this.currentMaximizedDockable = dockable;
-                this.oldRoot = getRootComponent();
-                this.oldParent = (DockablePanel) dockable.getComponent().getParent();
-
-                JComponent panel = (JComponent) forceWrapperForComponent(dockable, dockable.getComponent());
-                panel.setOpaque(true);
-                setRootComponent(panel);
-            }
-
-            SwingUtil.repaint(this);
+        @Override
+        protected boolean isDockableContainerDragEnabled() {
+            return SwingUtil.getBoolean(MyDoggyKeySpace.CONTENT_MANAGER_UI_DRAG_ENABLED, true);
         }
-
-        public void setTabPlacement(TabPlacement tabPlacement) {
-            for (Component c : multiSplitContainer.getTabbedComponents()) {
-                if (c instanceof TabbedContentPane) {
-                    TabbedContentPane tabbedContentPane = ((TabbedContentPane) c);
-                    tabbedContentPane.setTabPlacement(tabPlacement.ordinal() + 1);
-                }
-            }
-        }
-
-        public void setTabLayout(TabLayout tabLayout) {
-            for (Component c : multiSplitContainer.getTabbedComponents()) {
-                if (c instanceof TabbedContentPane) {
-                    TabbedContentPane tabbedContentPane = ((TabbedContentPane) c);
-                    tabbedContentPane.setTabLayoutPolicy(tabLayout.ordinal());
-                }
-            }
-        }
-
-   }
+    }
 
 }
