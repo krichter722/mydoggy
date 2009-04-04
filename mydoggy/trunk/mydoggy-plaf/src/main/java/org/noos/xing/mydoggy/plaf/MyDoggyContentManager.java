@@ -44,7 +44,7 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
         return getContents();
     }
 
-    public Content getDockable(String id) {
+    public Content getDockableById(String id) {
         return getContent(id);
     }
 
@@ -355,7 +355,7 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
         if (component == null)
             throw new IllegalArgumentException("Component cannot be null.");
 
-        if (toolWindowManager.getDockable(id) != null)
+        if (toolWindowManager.getDockableById(id) != null)
             throw new IllegalArgumentException("Cannot register content with passed id. An already registered dockable exists. [id : " + id + "]");
 
         MyDoggyContent content = new MyDoggyContent(this, id, title, icon, component, tip, toolWindow);

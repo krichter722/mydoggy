@@ -53,7 +53,7 @@ public class SharedWindows {
     public Dockable getRefDockable(Dockable dockable) {
         for (String id : getSharedWindow(dockable.getId())) {
             if (!id.equals(dockable.getId())) {
-                Dockable ref = dockableManager.getDockable(id);
+                Dockable ref = dockableManager.getDockableById(id);
                 if (ref.isVisible()) {
                     return ref;
                 }
@@ -69,7 +69,7 @@ public class SharedWindows {
                 public void run() {
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
-                            MultiSplitWindow multiSplitWindow = SwingUtil.getParent(dockableManager.getDockable(sharedWindowEntry.ids[0]).getComponent(), MultiSplitWindow.class);
+                            MultiSplitWindow multiSplitWindow = SwingUtil.getParent(dockableManager.getDockableById(sharedWindowEntry.ids[0]).getComponent(), MultiSplitWindow.class);
                             if (multiSplitWindow != null)
                                 multiSplitWindow.setMultiSplitLayout(sharedWindowEntry.node);
                         }

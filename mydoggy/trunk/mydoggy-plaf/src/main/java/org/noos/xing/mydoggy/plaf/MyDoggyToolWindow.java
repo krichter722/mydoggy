@@ -84,7 +84,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         return getToolWindowTabs();
     }
 
-    public ToolWindowTab getDockable(String id) {
+    public ToolWindowTab getDockableById(String id) {
         throw new RuntimeException("Cannot call this method!!!");
     }
 
