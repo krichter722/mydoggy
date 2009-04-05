@@ -473,7 +473,10 @@ public class MyDoggySet {
                         }
                     });
 
-                    test.toolWindowManager.getToolWindow("Tool 7").getRepresentativeAnchorDescriptor().showMessage("Hello World!!! hio fhiqowehfipoqwehf ioqwehfioqwehfioqwehfioqhwefioqwheiof hqwiof hqwiofhqiwoe");
+                    test.toolWindowManager.getToolWindow("Tool 3").getRepresentativeAnchorDescriptor().showMessage(SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/save.png"), "Hello World!!!");
+                    test.toolWindowManager.getToolWindow("Tool 4").getRepresentativeAnchorDescriptor().showMessage(SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/save.png"), "Hello World!!!");
+                    test.toolWindowManager.getToolWindow("Tool 13").getRepresentativeAnchorDescriptor().showMessage(SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/save.png"), "Hello World!!!");
+                    test.toolWindowManager.getToolWindow("Tool 1").getRepresentativeAnchorDescriptor().showMessage(SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/save.png"), "Hello World!!!");
                 }
             });
         } catch (Exception e) {

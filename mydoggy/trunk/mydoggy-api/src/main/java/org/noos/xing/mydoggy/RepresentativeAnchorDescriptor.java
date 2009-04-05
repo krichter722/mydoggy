@@ -13,9 +13,16 @@ public interface RepresentativeAnchorDescriptor<D extends Dockable> extends Obse
     /**
      * Returns the descriptor owner.
      * @return the dockable which owns this descriptor.
+     * @since 1.5.0
      */
     D getDockable();
-    
+
+    /**
+     *
+     * @return
+     */
+    ToolWindowAnchor getAnchor();
+
     /**
      * Enable or disable the representative anchor button. The method throw an exception when it is called
      * on a tool whose type is FLOATING_FREE.
@@ -172,9 +179,9 @@ public interface RepresentativeAnchorDescriptor<D extends Dockable> extends Obse
 
     /**
      * TODO: not implemented yet!
-     * @param message
-     * @since 1.5.0
+     * @param icon
+     *@param message  @since 1.5.0
      */
-    void showMessage(String message);
+    void showMessage(Icon icon, String message);
 
 }
