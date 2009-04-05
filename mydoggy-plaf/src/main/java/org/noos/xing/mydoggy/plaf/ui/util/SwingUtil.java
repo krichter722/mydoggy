@@ -854,6 +854,12 @@ public class SwingUtil {
         return defaultValue;
     }
 
+    public static Color getColor(String key, Color defaultColor) {
+        if (UIManager.getDefaults().containsKey(key))
+            return (Color) UIManager.getColor(key);
+        return defaultColor;
+    }
+
     public static TransparencyManager<Window> getTransparencyManager() {
         return (TransparencyManager<Window>) UIManager.get(TransparencyManager.class);
     }

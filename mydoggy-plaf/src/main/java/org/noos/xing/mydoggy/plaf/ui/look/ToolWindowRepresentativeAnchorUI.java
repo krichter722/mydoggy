@@ -106,20 +106,12 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
+                    Object[] params = (Object[]) e.getNewValue();
+
                     balloonTip.setRootPaneContainer(descriptor.getManager().getRootPaneContainer());
-                    balloonTip.setPreferredSize(new Dimension(150, 50));
-                    balloonTip.setText((String) e.getNewValue());
-
-                    Point source = representativeAnchor.getLocation();
-                    Dimension size = representativeAnchor.getSize();
-
-                    source.setLocation(source.x + (size.width / 2),
-                                       source.y + (size.height / 2));
-
-                    Point point = SwingUtil.convertPoint(representativeAnchor,
-                                                         source,
-                                                         (Component) descriptor.getManager().getRootPaneContainer());
-                    balloonTip.show(point.x, point.y);
+                    balloonTip.setIcon((Icon) params[0]);
+                    balloonTip.setText((String) params[1]);
+                    balloonTip.setVisible(true);
                 }
             });
         }
@@ -135,6 +127,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
         this.representativeAnchor = (ToolWindowRepresentativeAnchor) c;
         this.descriptor = representativeAnchor.getDockableDescriptor();
         this.toolWindow = descriptor.getToolWindow();
+        this.representativeAnchorDescriptor = toolWindow.getRepresentativeAnchorDescriptor();
 
         super.installUI(c);
     }
@@ -219,7 +212,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     protected void installDefaults(JLabel c) {
         super.installDefaults(c);
 
-        this.balloonTip = new RepresentativeAnchorBalloonTip(descriptor.getManager().getRootPaneContainer());
+        this.balloonTip = new RepresentativeAnchorBalloonTip(representativeAnchorDescriptor, representativeAnchor);
 
         // Flashing animation fields
         this.flashingAnimation = new GradientAnimation();
@@ -251,7 +244,6 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
     protected void installListeners(JLabel c) {
         super.installListeners(c);
 
-        this.representativeAnchorDescriptor = toolWindow.getRepresentativeAnchorDescriptor();
         this.representativeAnchorDescriptor.addPropertyChangeListener(this);
 
         descriptor.getCleaner().addCleaner(this);

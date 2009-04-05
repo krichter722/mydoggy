@@ -43,6 +43,10 @@ public class ToolWindowRepresentativeAnchorDescriptor extends PropertyChangeEven
         return toolWindow;
     }
 
+    public ToolWindowAnchor getAnchor() {
+        return toolWindow.getAnchor();
+    }
+
     public boolean isPreviewEnabled() {
         return previewEnabled;
     }
@@ -107,8 +111,8 @@ public class ToolWindowRepresentativeAnchorDescriptor extends PropertyChangeEven
         firePlafPropertyChangeEvent("ensureRepresentativeAnchorVisible", false, true);
     }
 
-    public void showMessage(String message) {
-        firePropertyChangeEvent("showMessage", null, message);
+    public void showMessage(Icon icon, String message) {
+        firePropertyChangeEvent("showMessage", null, new Object[]{icon, message});
     }
 
     public void setVisible(boolean visible) {
