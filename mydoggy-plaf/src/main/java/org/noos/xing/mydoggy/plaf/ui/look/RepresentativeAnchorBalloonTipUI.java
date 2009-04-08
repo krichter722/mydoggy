@@ -1,7 +1,9 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
 import info.clearthought.layout.TableLayout;
+import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.RepresentativeAnchorBalloonTip;
+import org.noos.xing.mydoggy.plaf.ui.translucent.TranslucentComponent;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -29,6 +31,9 @@ public class RepresentativeAnchorBalloonTipUI extends BasicPanelUI implements Pr
     protected RootPaneContainer rootPaneContainer;
     protected JLayeredPane layeredPane;
 
+    protected TransparencyAnimation transparencyAnimation;
+    protected float transparencyAlpha = 0.0f;
+
     protected int hOffset;
     protected int vOffset;
 
@@ -43,10 +48,30 @@ public class RepresentativeAnchorBalloonTipUI extends BasicPanelUI implements Pr
     protected void installDefaults(final JPanel p) {
         super.installDefaults(p);
 
+        this.transparencyAnimation = new TransparencyAnimation(
+                new TranslucentComponent() {
+                    public void setAlphaModeRatio(float transparency) {
+                        transparencyAlpha = 1.0f - transparency;
+                        SwingUtilities.invokeLater(new Runnable() {
+                            public void run() {
+                                balloonTip.repaint();
+                            }
+                        });
+                    }
+
+                    public float getAlphaModeEnabled() {
+                        return transparencyAlpha;
+                    }
+                },
+                balloonTip,
+                SwingUtil.getFloat("RepresentativeAnchorBalloonTipUI.animation.alpha", 0.1f),
+                SwingUtil.getInt("RepresentativeAnchorBalloonTipUI.animation.duration", 1000)
+        );
+
         hOffset = SwingUtil.getInt("RepresentativeAnchorBalloonTipUI.hOffset", 15);
         vOffset = SwingUtil.getInt("RepresentativeAnchorBalloonTipUI.vOffset", 15);
 
-        p.setLayout(new TableLayout(new double[][]{{-1},{-1}}));
+        p.setLayout(new TableLayout(new double[][]{{-1}, {-1}}));
         p.setBorder(new RoundedBalloonBorder(SwingUtil.getInt("RepresentativeAnchorBalloonTipUI.arcWidth", 7),
                                              SwingUtil.getInt("RepresentativeAnchorBalloonTipUI.arcHeight", 7),
                                              SwingUtil.getColor("RepresentativeAnchorBalloonTipUI.fillColor", new Color(161, 238, 161)),
@@ -121,16 +146,16 @@ public class RepresentativeAnchorBalloonTipUI extends BasicPanelUI implements Pr
 
         switch (balloonTip.getRepresentativeAnchorDescriptor().getAnchor()) {
             case TOP:
-                finalLocatioon.setLocation(finalLocatioon.getX() - (finalSize.getWidth()/2), finalLocatioon.getY());
+                finalLocatioon.setLocation(finalLocatioon.getX() - (finalSize.getWidth() / 2), finalLocatioon.getY());
                 break;
             case LEFT:
-                finalLocatioon.setLocation(finalLocatioon.getX(), finalLocatioon.getY() - (finalSize.getHeight()/2));
+                finalLocatioon.setLocation(finalLocatioon.getX(), finalLocatioon.getY() - (finalSize.getHeight() / 2));
                 break;
             case RIGHT:
-                finalLocatioon.setLocation(finalLocatioon.getX() - finalSize.getWidth(), finalLocatioon.getY() - (finalSize.getHeight()/2));
+                finalLocatioon.setLocation(finalLocatioon.getX() - finalSize.getWidth(), finalLocatioon.getY() - (finalSize.getHeight() / 2));
                 break;
             case BOTTOM:
-                finalLocatioon.setLocation(finalLocatioon.getX() - (finalSize.getWidth()/2), finalLocatioon.getY() - finalSize.getHeight());
+                finalLocatioon.setLocation(finalLocatioon.getX() - (finalSize.getWidth() / 2), finalLocatioon.getY() - finalSize.getHeight());
                 break;
         }
 
@@ -140,6 +165,8 @@ public class RepresentativeAnchorBalloonTipUI extends BasicPanelUI implements Pr
         layeredPane = rootPaneContainer.getLayeredPane();
         layeredPane.setLayer(balloonTip, JLayeredPane.DEFAULT_LAYER + 5);
         layeredPane.add(balloonTip);
+
+        transparencyAnimation.show();
     }
 
 
@@ -199,7 +226,7 @@ public class RepresentativeAnchorBalloonTipUI extends BasicPanelUI implements Pr
             Graphics2D g2D = (Graphics2D) g;
 
             Composite oldComposite = g2D.getComposite();
-            g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.90f));
+            g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparencyAlpha));
             g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             try {
@@ -211,7 +238,7 @@ public class RepresentativeAnchorBalloonTipUI extends BasicPanelUI implements Pr
                         g.setColor(borderColor);
                         g.drawRoundRect(x, y, bWidth - 1, bHeight - vOffset - 1, arcWidth * 2, arcHeight * 2);
 
-                        int[] xPoints = new int[]{x + (bWidth/2) - 7, x + (bWidth/2), x + (bWidth/2) + 7};
+                        int[] xPoints = new int[]{x + (bWidth / 2) - 7, x + (bWidth / 2), x + (bWidth / 2) + 7};
                         int[] yPoints = new int[]{y + bHeight - vOffset - 1, y + bHeight, y + bHeight - vOffset - 1};
 
                         g.setColor(fillColor);
@@ -229,7 +256,7 @@ public class RepresentativeAnchorBalloonTipUI extends BasicPanelUI implements Pr
                         g.setColor(borderColor);
                         g.drawRoundRect(x, y + vOffset, bWidth - 1, bHeight - vOffset - 1, arcWidth * 2, arcHeight * 2);
 
-                        xPoints = new int[]{x + (bWidth/2) - 7, x + (bWidth/2), x + (bWidth/2) + 7};
+                        xPoints = new int[]{x + (bWidth / 2) - 7, x + (bWidth / 2), x + (bWidth / 2) + 7};
                         yPoints = new int[]{y + vOffset, y + 1, y + vOffset};
 
                         g.setColor(fillColor);
@@ -248,7 +275,7 @@ public class RepresentativeAnchorBalloonTipUI extends BasicPanelUI implements Pr
                         g.drawRoundRect(x + hOffset, y, bWidth - hOffset - 1, bHeight - 1, arcWidth * 2, arcHeight * 2);
 
                         xPoints = new int[]{x + hOffset, x + 1, x + hOffset};
-                        yPoints = new int[]{y + (bHeight/2) + 7, y + (bHeight/2), y + (bHeight/2) - 7};
+                        yPoints = new int[]{y + (bHeight / 2) + 7, y + (bHeight / 2), y + (bHeight / 2) - 7};
 
                         g.setColor(fillColor);
                         g.fillPolygon(xPoints, yPoints, 3);
@@ -265,8 +292,8 @@ public class RepresentativeAnchorBalloonTipUI extends BasicPanelUI implements Pr
                         g.setColor(borderColor);
                         g.drawRoundRect(x, y, bWidth - hOffset - 1, bHeight - 1, arcWidth * 2, arcHeight * 2);
 
-                        xPoints = new int[]{x + bWidth - hOffset - 1, x + bWidth, x + bWidth - hOffset - 1 };
-                        yPoints = new int[]{y + (bHeight/2) + 7, y + (bHeight/2), y + (bHeight/2) - 7};
+                        xPoints = new int[]{x + bWidth - hOffset - 1, x + bWidth, x + bWidth - hOffset - 1};
+                        yPoints = new int[]{y + (bHeight / 2) + 7, y + (bHeight / 2), y + (bHeight / 2) - 7};
 
                         g.setColor(fillColor);
                         g.fillPolygon(xPoints, yPoints, 3);
@@ -278,7 +305,7 @@ public class RepresentativeAnchorBalloonTipUI extends BasicPanelUI implements Pr
                         break;
                 }
             } finally {
-                g2D.setComposite(oldComposite);
+//                g2D.setComposite(oldComposite);
             }
         }
     }

@@ -913,6 +913,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                     initGlassPane();
                 } else {
                     keyboardFocusManager.removeKeyEventPostProcessor(shortcutProcessor);
+                    keyboardFocusManager.removePropertyChangeListener("focusOwner", focusOwnerChangeListener);
 
                     for (PropertyChangeListener listener : keyboardFocusManager.getPropertyChangeListeners("focusOwner")) {
                         if (listener.getClass().getPackage().getName().startsWith(

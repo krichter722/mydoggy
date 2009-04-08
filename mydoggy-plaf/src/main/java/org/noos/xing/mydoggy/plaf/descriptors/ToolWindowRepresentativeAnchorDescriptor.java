@@ -112,6 +112,7 @@ public class ToolWindowRepresentativeAnchorDescriptor extends PropertyChangeEven
     }
 
     public void showMessage(Icon icon, String message) {
+        // TODO: ensure the representative anchor is visible
         firePropertyChangeEvent("showMessage", null, new Object[]{icon, message});
     }
 
