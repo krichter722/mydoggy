@@ -1530,8 +1530,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         }
 
         public void contentRemoved(ContentManagerEvent event) {
-            MyDoggyContent content = (MyDoggyContent) event.getContent();
-            content.removePlafPropertyChangeListener(this);
         }
 
         public void contentSelected(ContentManagerEvent event) {

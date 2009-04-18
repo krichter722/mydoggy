@@ -1,6 +1,7 @@
 package org.noos.xing.mydoggy.plaf;
 
 import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.descriptors.ContentRepresentativeAnchorDescriptor;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
 import org.noos.xing.mydoggy.plaf.ui.content.PlafContent;
@@ -31,7 +32,7 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
     protected boolean flash;
     protected boolean minimized;
 
-    protected RepresentativeAnchorDescriptor representativeAnchorDescriptor;
+    protected RepresentativeAnchorDescriptor<Content> representativeAnchorDescriptor;
 
     public MyDoggyContent(MyDoggyContentManager contentManager,
                           String id, String title, Icon icon,
@@ -376,9 +377,12 @@ public class MyDoggyContent extends PropertyChangeEventSource implements PlafCon
     public void cleanup() {
         super.cleanup();
 
+        ((Cleaner) representativeAnchorDescriptor).cleanup();
+
         // Finalizy clean
         contentManager = null;
         dockableDelegator = null;
+        representativeAnchorDescriptor = null;
     }
 
 }
