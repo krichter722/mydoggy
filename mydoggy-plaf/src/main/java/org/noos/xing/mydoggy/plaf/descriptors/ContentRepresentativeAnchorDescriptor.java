@@ -154,4 +154,10 @@ public class ContentRepresentativeAnchorDescriptor extends PropertyChangeEventSo
         return icon;
     }
 
+    @Override
+    public void cleanup() {
+        super.cleanup();
+
+        this.content = null;
+    }
 }

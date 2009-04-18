@@ -143,9 +143,6 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
                 // Clean internal map
                 contentMap.remove(content.getId());
 
-                // Fire remove event
-                fireContentRemoved(content);
-
                 // Choose next content
                 plafContentManagerUI.selectNextContent(content);
 
@@ -167,6 +164,9 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
 
                 // clean the content
                 ((MyDoggyContent) content).cleanup();
+
+                // Fire remove event
+                fireContentRemoved(content);
             }
         }
 
