@@ -114,6 +114,11 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                     balloonTip.setVisible(true);
                 }
             });
+        } else if ("focusOwner".equals(propertyName)) {
+            if (balloonTip.isVisible()) {
+                if (e.getNewValue() != null)
+                    balloonTip.setVisible(false);
+            }
         }
     }
 
@@ -255,6 +260,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
         descriptor.getToolWindow().addPlafPropertyChangeListener(this);
 
         descriptor.getManager().addRemoveNotifyListener(removeNotifyDragListener = new RemoveNotifyDragListener(c, new ToolWindowRepresentativeAnchorDragListener(descriptor, c)));
+        descriptor.getManager().addInternalPropertyChangeListener("focusOwner", this);
     }
 
     protected void uninstallListeners(JLabel c) {
@@ -272,6 +278,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
         // Remove drag gesture
         removeNotifyDragListener.cleanup();
         descriptor.getManager().removeRemoveNotifyListener(removeNotifyDragListener);
+        descriptor.getManager().removeInternalPropertyChangeListener("focusOwner", this);
     }
 
 

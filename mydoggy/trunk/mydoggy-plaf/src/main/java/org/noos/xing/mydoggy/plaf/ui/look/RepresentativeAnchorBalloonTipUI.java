@@ -64,8 +64,8 @@ public class RepresentativeAnchorBalloonTipUI extends BasicPanelUI implements Pr
                     }
                 },
                 balloonTip,
-                SwingUtil.getFloat("RepresentativeAnchorBalloonTipUI.animation.alpha", 0.1f),
-                SwingUtil.getInt("RepresentativeAnchorBalloonTipUI.animation.duration", 1000)
+                SwingUtil.getFloat("RepresentativeAnchorBalloonTipUI.animation.alpha", 0.15f),
+                SwingUtil.getInt("RepresentativeAnchorBalloonTipUI.animation.duration", 500)
         );
 
         hOffset = SwingUtil.getInt("RepresentativeAnchorBalloonTipUI.hOffset", 15);
@@ -129,7 +129,7 @@ public class RepresentativeAnchorBalloonTipUI extends BasicPanelUI implements Pr
         }
     }
 
-    public void updateLocation() {
+    public void updateLocation(boolean visible) {
         if (rootPaneContainer != null) {
             layeredPane = rootPaneContainer.getLayeredPane();
             layeredPane.remove(balloonTip);
