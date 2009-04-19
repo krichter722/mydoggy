@@ -11,6 +11,7 @@ import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -272,15 +273,22 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         if (flash && isActive())
             return;
 
-        if (this.flash == flash)
-            return;
+        if (!this.flash && !flash) {
+            // Verify a tab...
+            for (ToolWindowTab toolWindowTab : toolWindowTabs) {
+                toolWindowTab.setFlashing(false);
+            }            
+        } else {
+            if (this.flash == flash)
+                return;
 
-        synchronized (getLock()) {
+            synchronized (getLock()) {
 
-            boolean old = this.flash;
-            this.flash = flash;
+                boolean old = this.flash;
+                this.flash = flash;
 
-            firePropertyChangeEvent("flash", old, flash);
+                firePropertyChangeEvent("flash", old, flash);
+            }
         }
     }
 
@@ -1007,7 +1015,25 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
         firePropertyChangeEvent("anchor", oldValue, newValue, userObject);
     }
 
+    protected PropertyChangeListener pclListener = new PropertyChangeListener() {
+        public void propertyChange(PropertyChangeEvent evt) {
+            if ("flash".equals(evt.getPropertyName()))
+                firePlafPropertyChangeEvent(evt);
+        }
+    };
+
+
     protected void fireToolWindowTabEvent(ToolWindowTabEvent event) {
+        switch (event.getActionId()) {
+            case TAB_ADDED:
+                event.getToolWindowTab().addPropertyChangeListener(pclListener);
+                break;
+            case TAB_REMOVED:
+                event.getToolWindowTab().removePropertyChangeListener(pclListener);
+                break;
+        }
+
+
         if (toolWindowListeners == null)
             return;
 

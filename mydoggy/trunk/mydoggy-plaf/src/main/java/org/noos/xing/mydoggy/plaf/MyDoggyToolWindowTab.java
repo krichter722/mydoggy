@@ -120,7 +120,7 @@ public class MyDoggyToolWindowTab extends PropertyChangeEventSource implements T
     }
 
     public void setFlashing(boolean flash) {
-        if (flash && isSelected())
+        if (flash && owner.isVisible() && isSelected())
             return; 
 
         if (this.flash == flash)

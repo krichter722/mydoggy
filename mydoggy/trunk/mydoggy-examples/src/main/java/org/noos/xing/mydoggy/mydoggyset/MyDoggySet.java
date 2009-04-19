@@ -465,20 +465,7 @@ public class MyDoggySet {
 //            test.run(null);
 //            test.run(new MultiSplitRandomConstraints(test));
 //            test.run(new TabbedRandomConstraints(test));
-            test.run(new Runnable() {
-                public void run() {
-                    KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", new PropertyChangeListener() {
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            System.out.println("focusOwner = " + evt.getNewValue());
-                        }
-                    });
-
-                    test.toolWindowManager.getToolWindow("Tool 3").getRepresentativeAnchorDescriptor().showMessage(SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/save.png"), "Hello World!!!");
-//                    test.toolWindowManager.getToolWindow("Tool 4").getRepresentativeAnchorDescriptor().showMessage(SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/save.png"), "Hello World!!!");
-//                    test.toolWindowManager.getToolWindow("Tool 13").getRepresentativeAnchorDescriptor().showMessage(SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/save.png"), "Hello World!!!");
-//                    test.toolWindowManager.getToolWindow("Tool 1").getRepresentativeAnchorDescriptor().showMessage(SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/save.png"), "Hello World!!!");
-                }
-            });
+            test.run(null);
         } catch (Exception e) {
             e.printStackTrace();
         }
