@@ -707,7 +707,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
                 } else {
                     keyboardFocusManager.removePropertyChangeListener("focusOwner", focusListener);
 
-                    if  (toolWindow != null)
+                    if (toolWindow != null)
                         toolWindow.setFlashing(false);
                 }
             }

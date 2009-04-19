@@ -671,6 +671,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         propertyChangeSupport.addPropertyChangeListener(property, listener);
     }
 
+    public void removeInternalPropertyChangeListener(String property, PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(property, listener);
+    }
+
     public void addRemoveNotifyListener(PropertyChangeListener listener) {
         addInternalPropertyChangeListener("managerWindowAncestor", listener);
     }
@@ -1484,8 +1488,11 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     public class FocusOwnerChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Component newFocusOwner = (Component) evt.getNewValue();
+
             if (newFocusOwner != null && SwingUtilities.isDescendingFrom(newFocusOwner, mainContainer))
                 lastFocusOwner = newFocusOwner;
+
+            propertyChangeSupport.firePropertyChange(evt);
         }
     }
 
