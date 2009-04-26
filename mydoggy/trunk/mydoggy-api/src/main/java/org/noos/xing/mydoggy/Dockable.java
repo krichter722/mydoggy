@@ -189,11 +189,11 @@ public interface Dockable<M extends DockableManager> extends Observable {
     void ensureVisible();
 
     /**
-     * TODO
-     * @return
+     * Returns <code>true</code> if the dockable is visible, <code>false</code> otherwise.
+     *
+     * @return <code>true</code> if the dockable is visible, <code>false</code> otherwise.
      * @since 1.4.0
      */
     boolean isVisible();
-
 
 }
