@@ -5,6 +5,7 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.PropertyChangeEventSource;
+import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
 
 import javax.swing.*;
 import java.util.HashSet;
@@ -15,6 +16,7 @@ import java.util.Set;
  */
 public class ToolWindowRepresentativeAnchorDescriptor extends PropertyChangeEventSource implements RepresentativeAnchorDescriptor<ToolWindow> {
 
+    protected ToolWindowDescriptor toolWindowDescriptor;
     protected ToolWindow toolWindow;
 
     protected boolean previewEnabled;
@@ -28,8 +30,9 @@ public class ToolWindowRepresentativeAnchorDescriptor extends PropertyChangeEven
     protected boolean visible;
 
 
-    public ToolWindowRepresentativeAnchorDescriptor(ToolWindow toolWindow) {
-        this.toolWindow = toolWindow;
+    public ToolWindowRepresentativeAnchorDescriptor(ToolWindowDescriptor toolWindowDescriptor) {
+        this.toolWindowDescriptor = toolWindowDescriptor;
+        this.toolWindow = toolWindowDescriptor.getToolWindow();
         this.previewEnabled = true;
         this.previewDelay = 1000;
         this.previewTransparentRatio = 0.65f;
@@ -37,7 +40,10 @@ public class ToolWindowRepresentativeAnchorDescriptor extends PropertyChangeEven
         this.visible = true;
         this.title = toolWindow.getId();
         this.icon = toolWindow.getIcon();
+
+        toolWindowDescriptor.getCleaner().addCleaner(this);
     }
+
 
     public ToolWindow getDockable() {
         return toolWindow;
@@ -107,8 +113,7 @@ public class ToolWindowRepresentativeAnchorDescriptor extends PropertyChangeEven
     }
 
     public void ensureVisible() {
-        // TODO: implement it
-        firePlafPropertyChangeEvent("ensureRepresentativeAnchorVisible", false, true);
+        toolWindowDescriptor.getToolBar().ensureVisible(toolWindowDescriptor.getRepresentativeAnchor());
     }
 
     public void showMessage(Icon icon, String message) {
@@ -170,5 +175,12 @@ public class ToolWindowRepresentativeAnchorDescriptor extends PropertyChangeEven
     public Icon getIcon() {
         return icon;
     }
-    
+
+
+    @Override
+    public void cleanup() {
+        super.cleanup();
+        this.toolWindow = null;
+        this.toolWindowDescriptor = null;
+    }
 }

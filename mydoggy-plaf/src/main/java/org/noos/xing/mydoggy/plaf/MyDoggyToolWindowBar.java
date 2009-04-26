@@ -228,6 +228,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     }
 
     public void ensureVisible(final Component component) {
+        if (component == null)
+            return;
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 toolWindowScrollBar.ensureVisible(component);
@@ -1767,6 +1769,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
             setOpaque(false);
             setLayout(new ExtendedTableLayout(new double[][]{{-1},{-1}}));
+            putClientProperty("ra", representativeAnchor);
             add(representativeAnchor, "0,0,FULL,FULL");
         }
 

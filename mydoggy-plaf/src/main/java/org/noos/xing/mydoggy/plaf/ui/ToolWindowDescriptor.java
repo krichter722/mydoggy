@@ -323,6 +323,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
 
     public void cleanup() {
         getCleaner().cleanup();
+
     }
 
 
@@ -770,7 +771,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         dockedTypeDescriptor = (DockedTypeDescriptor) ((InternalTypeDescriptor) manager.getTypeDescriptorTemplate(ToolWindowType.DOCKED)).cloneMe(this);
         dockedTypeDescriptor.addPropertyChangeListener(this);
 
-        representativeAnchorDescriptor = new ToolWindowRepresentativeAnchorDescriptor(toolWindow);
+        representativeAnchorDescriptor = new ToolWindowRepresentativeAnchorDescriptor(this);
         representativeAnchorDescriptor.addPropertyChangeListener(this);
     }
 

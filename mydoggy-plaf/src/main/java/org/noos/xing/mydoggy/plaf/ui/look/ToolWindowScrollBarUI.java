@@ -97,8 +97,13 @@ public class ToolWindowScrollBarUI extends ComponentUI implements ChangeListener
         // Check for component
         boolean found = false;
         for (int i = 0, size = container.getComponentCount(); i < size; i++) {
-            if (container.getComponent(i) == component)
+            Component containerComponent = container.getComponent(i);
+
+            if (containerComponent == component || (containerComponent instanceof JComponent && ((JComponent)containerComponent).getClientProperty("ra") == component)) {
+                component = containerComponent; 
                 found = true;
+                break;
+            }
         }
 
         if (found) {
