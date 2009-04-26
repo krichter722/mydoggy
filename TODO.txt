@@ -10,6 +10,7 @@ TODO: How to make the representative anchor button of a tool window show the tit
 TODO: tab flashing doesn't work...when the tool is not visible...
 TODO: [mydoggy - Help] RE: Several horinotally aggregated windows le
 TODO: tool detached on the same window must be restorable by the persistence mechanism..
+TODO: showMessage this correctly ... <html>Hello<br>World!!!<br>Hello<br>World!!!<br>Hello<br>World!!!<br>Hello<br>World!!!<br>Hello<br>World!!!<br>Hello<br>World!!!<br></html> 
 
 BY EMAIL:
 

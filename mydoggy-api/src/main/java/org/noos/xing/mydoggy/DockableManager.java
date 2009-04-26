@@ -18,9 +18,10 @@ public interface DockableManager<D extends Dockable> {
     D[] getDockables();
 
     /**
-     * TODO
-     * @param id
-     * @return
+     * Returns the dockable whose id is the passed value, null otherwise.
+     *
+     * @param id the dockable id.
+     * @return the dockable whose id is the passed value, null otherwise. 
      * @since 1.5.0
      */
     D getDockableById(String id);
