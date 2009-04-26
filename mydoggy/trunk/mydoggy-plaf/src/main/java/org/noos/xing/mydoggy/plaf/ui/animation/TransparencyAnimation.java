@@ -32,12 +32,12 @@ public class TransparencyAnimation extends AbstractAnimation {
     }
 
     protected float onAnimating(float animationPercent) {
-        if (getAnimationDirection() == Direction.INCOMING) {
+//        if (getAnimationDirection() == Direction.INCOMING) {
             double animatingLengthX = (animationPercent * (1.0f - alpha));
             synchronized(transparencyManager) {
                 transparencyManager.setAlphaModeRatio(component, 1.0f - (float) animatingLengthX);
             }
-        }
+//        }
         return animationPercent;
 	}
 

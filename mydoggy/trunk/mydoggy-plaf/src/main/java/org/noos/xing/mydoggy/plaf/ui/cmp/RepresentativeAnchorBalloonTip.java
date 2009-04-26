@@ -51,12 +51,12 @@ public class RepresentativeAnchorBalloonTip extends JPanel {
     }
 
 
-    @Override
-    public void setVisible(boolean aFlag) {
-        if (aFlag)
-            getUI().updateLocation(aFlag);
+    public void showTip() {
+        getUI().showTip();
+    }
 
-        super.setVisible(aFlag);
+    public void hideTip() {
+        getUI().hideTip();
     }
 
     public void setRootPaneContainer(RootPaneContainer rootPaneContainer) {

@@ -172,15 +172,18 @@ public interface RepresentativeAnchorDescriptor<D extends Dockable> extends Obse
 
 
     /**
+     * Ensure that the representative anchor is visible to the user.
      *
      * @since 1.5.0
      */
     void ensureVisible();
 
     /**
-     * TODO: not implemented yet!
-     * @param icon
-     *@param message  @since 1.5.0
+     * Show a message near the representative anchor.
+     *
+     * @param icon an icon.
+     * @param message the message to be shown.
+     * @since 1.5.0
      */
     void showMessage(Icon icon, String message);
 

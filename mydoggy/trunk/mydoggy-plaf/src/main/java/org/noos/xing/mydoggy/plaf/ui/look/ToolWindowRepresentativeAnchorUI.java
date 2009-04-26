@@ -111,13 +111,14 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                     balloonTip.setRootPaneContainer(descriptor.getManager().getRootPaneContainer());
                     balloonTip.setIcon((Icon) params[0]);
                     balloonTip.setText((String) params[1]);
-                    balloonTip.setVisible(true);
+                    balloonTip.showTip();
                 }
             });
         } else if ("focusOwner".equals(propertyName)) {
             if (balloonTip.isVisible()) {
-                if (e.getNewValue() != null)
-                    balloonTip.setVisible(false);
+                if (e.getNewValue() != null) {
+                    balloonTip.hideTip();
+                }
             }
         }
     }

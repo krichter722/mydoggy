@@ -1,6 +1,8 @@
 package org.noos.xing.mydoggy.plaf.ui.look;
 
 import info.clearthought.layout.TableLayout;
+import org.noos.xing.mydoggy.plaf.ui.animation.AbstractAnimation;
+import org.noos.xing.mydoggy.plaf.ui.animation.AnimationListener;
 import org.noos.xing.mydoggy.plaf.ui.animation.TransparencyAnimation;
 import org.noos.xing.mydoggy.plaf.ui.cmp.RepresentativeAnchorBalloonTip;
 import org.noos.xing.mydoggy.plaf.ui.translucent.TranslucentComponent;
@@ -51,7 +53,12 @@ public class RepresentativeAnchorBalloonTipUI extends BasicPanelUI implements Pr
         this.transparencyAnimation = new TransparencyAnimation(
                 new TranslucentComponent() {
                     public void setAlphaModeRatio(float transparency) {
-                        transparencyAlpha = 1.0f - transparency;
+                        if (transparencyAnimation.getAnimationDirection() == AbstractAnimation.Direction.OUTGOING){
+                            transparencyAlpha = transparency;
+                        } else {
+                            transparencyAlpha = 1.0f - transparency;
+                        }
+
                         SwingUtilities.invokeLater(new Runnable() {
                             public void run() {
                                 balloonTip.repaint();
@@ -67,6 +74,12 @@ public class RepresentativeAnchorBalloonTipUI extends BasicPanelUI implements Pr
                 SwingUtil.getFloat("RepresentativeAnchorBalloonTipUI.animation.alpha", 0.15f),
                 SwingUtil.getInt("RepresentativeAnchorBalloonTipUI.animation.duration", 500)
         );
+        transparencyAnimation.addAnimationListener(new AnimationListener() {
+            public void onFinished() {
+                if (transparencyAnimation.getAnimationDirection() == AbstractAnimation.Direction.OUTGOING)
+                    balloonTip.setVisible(false);
+            }
+        });
 
         hOffset = SwingUtil.getInt("RepresentativeAnchorBalloonTipUI.hOffset", 15);
         vOffset = SwingUtil.getInt("RepresentativeAnchorBalloonTipUI.vOffset", 15);
@@ -167,6 +180,16 @@ public class RepresentativeAnchorBalloonTipUI extends BasicPanelUI implements Pr
         layeredPane.add(balloonTip);
 
         transparencyAnimation.show();
+    }
+
+    public void showTip() {
+        transparencyAlpha = 0.0f;
+        updateLocation(true);
+        balloonTip.setVisible(true);
+    }
+
+    public void hideTip() {
+        transparencyAnimation.hide();
     }
 
 

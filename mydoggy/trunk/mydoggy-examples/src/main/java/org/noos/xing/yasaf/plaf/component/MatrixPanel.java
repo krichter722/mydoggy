@@ -47,7 +47,8 @@ public class MatrixPanel extends JPanel {
         column = 1 + column * 4;
         row = 1 + row * 2;
 
-        add(new JLabel(label), column + "," + row + ",r,c");
+        if (label != null)
+            add(new JLabel(label), column + "," + row + ",r,c");
         add(component, (column + 2) + "," + row + ",FULL,FULL");
     }
 
