@@ -2,6 +2,7 @@ package org.noos.xing.mydoggy.plaf.ui.look;
 
 import org.noos.xing.mydoggy.ToolWindowBar;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowBarPanel;
+import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -37,11 +38,11 @@ public class ToolWindowBarPanelUI extends BasicPanelUI {
     protected void installDefaults(JPanel p) {
         super.installDefaults(p);
 
-        LookAndFeel.installColorsAndFont(p,
-                                         "ToolWindowBarPanelUI.background",
-                                         "ToolWindowBarPanelUI.foreground",
-                                         "ToolWindowBarPanelUI.font");
-        LookAndFeel.installBorder(p, "ToolWindowBarPanelUI.border");
+        SwingUtil.installColorsAndFont(p,
+                "ToolWindowBarPanelUI.background",
+                "ToolWindowBarPanelUI.foreground",
+                "ToolWindowBarPanelUI.font");
+        SwingUtil.installBorder(p, "ToolWindowBarPanelUI.border");
     }
 
     public void uninstallUI(JComponent c) {

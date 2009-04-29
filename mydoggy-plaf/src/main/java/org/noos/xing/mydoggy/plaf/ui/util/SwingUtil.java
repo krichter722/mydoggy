@@ -9,6 +9,7 @@ import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.plaf.UIResource;
 import java.applet.Applet;
 import java.awt.*;
 import java.awt.dnd.DnDConstants;
@@ -186,7 +187,7 @@ public class SwingUtil {
     public static Component findComponentAt(Container cont, int x, int y, boolean ignoreEnabled, boolean ignoreGlassPane) {
         if (!((cont instanceof CellRendererPane) || (cont.getParent() instanceof CellRendererPane)) &&
 
-            !(cont.contains(x, y) /*&& cont.isVisible() */ && (ignoreEnabled || cont.isEnabled()))) {
+                !(cont.contains(x, y) /*&& cont.isVisible() */ && (ignoreEnabled || cont.isEnabled()))) {
             return null;
         }
         int ncomponents = cont.getComponentCount();
@@ -204,15 +205,15 @@ public class SwingUtil {
                 Point point = comp.getLocation();
                 if (comp instanceof Container) {
                     comp = findComponentAt((Container) comp,
-                                           x - point.x,
-                                           y - point.y,
-                                           ignoreEnabled,
-                                           ignoreGlassPane);
+                            x - point.x,
+                            y - point.y,
+                            ignoreEnabled,
+                            ignoreGlassPane);
                 } else {
                     comp = comp.getComponentAt(x - point.x, y - point.y);
                 }
                 if (comp != null && comp.isVisible() &&
-                    (ignoreEnabled || comp.isEnabled())) {
+                        (ignoreEnabled || comp.isEnabled())) {
                     return comp;
                 }
             }
@@ -223,15 +224,15 @@ public class SwingUtil {
                 Point point = comp.getLocation();
                 if (comp instanceof Container) {
                     comp = findComponentAt((Container) comp,
-                                           x - point.x,
-                                           y - point.y,
-                                           ignoreEnabled,
-                                           ignoreGlassPane);
+                            x - point.x,
+                            y - point.y,
+                            ignoreEnabled,
+                            ignoreGlassPane);
                 } else {
                     comp = comp.getComponentAt(x - point.x, y - point.y);
                 }
                 if (comp != null && comp.isVisible() &&
-                    (ignoreEnabled || comp.isEnabled())) {
+                        (ignoreEnabled || comp.isEnabled())) {
                     return comp;
                 }
             }
@@ -435,7 +436,7 @@ public class SwingUtil {
                 x = ((JComponent) c).getX();
                 y = ((JComponent) c).getY();
             } else if (c instanceof java.applet.Applet ||
-                       c instanceof java.awt.Window) {
+                    c instanceof java.awt.Window) {
                 try {
                     Point pp = c.getLocationOnScreen();
                     x = pp.x;
@@ -636,7 +637,7 @@ public class SwingUtil {
         dragSource.addDragSourceMotionListener(dragListener);
 
         dragEntryMap.put(c, new DragEntry(recognizer,
-                                          dragListener));
+                dragListener));
 
         return recognizer;
     }
@@ -719,7 +720,7 @@ public class SwingUtil {
                 x = c.getX();
                 y = c.getY();
             } else if (c instanceof java.applet.Applet ||
-                       c instanceof java.awt.Window) {
+                    c instanceof java.awt.Window) {
                 try {
                     Point pp = c.getLocationOnScreen();
                     x = pp.x;
@@ -751,7 +752,7 @@ public class SwingUtil {
                 x = c.getX();
                 y = c.getY();
             } else if (c instanceof java.applet.Applet ||
-                       c instanceof java.awt.Window) {
+                    c instanceof java.awt.Window) {
                 try {
                     Point pp = c.getLocationOnScreen();
                     x = pp.x;
@@ -784,28 +785,28 @@ public class SwingUtil {
         return p;
     }
 
-    public static Point convertPoint(Component source,Point aPoint,Component destination) {
+    public static Point convertPoint(Component source, Point aPoint, Component destination) {
         Point p;
 
-        if(source == null && destination == null)
+        if (source == null && destination == null)
             return aPoint;
 
-        if(source == null) {
+        if (source == null) {
             source = SwingUtilities.getWindowAncestor(destination);
-            if(source == null)
+            if (source == null)
                 throw new Error("Source component not connected to component tree hierarchy");
         }
 
         p = new Point(aPoint);
-        convertPointToScreen(p,source);
+        convertPointToScreen(p, source);
 
-        if(destination == null) {
+        if (destination == null) {
             destination = getWindowAncestor(source);
-            if(destination == null)
+            if (destination == null)
                 throw new Error("Destination component not connected to component tree hierarchy");
         }
 
-        convertPointFromScreen2(p,destination);
+        convertPointFromScreen2(p, destination);
 
         return p;
     }
@@ -918,6 +919,43 @@ public class SwingUtil {
     }
 
 
+    // Look and Feel
+
+
+    public static void installColorsAndFont(JComponent c,
+                                            String defaultBgName,
+                                            String defaultFgName,
+                                            String defaultFontName) {
+        Font f = c.getFont();
+        if (f == null || f instanceof UIResource && UIManager.getDefaults().containsKey(defaultFgName)) {
+            c.setFont(UIManager.getFont(defaultFontName));
+        }
+
+        installColors(c, defaultBgName, defaultFgName);
+    }
+
+
+    public static void installColors(JComponent c,
+                                     String defaultBgName,
+                                     String defaultFgName) {
+        Color bg = c.getBackground();
+        if (bg == null || bg instanceof UIResource && UIManager.getDefaults().containsKey(defaultBgName)) {
+            c.setBackground(UIManager.getColor(defaultBgName));
+        }
+
+        Color fg = c.getForeground();
+        if (fg == null || fg instanceof UIResource && UIManager.getDefaults().containsKey(defaultFgName)) {
+            c.setForeground(UIManager.getColor(defaultFgName));
+        }
+
+    }
+
+    public static void installBorder(JComponent c, String defaultBorderName) {
+        Border b = c.getBorder();
+        if (b == null || b instanceof UIResource && UIManager.getDefaults().containsKey(defaultBorderName)) {
+            c.setBorder(UIManager.getBorder(defaultBorderName));
+        }
+    }
 
     public static class DragEntry {
         DragGestureRecognizer dragGestureRecognizer;

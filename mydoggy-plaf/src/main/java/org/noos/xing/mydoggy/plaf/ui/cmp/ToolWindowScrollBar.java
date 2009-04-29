@@ -9,7 +9,7 @@ import java.awt.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ToolWindowScrollBar extends JComponent {
+public class ToolWindowScrollBar extends JPanel {
     /**
      * @see #getUIClassID
      * @see #readObject

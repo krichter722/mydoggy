@@ -14,6 +14,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.LabelUI;
+import javax.swing.plaf.basic.BasicPanelUI;
 import javax.swing.plaf.metal.MetalLabelUI;
 import java.awt.*;
 import java.awt.event.*;
@@ -21,7 +22,7 @@ import java.awt.event.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ToolWindowScrollBarUI extends ComponentUI implements ChangeListener {
+public class ToolWindowScrollBarUI extends BasicPanelUI implements ChangeListener {
 
     public enum Direction {
         LEFT, RIGHT
