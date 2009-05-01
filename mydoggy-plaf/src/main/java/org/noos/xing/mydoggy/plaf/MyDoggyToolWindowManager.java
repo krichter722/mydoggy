@@ -438,7 +438,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         if (source instanceof DockableDescriptor) {
             DockableDescriptor descriptor = (DockableDescriptor) source;
             if (descriptor.getDockableType() != DockableDescriptor.DockableType.CUSTOM) {
-                if (getDockableById(descriptor.getDockable().getId()) != descriptor.getDockable()) {
+                if (getDockable(descriptor.getDockable().getId()) != descriptor.getDockable()) {
                     throw new RuntimeException("Manager doesn't contain that ToolWindow. [id : " + descriptor.getDockable().getId() + "]");
                 }
             }
