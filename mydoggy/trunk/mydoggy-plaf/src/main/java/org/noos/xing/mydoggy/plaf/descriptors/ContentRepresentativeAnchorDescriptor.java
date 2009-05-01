@@ -34,7 +34,7 @@ public class ContentRepresentativeAnchorDescriptor extends PropertyChangeEventSo
         this.previewTransparentRatio = 0.65f;
         this.lockingAnchors = new HashSet<ToolWindowAnchor>();
         this.visible = true;
-        this.title = content.getId();
+        this.title = content.getTitle();
         this.icon = content.getIcon();
     }
 
