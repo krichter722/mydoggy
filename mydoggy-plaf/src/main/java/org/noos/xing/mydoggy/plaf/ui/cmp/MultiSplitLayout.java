@@ -1236,6 +1236,7 @@ public class MultiSplitLayout implements LayoutManager {
 
         public String print() {
             StringBuffer sb = new StringBuffer("Split");
+            sb.append("{").append(getBounds()).append("}");
             sb.append(isRowLayout() ? " ROW [" : " COLUMN [");
 
             for (Node child : children) {
@@ -1349,8 +1350,13 @@ public class MultiSplitLayout implements LayoutManager {
             return "Divider " + getBounds().toString();
         }
 
+        @Override
+        public void setBounds(Rectangle bounds) {
+            super.setBounds(bounds);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
         public String print() {
-            return "Divider";
+            return String.format("Divider{%s}", getBounds());
         }
     }
 

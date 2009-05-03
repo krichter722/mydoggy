@@ -283,7 +283,9 @@ public class MultiSplitPane extends JPanel {
             bounds.y = Math.max(bounds.y, dragMin);
             bounds.y = Math.min(bounds.y, dragMax);
         }
+
         dragDivider.setBounds(bounds);
+
         if (isContinuousLayout()) {
             revalidate();
             repaintDragLimits();
