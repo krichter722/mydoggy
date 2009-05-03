@@ -155,18 +155,23 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
                     }
                 }
             } finally {
-                // Remove aliases
-                for (Iterator<Content> iterator = aliases.values().iterator(); iterator.hasNext();) {
-                    Content aliasedContent = iterator.next();
-                    if (aliasedContent == content)
-                        iterator.remove();
+                try {
+                    // Remove aliases
+                    for (Iterator<Content> iterator = aliases.values().iterator(); iterator.hasNext();) {
+                        Content aliasedContent = iterator.next();
+
+                        if (aliasedContent == content) 
+                            iterator.remove();
+                    }
+
+                    // Fire remove event
+                    fireContentRemoved(content);
+                } finally {
+                    // clean the content
+                    ((MyDoggyContent) content).cleanup();
+
                 }
 
-                // clean the content
-                ((MyDoggyContent) content).cleanup();
-
-                // Fire remove event
-                fireContentRemoved(content);
             }
         }
 
