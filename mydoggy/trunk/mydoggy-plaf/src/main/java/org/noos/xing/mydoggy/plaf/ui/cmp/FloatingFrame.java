@@ -189,21 +189,23 @@ public class FloatingFrame extends JFrame implements FloatingWindow,
     public void setUndecorated(boolean undecorated) {
         super.setUndecorated(undecorated);
 
-        if (undecorated) {
-            // remove
-            TableLayout tableLayout = ((TableLayout) getContentPane().getLayout());
-            int borderLength = SwingUtil.getInt(MyDoggyKeySpace.MODAL_WINDOW_BORDER_LENGTH, 2);
-            tableLayout.setRow(new double[]{borderLength, TableLayout.FILL, borderLength});
-            tableLayout.setColumn(new double[]{borderLength, TableLayout.FILL, borderLength});
+        if (getContentPane().getLayout() instanceof TableLayout) {
+            if (undecorated) {
+                // remove
+                TableLayout tableLayout = ((TableLayout) getContentPane().getLayout());
+                int borderLength = SwingUtil.getInt(MyDoggyKeySpace.MODAL_WINDOW_BORDER_LENGTH, 2);
+                tableLayout.setRow(new double[]{borderLength, TableLayout.FILL, borderLength});
+                tableLayout.setColumn(new double[]{borderLength, TableLayout.FILL, borderLength});
 
-            SwingUtil.revalidate(this);
-        } else {
-            // add
-            TableLayout tableLayout = ((TableLayout) getContentPane().getLayout());
-            tableLayout.setRow(new double[]{0, TableLayout.FILL, 0});
-            tableLayout.setColumn(new double[]{0, TableLayout.FILL, 0});
+                SwingUtil.revalidate(this);
+            } else {
+                // add
+                TableLayout tableLayout = ((TableLayout) getContentPane().getLayout());
+                tableLayout.setRow(new double[]{0, TableLayout.FILL, 0});
+                tableLayout.setColumn(new double[]{0, TableLayout.FILL, 0});
 
-            SwingUtil.revalidate(this);
+                SwingUtil.revalidate(this);
+            }
         }
     }
 
