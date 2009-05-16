@@ -55,6 +55,11 @@ public class ToolWindowRepresentativeAnchor extends JLabel implements Cleaner {
         return uiClassID;
     }
 
+    @Override
+    public void removeNotify() {
+        super.removeNotify();    //To change body of overridden methods use File | Settings | File Templates.
+        setUI(null);
+    }
 
     public ToolWindowDescriptor getDockableDescriptor() {
         return toolWindowDescriptor;
