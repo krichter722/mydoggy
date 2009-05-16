@@ -38,6 +38,13 @@ public class DockablePanel extends JPanel implements DockableOwner {
         return dockable;
     }
 
+    @Override
+    public void removeNotify() {
+        //  TODO: pay attention to this... Should this extended to other classes...
+        super.removeNotify();
+        setUI(null);
+    }
+
     public void updateUI() {
         if (dockable != null)
             setUI((DockablePanelUI) UIManager.getUI(this));
