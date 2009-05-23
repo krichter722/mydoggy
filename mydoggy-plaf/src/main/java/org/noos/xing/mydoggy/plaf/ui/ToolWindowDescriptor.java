@@ -204,7 +204,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
                     break;
                 case LEFT:
                     if (SwingUtil.getBoolean(MyDoggyKeySpace.TWRA_ROTATE_ICON_ON_ANCHOR, false) && toolIcon != null)
-                        toolIcon = GraphicsUtil.rotate(toolIcon, Math.PI/2);
+                        toolIcon = GraphicsUtil.rotate(toolIcon, -Math.PI/2);
 
                     TextIcon textIcon = new TextIcon(parent, toolRepresentativeAnchorText, TextIcon.ROTATE_LEFT);
                     textIcon.setForeground(toolWindow.isAvailable() ? UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND)
@@ -214,7 +214,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
                     break;
                 case RIGHT:
                     if (SwingUtil.getBoolean(MyDoggyKeySpace.TWRA_ROTATE_ICON_ON_ANCHOR, false) && toolIcon != null)
-                        toolIcon = GraphicsUtil.rotate(toolIcon, -Math.PI/2);
+                        toolIcon = GraphicsUtil.rotate(toolIcon, Math.PI/2);
 
                     textIcon = new TextIcon(parent, toolRepresentativeAnchorText, TextIcon.ROTATE_RIGHT);
                     textIcon.setForeground(toolWindow.isAvailable() ? UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND)
@@ -269,7 +269,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
                     break;
                 case LEFT:
                     if (SwingUtil.getBoolean(MyDoggyKeySpace.TWRA_ROTATE_ICON_ON_ANCHOR, false) && toolIcon != null)
-                        toolIcon = GraphicsUtil.rotate(toolIcon, Math.PI/2);
+                        toolIcon = GraphicsUtil.rotate(toolIcon, -Math.PI/2);
 
                     TextIcon textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeAnchor.getIcon()).getLeftIcon()).getComponent(), toolRepresentativeAnchorText, TextIcon.ROTATE_LEFT);
                     textIcon.setForeground(toolWindow.isAvailable() ? UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND)
@@ -280,7 +280,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
                     break;
                 case RIGHT:
                     if (SwingUtil.getBoolean(MyDoggyKeySpace.TWRA_ROTATE_ICON_ON_ANCHOR, false) && toolIcon != null)
-                        toolIcon = GraphicsUtil.rotate(toolIcon, -Math.PI/2);
+                        toolIcon = GraphicsUtil.rotate(toolIcon, Math.PI/2);
 
                     textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeAnchor.getIcon()).getRightIcon()).getComponent(), toolRepresentativeAnchorText, TextIcon.ROTATE_RIGHT);
                     textIcon.setForeground(toolWindow.isAvailable() ? UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND)
