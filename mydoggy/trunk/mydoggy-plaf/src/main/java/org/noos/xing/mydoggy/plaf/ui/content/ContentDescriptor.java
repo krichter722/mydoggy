@@ -60,7 +60,7 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
                     break;
                 case LEFT:
                     if (SwingUtil.getBoolean(MyDoggyKeySpace.TWRA_ROTATE_ICON_ON_ANCHOR, false) && toolIcon != null)
-                        toolIcon = GraphicsUtil.rotate(toolIcon, Math.PI/2);
+                        toolIcon = GraphicsUtil.rotate(toolIcon, -Math.PI/2);
 
                     TextIcon textIcon = new TextIcon(parent, labelText, TextIcon.ROTATE_LEFT);
                     textIcon.setForeground(UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND));
@@ -70,7 +70,7 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
                     break;
                 case RIGHT:
                     if (SwingUtil.getBoolean(MyDoggyKeySpace.TWRA_ROTATE_ICON_ON_ANCHOR, false) && toolIcon != null)
-                        toolIcon = GraphicsUtil.rotate(toolIcon, -Math.PI/2);
+                        toolIcon = GraphicsUtil.rotate(toolIcon, Math.PI/2);
 
                     textIcon = new TextIcon(parent, labelText, TextIcon.ROTATE_RIGHT);
                     textIcon.setForeground(UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND));
@@ -124,7 +124,7 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
                     break;
                 case LEFT:
                     if (SwingUtil.getBoolean(MyDoggyKeySpace.TWRA_ROTATE_ICON_ON_ANCHOR, false) && toolIcon != null)
-                        toolIcon = GraphicsUtil.rotate(toolIcon, Math.PI/2);
+                        toolIcon = GraphicsUtil.rotate(toolIcon, -Math.PI/2);
 
                     TextIcon textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeLabel.getIcon()).getLeftIcon()).getComponent(), labelText, TextIcon.ROTATE_LEFT);
                     textIcon.setForeground(UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND));
@@ -135,7 +135,7 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
                     break;
                 case RIGHT:
                     if (SwingUtil.getBoolean(MyDoggyKeySpace.TWRA_ROTATE_ICON_ON_ANCHOR, false) && toolIcon != null)
-                        toolIcon = GraphicsUtil.rotate(toolIcon, -Math.PI/2);
+                        toolIcon = GraphicsUtil.rotate(toolIcon, Math.PI/2);
 
                     textIcon = new TextIcon(((TextIcon) ((AggregateIcon) representativeLabel.getIcon()).getRightIcon()).getComponent(), labelText, TextIcon.ROTATE_RIGHT);
                     textIcon.setForeground(UIManager.getColor(MyDoggyKeySpace.TWRA_FOREGROUND));
