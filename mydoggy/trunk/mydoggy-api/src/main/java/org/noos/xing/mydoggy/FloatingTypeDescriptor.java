@@ -180,14 +180,17 @@ public interface FloatingTypeDescriptor extends ToolWindowTypeDescriptor {
     boolean isAlwaysOnTop();
 
     /**
-     * @param osDecorated
+     * Enables or disable the OS decoration.
+     *
+     * @param osDecorated <tt>true</tt> to enabled the OS decoration, <tt>false</tt> otherwise.
      * @since 1.5.0
      */
     void setOsDecorated(boolean osDecorated);
 
     /**
-     * TODO
-     * @return
+     * Returns <tt>true</tt> if the OS decoration is used, <tt>false</tt> otherwise.
+     *
+     * @return <tt>true</tt> if the OS decoration is used, <tt>false</tt> otherwise.
      * @since 1.5.0
      */
     boolean isOsDecorated();

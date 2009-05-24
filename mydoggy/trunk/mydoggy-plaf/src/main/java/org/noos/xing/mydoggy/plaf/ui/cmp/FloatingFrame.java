@@ -13,7 +13,6 @@ import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
-import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -26,7 +25,10 @@ import java.util.List;
 public class FloatingFrame extends JFrame implements FloatingWindow,
                                                   PropertyChangeListener,
                                                   ActionListener {
+
     protected MyDoggyToolWindowManager toolWindowManager;
+
+    protected FloatingResizeMouseInputHandler resizeMouseInputHandler;
 
     // Modal support
     protected Window modalToWindow;
@@ -294,7 +296,7 @@ public class FloatingFrame extends JFrame implements FloatingWindow,
     
     public void setResizable(boolean resizable) {
         super.setResizable(resizable);
-//        this.resizeMouseInputHandler.setResizable(resizable);
+        this.resizeMouseInputHandler.setResizable(resizable);
     }
 
     public void dispose() {
@@ -350,7 +352,7 @@ public class FloatingFrame extends JFrame implements FloatingWindow,
     }
 
     protected void initListeners() {
-        MouseInputListener resizeMouseInputHandler = new FloatingResizeMouseInputHandler(this);
+        resizeMouseInputHandler = new FloatingResizeMouseInputHandler(this);
 
         addMouseMotionListener(resizeMouseInputHandler);
         addMouseListener(resizeMouseInputHandler);

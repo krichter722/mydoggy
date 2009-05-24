@@ -57,6 +57,8 @@ public interface FloatingWindow extends MultiSplitWindow<ToolWindow> {
 
     void setLocation(Point location);
 
+    void setResizable(boolean resizable);
+
     void importFrom(FloatingWindow oldWindow);
 
 }

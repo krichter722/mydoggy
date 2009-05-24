@@ -203,11 +203,10 @@ public interface ToolWindowManager extends DockableManager<ToolWindow> {
     boolean containsGroup(String name);
 
     /**
-     * TODO: check javadoc
      * Returns the dockable to which this manager maps the specified id.
      * Returns <tt>null</tt> if the manager contains no mapping for this id.
      *
-     * @param id id of dockable.
+     * @param id dockable's id or alias.
      * @return registered dockable with specified id. If there is no registered
      *         dockable with specified id then the method returns <tt>null</tt>.
      * @see org.noos.xing.mydoggy.Dockable
