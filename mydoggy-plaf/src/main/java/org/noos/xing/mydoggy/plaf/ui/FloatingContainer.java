@@ -517,9 +517,8 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
             if (toolWindow.getType() == ToolWindowType.FLOATING ||
                 toolWindow.getType() == ToolWindowType.FLOATING_FREE &&
                 window != null) {
-                // TODO: what with this...
-//                applyResizableBorder((Boolean) evt.getNewValue(), true);
-//                pack();
+
+                window.setResizable((Boolean) evt.getNewValue());
             }
         }
 

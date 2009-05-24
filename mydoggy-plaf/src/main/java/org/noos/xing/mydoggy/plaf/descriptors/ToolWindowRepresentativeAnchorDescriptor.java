@@ -31,6 +31,8 @@ public class ToolWindowRepresentativeAnchorDescriptor extends PropertyChangeEven
 
 
     public ToolWindowRepresentativeAnchorDescriptor(ToolWindowDescriptor toolWindowDescriptor) {
+        super(toolWindowDescriptor.getManager().getFirePublicEvent());
+
         this.toolWindowDescriptor = toolWindowDescriptor;
         this.toolWindow = toolWindowDescriptor.getToolWindow();
         this.previewEnabled = true;

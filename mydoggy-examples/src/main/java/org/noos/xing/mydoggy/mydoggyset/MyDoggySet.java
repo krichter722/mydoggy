@@ -443,7 +443,6 @@ public class MyDoggySet {
         UIManager.put(MyDoggyKeySpace.DND_CONTENT_OUTSIDE_FRAME, true);
 
         UIManager.put(MyDoggyKeySpace.TWRA_ROTATE_ICON_ON_ANCHOR, false);
-        JDialog.setDefaultLookAndFeelDecorated(true);
 
 //        resourceManager.putObject("ToolWindowTabTitleUI.font", new Font("Verdana", Font.BOLD, 10));
 //        resourceManager.putObject("ToolWindowTitleBarUI.font", new Font("Verdana", Font.BOLD, 10));

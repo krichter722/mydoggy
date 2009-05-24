@@ -12,7 +12,6 @@ import org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
-import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -23,15 +22,16 @@ import java.util.List;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class FloatingDialog extends JDialog implements FloatingWindow,
-                                                    PropertyChangeListener,
-                                                    ActionListener {
+                                                       PropertyChangeListener,
+                                                       ActionListener {
+
     protected MyDoggyToolWindowManager toolWindowManager;
+
+    protected FloatingResizeMouseInputHandler resizeMouseInputHandler;
 
     // Multi split support
     protected DockableDropPanel dockableDropPanel;
     protected MultiSplitDockableContainer<ToolWindow> multiSplitDockableContainer;
-
-    protected FloatingResizeMouseInputHandler resizeMouseInputHandler; 
 
     // Transparency support
     protected Timer transparencyTimer;
@@ -266,7 +266,8 @@ public class FloatingDialog extends JDialog implements FloatingWindow,
 
     public void setResizable(boolean resizable) {
         super.setResizable(resizable);
-//        this.resizeMouseInputHandler.setResizable(resizable);
+
+        this.resizeMouseInputHandler.setResizable(resizable);
     }
 
 
@@ -306,7 +307,7 @@ public class FloatingDialog extends JDialog implements FloatingWindow,
     }
 
     protected void initListeners()  {
-        MouseInputListener resizeMouseInputHandler = new FloatingResizeMouseInputHandler(this);
+        resizeMouseInputHandler = new FloatingResizeMouseInputHandler(this);
 
         addMouseListener(resizeMouseInputHandler);
         addMouseMotionListener(resizeMouseInputHandler);

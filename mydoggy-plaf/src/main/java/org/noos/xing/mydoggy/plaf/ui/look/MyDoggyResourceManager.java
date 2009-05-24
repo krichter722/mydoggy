@@ -45,7 +45,7 @@ public class MyDoggyResourceManager extends PropertyChangeEventSource implements
 
 
     public MyDoggyResourceManager() {
-        // To initializa the resource manager use @link{setClassLoader}
+        // To initialize the resource manager use @link{setClassLoader}
     }
 
 

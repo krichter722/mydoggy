@@ -419,7 +419,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 } else
                     writer.dataElement("floating", floatingDescriptorAttributes);
 
-                // Store ScreenWindow bounds.. TODO: this is never loaded....why???
+                // Store ScreenWindow bounds.. TODO: this is never loaded....why??? when a tool is maximized and stored also the previzios bounds should be stored and then restored...
                 if (toolWindow.isMaximized() && (toolWindow.getType() == ToolWindowType.FLOATING || toolWindow.getType() == ToolWindowType.FLOATING_FREE)) {
                     Rectangle screenWindowBounds = context.get(MyDoggyToolWindowManager.class).getDescriptor(toolWindow).getScreenWindowBounds();
 

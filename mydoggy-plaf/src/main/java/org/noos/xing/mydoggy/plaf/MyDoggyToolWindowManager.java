@@ -108,7 +108,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     // Public event support
     protected boolean firePublic = true;
-    protected Question<Object, Boolean> firePublicEvent; // TODO: extend support to the question...
+    protected Question<Object, Boolean> firePublicEvent;
 
 
     public MyDoggyToolWindowManager() {

@@ -50,6 +50,8 @@ public abstract class DefaultToolWindowTypeDescriptor extends PropertyChangeEven
                                            boolean hideRepresentativeButtonOnVisible,
                                            boolean titleBarButtonsVisible,
                                            boolean titleBarVisible) {
+        super(toolWindowDescriptor.getManager().getFirePublicEvent());
+        
         this.toolWindowDescriptor = toolWindowDescriptor;
         this.animating = animating;
         this.autoHide = autoHide;
