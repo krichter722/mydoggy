@@ -56,7 +56,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
         if (visible) {
             // retrieve common panel
-            floatingLiveWindow = descriptor.getFloatingLivePanel();
+            floatingLiveWindow = descriptor.getFloatingLiveWindow();
             JComponent floatingLiveComponent = (JComponent) floatingLiveWindow;
 
             // setup components
@@ -138,7 +138,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
             // unmount
             floatingLiveWindow.unmount();
-            descriptor.removeFloatingLivePanel();
+            descriptor.removeFloatingLiveWindow();
             
             floatingLiveWindow = null;
         }

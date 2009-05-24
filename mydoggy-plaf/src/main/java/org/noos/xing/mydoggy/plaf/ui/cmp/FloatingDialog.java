@@ -269,7 +269,25 @@ public class FloatingDialog extends JDialog implements FloatingWindow,
 //        this.resizeMouseInputHandler.setResizable(resizable);
     }
 
-    
+
+    public void dispose() {
+        super.dispose();
+
+        toolWindowManager = null;
+
+        dockableDropPanel = null;
+        multiSplitDockableContainer = null;
+
+        // Transparency support
+        if (transparencyTimer != null) {
+            transparencyTimer.stop();
+            transparencyTimer = null;
+        }
+        transparencyManager = null;
+        transparencyAnimation = null;
+    }
+
+
     protected void initComponents() {
         multiSplitDockableContainer = new MultiSplitDockableContainer<ToolWindow>(toolWindowManager, JSplitPane.VERTICAL_SPLIT);
 

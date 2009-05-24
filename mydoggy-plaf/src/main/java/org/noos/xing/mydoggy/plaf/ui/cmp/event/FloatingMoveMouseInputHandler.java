@@ -112,5 +112,7 @@ public class FloatingMoveMouseInputHandler implements MouseInputListener {
 
         if (floatingContainer instanceof Window)
             floatingWindow = (Window) floatingContainer;
+        else
+            floatingWindow = null;
     }
 }

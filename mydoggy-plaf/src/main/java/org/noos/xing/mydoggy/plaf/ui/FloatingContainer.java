@@ -61,7 +61,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
         if (visible) {
             // retrieve common panel
-            window = descriptor.getModalWindow();
+            window = descriptor.getFloatingWindow();
 
             // install listeners
             installWindowListeners();
@@ -127,7 +127,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                     window.getContentPane().setVisible(true);
                     window.setVisible(false);
 
-                    descriptor.removeModalWindow();
+                    descriptor.removeFloatingWindow();
                 }
 
                 window = null;
@@ -214,7 +214,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
     protected void reinitWindow(FloatingWindow oldWindow) {
         // Init new window
-        window = descriptor.getModalWindow();
+        window = descriptor.getFloatingWindow();
         window.importFrom(oldWindow);
         installWindowListeners();
     }
@@ -439,7 +439,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
                 // Clean
                 uninstallWindowListeners();
-                descriptor.removeModalWindow();
+                descriptor.removeFloatingWindow();
 
                 Component focusOwner = oldWindow.getWindow().getFocusOwner();
                 oldWindow.setVisible(false);
@@ -460,7 +460,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
                 // Clean old window
                 uninstallWindowListeners();
-                descriptor.removeModalWindow();
+                descriptor.removeFloatingWindow();
 
                 // Finalize clean
                 oldWindow.getWindow().dispose();
@@ -485,7 +485,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
                 // Clean
                 uninstallWindowListeners();
-                descriptor.removeModalWindow();
+                descriptor.removeFloatingWindow();
 
                 Component focusOwner = oldWindow.getWindow().getFocusOwner();
                 oldWindow.setVisible(false);
@@ -506,7 +506,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
                 // Clean old window
                 uninstallWindowListeners();
-                descriptor.removeModalWindow();
+                descriptor.removeFloatingWindow();
 
                 // Finalize clean
                 oldWindow.getWindow().dispose();
