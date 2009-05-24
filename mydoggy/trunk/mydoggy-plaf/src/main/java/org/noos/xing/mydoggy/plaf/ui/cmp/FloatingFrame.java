@@ -292,6 +292,31 @@ public class FloatingFrame extends JFrame implements FloatingWindow,
     }
 
     
+    public void setResizable(boolean resizable) {
+        super.setResizable(resizable);
+//        this.resizeMouseInputHandler.setResizable(resizable);
+    }
+
+    public void dispose() {
+        super.dispose();
+
+        toolWindowManager = null;
+
+        dockableDropPanel = null;
+        multiSplitDockableContainer = null;
+        modalToWindow = null;
+        returnFocus = null;
+
+        // Transparency support
+        if (transparencyTimer != null) {
+            transparencyTimer.stop();
+            transparencyTimer = null;
+        }
+        transparencyManager = null;
+        transparencyAnimation = null;
+    }
+
+
     public boolean isModal() {
         synchronized (FloatingFrame.this) {
             return modalToWindow != null;
@@ -304,11 +329,6 @@ public class FloatingFrame extends JFrame implements FloatingWindow,
 
     public void setReturnFocus(Component returnFocus) {
         this.returnFocus = returnFocus;
-    }
-
-    public void setResizable(boolean resizable) {
-        super.setResizable(resizable);
-//        this.resizeMouseInputHandler.setResizable(resizable);
     }
 
 

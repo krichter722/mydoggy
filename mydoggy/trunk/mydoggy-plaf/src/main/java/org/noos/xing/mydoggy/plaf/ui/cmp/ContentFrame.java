@@ -57,13 +57,6 @@ public class ContentFrame extends JFrame implements ContentWindow {
     }
 
 
-    public void dispose() {
-        super.dispose();
-
-        content = null;
-        contentUI = null;
-    }
-
 
     public void addDockable(Content content, Component contentComponent) {
         addDockable(content, contentComponent, null, AggregationPosition.DEFAULT);
@@ -108,7 +101,15 @@ public class ContentFrame extends JFrame implements ContentWindow {
         multiSplitDockableContainer.setMultiSplitLayout((MultiSplitLayout.Node) model);
     }
 
-    
+
+    public void dispose() {
+        super.dispose();
+
+        content = null;
+        contentUI = null;
+    }
+
+
     protected void installComponents() {
         // Setup title
         setTitle(content.getTitle());
@@ -128,7 +129,6 @@ public class ContentFrame extends JFrame implements ContentWindow {
 
     protected void installListeners(Frame parentFrame) {
         // Init Listener
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new ContentWindowAdapter());
         if (parentFrame == null)
             addWindowFocusListener(new ToFrontWindowFocusListener(this));
@@ -149,13 +149,15 @@ public class ContentFrame extends JFrame implements ContentWindow {
 
     public class ContentWindowAdapter extends WindowAdapter {
         public void windowClosing(WindowEvent event) {
-            for (Content content : multiSplitDockableContainer.getDockables()) {
-                content.setDetached(false);
-            }
+            if (multiSplitDockableContainer != null)
+                for (Content content : multiSplitDockableContainer.getDockables()) {
+                    content.setDetached(false);
+                }
 
             content = null;
             contentUI = null;
-
+            multiSplitDockableContainer = null;
+  
             super.windowClosing(event);
         }
     }
@@ -173,7 +175,7 @@ public class ContentFrame extends JFrame implements ContentWindow {
 
 
         protected void update() {
-            if (isActive() && isVisible()) {
+            if (isActive() && isVisible() && multiSplitDockableContainer != null) {
                 Rectangle bounds = getBounds();
                 for (Content content : multiSplitDockableContainer.getDockables()) {
                     content.getContentUI().setDetachedBounds(bounds);

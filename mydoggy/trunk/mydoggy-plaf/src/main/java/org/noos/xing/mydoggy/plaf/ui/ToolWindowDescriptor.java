@@ -607,24 +607,25 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         slidingTypeDescriptor.removePropertyChangeListener(listener);
     }
 
-    public void removeFloatingLivePanel() {
+
+    public void removeFloatingLiveWindow() {
         manager.removeFloatingLiveWindow(toolWindow);
     }
 
-    public FloatingLiveWindow getFloatingLivePanel() {
+    public FloatingLiveWindow getFloatingLiveWindow() {
         return manager.getFloatingLiveWindow(toolWindow);
     }
 
-    public void removeModalWindow() {
+    public void removeFloatingWindow() {
         manager.removeFloatingWindow(toolWindow);
     }
 
-    public FloatingWindow getModalWindow() {
+    public FloatingWindow getFloatingWindow() {
         return manager.getFloatingWindow(toolWindow);
     }
 
     public Rectangle getScreenWindowBounds() {
-        return SwingUtil.getScreenWindowBounds(getModalWindow().getWindow());
+        return SwingUtil.getScreenWindowBounds(getFloatingWindow().getWindow());
     }
 
 
@@ -834,7 +835,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
             toolWindow.cleanup();
 
             // Remove floating live entry...
-            removeFloatingLivePanel();
+            removeFloatingLiveWindow();
 
             if (toolWindowPanel != null) {
                 toolWindowPanel.putClientProperty(ToolWindow.class, null);

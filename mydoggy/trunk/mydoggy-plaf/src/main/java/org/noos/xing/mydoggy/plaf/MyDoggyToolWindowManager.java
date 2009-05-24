@@ -104,7 +104,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected CornerPanel southEastCorner;
 
     protected Map<ToolWindow, FloatingLiveWindow> livePanelMap = new HashMap<ToolWindow, FloatingLiveWindow>();
-    protected Map<ToolWindow, FloatingWindow> modalWindowMap = new HashMap<ToolWindow, FloatingWindow>();
+    protected Map<ToolWindow, FloatingWindow> floatingWindowMap = new HashMap<ToolWindow, FloatingWindow>();
 
     // Public event support
     protected boolean firePublic = true;
@@ -1197,7 +1197,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
 
     public FloatingWindow getFloatingWindow(ToolWindow toolWindow) {
-        FloatingWindow floatingWindow = modalWindowMap.get(toolWindow);
+        FloatingWindow floatingWindow = floatingWindowMap.get(toolWindow);
 
         if (floatingWindow == null) {
             FloatingTypeDescriptor floatingTypeDescriptor = toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class);
@@ -1220,18 +1220,20 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             floatingWindow.setAlwaysOnTop(floatingTypeDescriptor.isAlwaysOnTop());
             floatingWindow.setUndecorated(!floatingTypeDescriptor.isOsDecorated());
 
-            modalWindowMap.put(toolWindow, floatingWindow);
+            floatingWindowMap.put(toolWindow, floatingWindow);
         }
 
         return floatingWindow;
     }
 
     public void removeFloatingWindow(ToolWindow toolWindow) {
-        modalWindowMap.remove(toolWindow);
+        FloatingWindow ft = floatingWindowMap.remove(toolWindow);
+        if (ft != null)
+            ft.dispose();
     }
 
     public Collection<FloatingWindow> getFloatingWindows() {
-        return modalWindowMap.values();
+        return floatingWindowMap.values();
     }
 
 
