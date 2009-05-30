@@ -90,6 +90,9 @@ public class DockedContainer extends MyDoggyToolWindowContainer {
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
                             Component focusable = descriptor.getToolWindowPanel().getFocusable();
+                            if (focusable == null)
+                                return;
+
                             focusable.setFocusable(true);
                             focusable.requestFocusInWindow();
                         }
@@ -97,6 +100,8 @@ public class DockedContainer extends MyDoggyToolWindowContainer {
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
                             Component toolWindowPanelFocusable = descriptor.getToolWindowPanel().getFocusable();
+                            if (toolWindowPanelFocusable == null)
+                                return;
 
                             if (toolWindowPanelFocusable.isFocusOwner()) {
                                 descriptor.setComponent(tab.getComponent());
