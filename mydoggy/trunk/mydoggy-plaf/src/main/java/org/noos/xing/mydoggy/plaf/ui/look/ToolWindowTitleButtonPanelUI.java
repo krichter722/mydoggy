@@ -359,6 +359,10 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
 
                 SwingUtil.revalidate(toolWindowTitleButtonPanel.getParent());
                 SwingUtil.repaint(toolWindowTitleButtonPanel);
+
+                if (focusable == toolWindowTitleButton)
+                    focusable = null;
+
                 break;
             }
         }

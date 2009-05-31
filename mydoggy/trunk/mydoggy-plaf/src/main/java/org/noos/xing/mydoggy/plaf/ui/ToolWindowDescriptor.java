@@ -518,7 +518,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 Component toolWindowPanelFocusable = toolWindowPanel.getFocusable();
-                if (toolWindowPanelFocusable != null)
+                if (toolWindowPanelFocusable == null)
                     return;
 
                 if (toolWindowPanelFocusable.isFocusOwner()) {
