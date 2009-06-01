@@ -19,6 +19,7 @@ public class DefaultFloatingLiveTypeDescriptor extends DefaultToolWindowTypeDesc
     private boolean transparentMode;
     private float transparentRatio;
     private int transparentDelay;
+    private boolean resizable;
 
 
     public DefaultFloatingLiveTypeDescriptor() {
@@ -27,6 +28,7 @@ public class DefaultFloatingLiveTypeDescriptor extends DefaultToolWindowTypeDesc
         transparentDelay = 1000;
 
         autoHide = false;
+        resizable = true;
     }
 
     public DefaultFloatingLiveTypeDescriptor(ToolWindowDescriptor toolWindowDescriptor,
@@ -42,7 +44,8 @@ public class DefaultFloatingLiveTypeDescriptor extends DefaultToolWindowTypeDesc
                                              boolean idVisibleOnTitleBar,
                                              boolean hideRepresentativeButtonOnVisible,
                                              boolean titleBarButtonsVisible,
-                                             boolean titleBarVisible) {
+                                             boolean titleBarVisible,
+                                             boolean resizable) {
         super(toolWindowDescriptor, parent, enabled, animating, autoHide,
               idVisibleOnTitleBar, hideRepresentativeButtonOnVisible,
               titleBarButtonsVisible, titleBarVisible);
@@ -52,6 +55,7 @@ public class DefaultFloatingLiveTypeDescriptor extends DefaultToolWindowTypeDesc
         this.transparentDelay = transparentDelay;
         this.transparentRatio = transparentRatio;
         this.transparentMode = useTransparentMode;
+        this.resizable = resizable;
     }
 
 
@@ -135,6 +139,18 @@ public class DefaultFloatingLiveTypeDescriptor extends DefaultToolWindowTypeDesc
         firePropertyChangeEvent("transparentDelay", old, transparentDelay);
     }
 
+    public boolean isResizable() {
+        return resizable;
+    }
+
+    public void setResizable(boolean resizable) {
+        if (this.resizable == resizable)
+            return;
+
+        boolean old = this.resizable;
+        this.resizable = resizable;
+        firePropertyChangeEvent("resizable", old, resizable);
+    }
 
     public ToolWindowTypeDescriptor cloneMe(ToolWindowDescriptor toolWindowDescriptor) {
         return new DefaultFloatingLiveTypeDescriptor(toolWindowDescriptor,
@@ -142,7 +158,8 @@ public class DefaultFloatingLiveTypeDescriptor extends DefaultToolWindowTypeDesc
                                                      transparentRatio, transparentMode,
                                                      enabled, animating, autoHide,
                                                      idVisibleOnTitleBar, hideRepresentativeButtonOnVisible,
-                                                     titleBarButtonsVisible, titleBarVisible);
+                                                     titleBarButtonsVisible, titleBarVisible,
+                                                     resizable);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
@@ -160,7 +177,9 @@ public class DefaultFloatingLiveTypeDescriptor extends DefaultToolWindowTypeDesc
             setTransparentRatio((Float) evt.getNewValue());
         } else if ("transparentDelay".equals(evt.getPropertyName())) {
             setTransparentDelay((Integer) evt.getNewValue());
-        } 
+        } else if ("resizable".equals(evt.getPropertyName())) {
+            setResizable((Boolean) evt.getNewValue());
+        }
     }
 
 }

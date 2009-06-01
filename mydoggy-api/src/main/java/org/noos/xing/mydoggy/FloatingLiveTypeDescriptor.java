@@ -119,4 +119,19 @@ public interface FloatingLiveTypeDescriptor extends ToolWindowTypeDescriptor {
      */
     int getTransparentDelay();
 
+    /**
+     * When <tt>true</tt>, the floating window is not resizable by user mouse actions.
+     *
+     * @param resizable whether user resize is allowed
+     * @since 1.5.0
+     */
+    void setResizable(boolean resizable);
+
+    /**
+     * Returns whether the floatingwindow is resizable by user mouse actions.
+     *
+     * @return true if user resize allowed.
+     * @since 1.5.0
+     */
+    boolean isResizable();
 }
