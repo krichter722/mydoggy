@@ -35,6 +35,8 @@ public class FloatingLivePanel extends TranslucentPanel implements FloatingLiveW
     protected TransparencyAnimation animation;
     protected Timer timer;
 
+    protected FloatingResizeMouseInputHandler resizeMouseInputHandler;
+
 
     public FloatingLivePanel(MyDoggyToolWindowManager manager) {
         this.manager = manager;
@@ -120,6 +122,15 @@ public class FloatingLivePanel extends TranslucentPanel implements FloatingLiveW
                                                 -1,
                                                 aggregationPosition);
         toolWindow.addPropertyChangeListener(this);
+
+        // Update 'resizable'
+        boolean resizable = toolWindow.getTypeDescriptor(FloatingLiveTypeDescriptor.class).isResizable();
+        if (getDockableCount() == 1)
+            resizeMouseInputHandler.setResizable(resizable);
+        else {
+            if (resizable)
+                resizeMouseInputHandler.setResizable(resizable);
+        }
     }
 
     public void removeDockable(ToolWindow toolWindow) {
@@ -175,6 +186,7 @@ public class FloatingLivePanel extends TranslucentPanel implements FloatingLiveW
         return false;
     }
 
+
     protected void initComponents() {
         this.layeredPane = manager.getLayeredPane();
 
@@ -190,7 +202,7 @@ public class FloatingLivePanel extends TranslucentPanel implements FloatingLiveW
     }
 
     protected void initListeners() {
-        FloatingResizeMouseInputHandler resizeMouseInputHandler = new FloatingResizeMouseInputHandler(this);
+        resizeMouseInputHandler = new FloatingResizeMouseInputHandler(this);
 
         addMouseMotionListener(resizeMouseInputHandler);
         addMouseListener(resizeMouseInputHandler);

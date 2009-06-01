@@ -439,6 +439,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 floatingLiveDescriptorAttributes.addAttribute(null, "transparentMode", null, null, String.valueOf(floatingLiveTypeDescriptor.isTransparentMode()));
                 floatingLiveDescriptorAttributes.addAttribute(null, "transparentDelay", null, null, String.valueOf(floatingLiveTypeDescriptor.getTransparentDelay()));
                 floatingLiveDescriptorAttributes.addAttribute(null, "transparentRatio", null, null, String.valueOf(floatingLiveTypeDescriptor.getTransparentRatio()));
+                floatingLiveDescriptorAttributes.addAttribute(null, "resizable", null, null, String.valueOf(floatingLiveTypeDescriptor.isResizable()));
 
                 // Store location
                 point = floatingLiveTypeDescriptor.getLocation();
@@ -1170,6 +1171,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     descriptor.setTransparentDelay(getInteger(context, typeElement, "transparentDelay", 0));
                     descriptor.setTransparentMode(getBoolean(context, typeElement, "transparentMode", true));
                     descriptor.setTransparentRatio(getFloat(context, typeElement, "transparentRatio", 0.7f));
+                    descriptor.setResizable(getBoolean(context, typeElement, "resizable", true));
 
                     Element location = getElement(typeElement, "location");
                     if (location != null)
