@@ -1,7 +1,6 @@
 package org.noos.xing.mydoggy.plaf.persistence.xml;
 
-import org.noos.xing.mydoggy.Dockable;
-import org.noos.xing.mydoggy.DockableManager;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitWindow;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -14,12 +13,14 @@ import java.util.List;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class SharedWindows {
+    protected PersistenceDelegateCallback persistenceDelegateCallback;
     protected DockableManager dockableManager;
     protected List<SharedWindowEntry> sharedWindows;
 
 
-    public SharedWindows(DockableManager dockableManager) {
+    public SharedWindows(DockableManager dockableManager, PersistenceDelegateCallback persistenceDelegateCallback) {
         this.dockableManager = dockableManager;
+        this.persistenceDelegateCallback = persistenceDelegateCallback;
 
         this.sharedWindows = new ArrayList<SharedWindowEntry>();
     }
@@ -54,7 +55,23 @@ public class SharedWindows {
         for (String id : getSharedWindow(dockable.getId())) {
             if (!id.equals(dockable.getId())) {
                 Dockable ref = dockableManager.getDockableById(id);
-                if (ref.isVisible()) {
+
+                if (ref == null) {
+                    if (dockableManager instanceof ToolWindowManager)
+                        ref = persistenceDelegateCallback.toolwindowNotFound(
+                                (ToolWindowManager) dockableManager,
+                                id,
+                                null
+                        );
+                    else
+                        ref = persistenceDelegateCallback.toolwindowNotFound(
+                                ((ContentManager) dockableManager).getToolWindowManager(),
+                                id,
+                                null
+                        );
+                }
+
+                if (ref != null && ref.isVisible()) {
                     return ref;
                 }
             }
