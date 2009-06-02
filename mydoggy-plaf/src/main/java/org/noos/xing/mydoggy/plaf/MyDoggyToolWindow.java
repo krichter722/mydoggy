@@ -834,8 +834,11 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
                     setVisible(false);
             }
 
+            getRepresentativeAnchorDescriptor().setVisible(available);
+
             boolean old = this.available;
             this.available = available;
+
 
             firePropertyChangeEvent("available", old, available,
                                     new Object[]{availablePosition, moveAction});

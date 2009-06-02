@@ -25,7 +25,7 @@ public class ToolWindowsView implements View {
         viewContext.put(ToolWindowManager.class, toolWindowManager);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1, 5, -1}}));
+        panel.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {150, 5, -1}}));
 
         panel.add(new ToolWindowsTableView(viewContext).getComponent(), "0,0,FULL,FULL");
         panel.add(new PreferencePanelView(viewContext).getComponent(), "0,2,FULL,FULL");

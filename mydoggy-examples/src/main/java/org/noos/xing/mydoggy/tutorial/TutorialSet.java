@@ -35,6 +35,8 @@ public class TutorialSet extends ScenarioSet {
         tutorialSet.addScenario(new TutorialScenario(tutorialSet, TutorialSet12.class, "TutorialSet - Step 12", "Work with a disabled ContentManager."));
 //        tutorialSet.addScenario(new TutorialScenario(TutorialSet13.class, "TutorialSet - Step 13", "Play with ToolWindowAction."));
 
+        tutorialSet.addScenario(new TutorialScenario(tutorialSet, TutorialSetCustomization1.class, "TutorialSet - Customization - Step 1", "A skeleton class called TutorialSet."));
+
         tutorialSet.run();
     }
 
