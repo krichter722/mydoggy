@@ -124,12 +124,12 @@ public class SwingUtil {
 
         Frame frames[] = Frame.getFrames();
         for (Frame frame : frames) {
-            if (frame instanceof FloatingWindow || frame instanceof ContentWindow)
+            if ((frame instanceof FloatingWindow || frame instanceof ContentWindow) && frame.isDisplayable())
                 containers.add(frame);
 
             Window[] windows = frame.getOwnedWindows();
             for (Window window : windows) {
-                if (window instanceof FloatingWindow || window instanceof ContentWindow)
+                if ((window instanceof FloatingWindow || window instanceof ContentWindow) && window.isDisplayable())
                     containers.add(window);
             }
         }
@@ -142,12 +142,12 @@ public class SwingUtil {
 
         Frame frames[] = Frame.getFrames();
         for (Frame frame : frames) {
-            if (frame instanceof ContentWindow)
+            if (frame instanceof ContentWindow && frame.isDisplayable())
                 containers.add((ContentWindow) frame);
 
             Window[] windows = frame.getOwnedWindows();
             for (Window window : windows) {
-                if (window instanceof ContentWindow)
+                if (window instanceof ContentWindow  && frame.isDisplayable())
                     containers.add((ContentWindow) window);
             }
         }
