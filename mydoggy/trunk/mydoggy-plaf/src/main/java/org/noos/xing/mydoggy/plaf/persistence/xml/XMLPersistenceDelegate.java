@@ -1064,9 +1064,9 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         public boolean parse(Element element, Context context) {
             mergePolicyApplier = context.get(MergePolicyApplier.class);
 
-            // TODO: Load shared window
             Element sharedWindowsElem = getElement(element, "sharedWindows");
-            SharedWindows sharedWindows = new SharedWindows(context.get(ToolWindowManager.class));
+            SharedWindows sharedWindows = new SharedWindows(context.get(ToolWindowManager.class),
+                                                            context.get(PersistenceDelegateCallback.class));
 
             if (sharedWindowsElem != null) {
                 NodeList sharedWindowsList = sharedWindowsElem.getElementsByTagName("sharedWindow");
@@ -1386,6 +1386,40 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
     public class ContentManagerElementParser extends ElementParserAdapter {
 
         public boolean parse(Element element, final Context context) {
+            // Load shared windows...
+            Element sharedWindowsElem = getElement(element, "sharedWindows");
+            SharedWindows sharedWindows = new SharedWindows(context.get(ToolWindowManager.class).getContentManager(),
+                                                            context.get(PersistenceDelegateCallback.class));
+
+            if (sharedWindowsElem != null) {
+                NodeList sharedWindowsList = sharedWindowsElem.getElementsByTagName("sharedWindow");
+                for (int i = 0, size = sharedWindowsList.getLength(); i < size; i++) {
+                    Element sharedwindowElem = (Element) sharedWindowsList.item(i);
+
+                    // Load dockable ids
+                    NodeList dockabledIdList = sharedwindowElem.getElementsByTagName("dockable");
+                    if (dockabledIdList.getLength() <= 0)
+                        continue;
+
+                    String[] ids = new String[dockabledIdList.getLength()];
+                    for (int j = 0, sizej = dockabledIdList.getLength(); j < sizej; j++) {
+                        ids[j] = ((Element) dockabledIdList.item(j)).getAttribute("id");
+                    }
+
+                    Element modelElement = getElement(element, "layout");
+                    if (modelElement == null)
+                        continue;
+
+                    String text = modelElement.getTextContent();
+                    XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(text.getBytes()));
+                    final MultiSplitLayout.Node model = (MultiSplitLayout.Node) decoder.readObject();
+
+                    sharedWindows.addSharedWindow(model, ids);
+                }
+            }
+
+
+            // Load contents..
             NodeList contents = element.getElementsByTagName("content");
 
             Content selectedContent = null;
@@ -1410,7 +1444,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                         maximizedContent = content;
 
                     content.setEnabled(getBoolean(context, contentElement, "enabled", true));
-                    content.setDetached(getBoolean(context, contentElement, "detached", false));
+                    boolean detached = getBoolean(context, contentElement, "detached", false);
                     content.setMaximized(false);
                     content.setMinimized(getBoolean(context, contentElement, "minimized", false));
                     content.setFlashing(getBoolean(context, contentElement, "flashing", false));
@@ -1447,6 +1481,18 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                                                                   getInteger(context, detachedBoundsElm, "height", 200)));
                     }
 
+                    if (detached) {
+                        if (sharedWindows.isInSharedWindow(content)) {
+                            Dockable refDockable = sharedWindows.getRefDockable(content);
+
+                            if (refDockable != null)
+                                content.detachByReference((Content) refDockable, AggregationPosition.DEFAULT);
+                            else
+                                content.setDetached(true);
+                        } else
+                            content.setDetached(true);
+                    } else
+                        content.setDetached(false);
                 }
             }
 
@@ -1509,29 +1555,6 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         ((MyDoggyToolWindowBar) context.get(ToolWindowManager.class).getToolWindowBar(anchor)).setLayout(layout);
-                    }
-                });
-            }
-
-            return false;
-        }
-
-    }
-
-    public class MainContainerModelElementParser extends ElementParserAdapter {
-
-        public boolean parse(Element element, final Context context) {
-
-            Element modelElement = getElement(element, "model");
-            if (modelElement != null) {
-                String text = modelElement.getTextContent();
-                XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(text.getBytes()));
-                final MultiSplitLayout.Node model = (MultiSplitLayout.Node) decoder.readObject();
-
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        MultiSplitDockableContainer dockableContainer = (MultiSplitDockableContainer) ((DockableDropPanel) context.get(MyDoggyToolWindowManager.class).getMainContent()).getComponent();
-                        dockableContainer.setMultiSplitLayout(model);
                     }
                 });
             }

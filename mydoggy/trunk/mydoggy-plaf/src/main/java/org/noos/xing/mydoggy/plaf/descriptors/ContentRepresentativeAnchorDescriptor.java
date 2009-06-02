@@ -16,6 +16,7 @@ public class ContentRepresentativeAnchorDescriptor extends PropertyChangeEventSo
 
     protected Content content;
 
+
     protected boolean previewEnabled;
     protected int previewDelay;
     protected float previewTransparentRatio;
@@ -37,6 +38,7 @@ public class ContentRepresentativeAnchorDescriptor extends PropertyChangeEventSo
         this.title = content.getTitle();
         this.icon = content.getIcon();
     }
+
 
     public Content getDockable() {
         return content;

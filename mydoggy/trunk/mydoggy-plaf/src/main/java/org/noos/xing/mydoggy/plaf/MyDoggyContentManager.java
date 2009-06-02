@@ -348,11 +348,6 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
         return null;
     }
 
-    protected void checkEnabled() {
-        if (!isEnabled())
-            throw new IllegalStateException("ContentManager is not enabled!. Enable it before call this method.");
-    }
-
     protected Content addContentInternal(String id, String title, Icon icon, Component component, String tip,
                                          ToolWindow toolWindow, Object... constraints) {
         if (id == null)

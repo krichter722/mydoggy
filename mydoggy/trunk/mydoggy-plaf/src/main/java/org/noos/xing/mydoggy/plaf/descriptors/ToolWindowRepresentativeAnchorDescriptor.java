@@ -141,7 +141,7 @@ public class ToolWindowRepresentativeAnchorDescriptor extends PropertyChangeEven
     }
 
     public boolean isVisible() {
-        return toolWindow.getType() != ToolWindowType.FLOATING_LIVE && visible;
+        return toolWindow.getType() != ToolWindowType.FLOATING_FREE && visible;
     }
 
     public void setTitle(String title) {

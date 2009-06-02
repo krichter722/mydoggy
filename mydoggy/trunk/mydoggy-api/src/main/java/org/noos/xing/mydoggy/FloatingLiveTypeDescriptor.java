@@ -3,7 +3,6 @@ package org.noos.xing.mydoggy;
 import java.awt.*;
 
 /**
- * @todo: introduce resizable...
  * This interface is used to modify the behaviours of FLOATING_LIVE type.
  *
  * @author Angelo De Caro (angelo.decaro@gmail.com)
