@@ -103,8 +103,6 @@ public class ContentDialog extends JDialog implements ContentWindow {
 
 
     public void dispose() {
-        System.out.println("ContentDialog.dispose");
-
         super.dispose();
 
         content = null;

@@ -107,6 +107,7 @@ public class ContentFrame extends JFrame implements ContentWindow {
 
         content = null;
         contentUI = null;
+        multiSplitDockableContainer = null;
     }
 
 
