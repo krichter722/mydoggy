@@ -229,6 +229,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
             representativeAnchor.setFocusable(false);
             representativeAnchor.putClientProperty(ToolWindowDescriptor.class, this);
         }
+        
         return representativeAnchor;
     }
 
@@ -239,12 +240,15 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     public void resetRepresentativeAnchor() {
         if (representativeAnchor != null)
             representativeAnchor.putClientProperty(ToolWindowDescriptor.class, null);
+
+        representativeAnchor.setUI(null);
         representativeAnchor = null;
     }
 
     public int getAnchorIndex() {
         if (representativeAnchor == null)
             return -1;
+
         return getToolBar().getRepresentativeAnchorIndex(representativeAnchor);
     }
 

@@ -64,6 +64,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
     protected TranslucentPanel previewPanel;
     protected RepresentativeAnchorBalloonTip balloonTip;
+    protected boolean representativeAnchorVisible = true;
 
     // Drag fields
     protected RemoveNotifyDragListener removeNotifyDragListener;
@@ -118,6 +119,9 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
             if (balloonTip.isVisible()) {
                 if (e.getNewValue() != null) {
                     balloonTip.hideTip();
+
+                    if (!toolWindow.isAvailable() && !toolWindow.getDockableManager().getToolWindowManagerDescriptor().isShowUnavailableTools())
+                        representativeAnchorDescriptor.setVisible(false);
                 }
             }
         }

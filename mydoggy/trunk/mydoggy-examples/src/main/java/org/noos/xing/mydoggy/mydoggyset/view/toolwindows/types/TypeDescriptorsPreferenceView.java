@@ -89,8 +89,7 @@ public class TypeDescriptorsPreferenceView extends ComponentView {
 
             panel.add(new JLabel("Type Descriptor : "), "0,0,r,FULL");
             panel.add(types, "2,0,FULL,FULL");
-            panel.add(new JButton(new ViewContextAction("Remove", null, viewContext, "remove", ToolWindow.class)),
-                     "4,0,FULL,FULL");
+            panel.add(new JButton(new ViewContextAction("Remove", null, viewContext, "remove", ToolWindow.class)), "4,0,FULL,FULL");
 
             return panel;
         }

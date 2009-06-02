@@ -68,6 +68,7 @@ public class PreferencePanelView extends ComponentView {
             MatrixPanel matrixPanel = new MatrixPanel(1, 1);
 
             JPanel showMessagePanel = new JPanel(new ExtendedTableLayout(new double[][]{{-1,1,70}, {-1}}));
+            showMessagePanel.setBorder(new TitledBorder("Show Anchor Message"));
             showMessagePanel.add(messageField = new JTextField(), "0,0,FULL,FULL");
             showMessagePanel.add(new JButton(new ViewContextAction("Show", null, viewContext, Actions.SHOW_MESSAGE, ToolWindow.class)), "2,0,c,c");
 

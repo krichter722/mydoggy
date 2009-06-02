@@ -94,7 +94,10 @@ public class ContentDescriptor extends CustomDockableDescriptor implements Prope
     }
 
     public void resetRepresentativeAnchor() {
-        representativeAnchor = null;
+        if (representativeAnchor != null) {
+            ((ContentRepresentativeAnchor) representativeAnchor).setUI(null);
+            representativeAnchor = null;
+        }
     }
 
     public int getAnchorIndex() {

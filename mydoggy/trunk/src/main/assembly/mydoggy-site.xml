@@ -31,6 +31,12 @@
             <outputDirectory>site/examples/jnlp</outputDirectory>
             <includes/>
         </fileSet>
+
+        <fileSet>
+            <directory>target/site/apidocs</directory>
+            <outputDirectory>site/api</outputDirectory>
+            <includes/>
+        </fileSet>
     </fileSets>
 
     <files>

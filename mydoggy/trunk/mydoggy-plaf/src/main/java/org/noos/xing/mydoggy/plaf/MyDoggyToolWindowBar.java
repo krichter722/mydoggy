@@ -230,6 +230,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     public void ensureVisible(final Component component) {
         if (component == null)
             return;
+        
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 toolWindowScrollBar.ensureVisible(component);

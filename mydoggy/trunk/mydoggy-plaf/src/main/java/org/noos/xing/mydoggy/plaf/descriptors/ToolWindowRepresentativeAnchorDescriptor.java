@@ -119,6 +119,7 @@ public class ToolWindowRepresentativeAnchorDescriptor extends PropertyChangeEven
     }
 
     public void showMessage(Icon icon, String message) {
+        ensureRepresentativeAnchor();
         ensureVisible();
 
         firePropertyChangeEvent("showMessage", null, new Object[]{icon, message});
@@ -128,8 +129,10 @@ public class ToolWindowRepresentativeAnchorDescriptor extends PropertyChangeEven
         if (toolWindow.getType() == ToolWindowType.FLOATING_FREE)
             return;
 
+/*
         if (!toolWindow.isAvailable())
             return;
+*/
 
         if (this.visible == visible)
             return;
@@ -141,6 +144,9 @@ public class ToolWindowRepresentativeAnchorDescriptor extends PropertyChangeEven
     }
 
     public boolean isVisible() {
+//        if (!toolWindow.isAvailable())
+//            return visible && toolWindow.getDockableManager().getToolWindowManagerDescriptor().isShowUnavailableTools();
+
         return toolWindow.getType() != ToolWindowType.FLOATING_FREE && visible;
     }
 
@@ -182,7 +188,14 @@ public class ToolWindowRepresentativeAnchorDescriptor extends PropertyChangeEven
     @Override
     public void cleanup() {
         super.cleanup();
+
         this.toolWindow = null;
         this.toolWindowDescriptor = null;
+    }
+
+
+    protected void ensureRepresentativeAnchor() {
+        if (toolWindowDescriptor.getRepresentativeAnchor() == null)
+            setVisible(true);
     }
 }

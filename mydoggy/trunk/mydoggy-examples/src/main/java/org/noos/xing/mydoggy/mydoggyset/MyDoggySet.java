@@ -444,9 +444,9 @@ public class MyDoggySet {
 
         UIManager.put(MyDoggyKeySpace.TWRA_ROTATE_ICON_ON_ANCHOR, false);
 
-//        resourceManager.putObject("ToolWindowTabTitleUI.font", new Font("Verdana", Font.BOLD, 10));
-//        resourceManager.putObject("ToolWindowTitleBarUI.font", new Font("Verdana", Font.BOLD, 10));
-//        resourceManager.putObject("ToolWindowRepresentativeAnchorUI.font", new Font("Verdana", Font.BOLD, 10));
+//        UIManager.put("ToolWindowTabTitleUI.font", new Font("Verdana", Font.BOLD, 15));
+        UIManager.put("ToolWindowTitleBarUI.font", new Font("Verdana", Font.BOLD, 15));
+//        UIManager.put("ToolWindowRepresentativeAnchorUI.font", new Font("Verdana", Font.BOLD, 15));
 
         myDoggyResourceManager.putInstanceCreator(ParentOfQuestion.class, new ObjectCreator() {
             public Object create(Context context) {

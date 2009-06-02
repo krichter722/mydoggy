@@ -196,6 +196,10 @@ public class CleanablePropertyChangeSupport implements Serializable, Cleaner {
             Object[] listeners = this.listeners.toArray();
             for (Object listener : listeners) {
                 PropertyChangeListener target = (PropertyChangeListener) listener;
+
+                if (!this.listeners.contains(target))
+                    continue;
+                
                 target.propertyChange(evt);
                 fired = true;
             }
