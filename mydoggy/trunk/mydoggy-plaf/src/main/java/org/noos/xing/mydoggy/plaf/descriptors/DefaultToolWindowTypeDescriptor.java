@@ -80,7 +80,7 @@ public abstract class DefaultToolWindowTypeDescriptor extends PropertyChangeEven
     }
 
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     public boolean isAnimating() {

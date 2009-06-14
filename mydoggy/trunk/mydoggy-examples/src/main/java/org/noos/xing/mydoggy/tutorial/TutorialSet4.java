@@ -111,7 +111,7 @@ public class TutorialSet4 {
             }
         });
         dockedTypeDescriptor.setAnimating(true);
-
+       
         // SlidingTypeDescriptor
         SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
         slidingTypeDescriptor.setEnabled(false);
@@ -130,6 +130,7 @@ public class TutorialSet4 {
         floatingTypeDescriptor.setTransparentRatio(0.2f);
         floatingTypeDescriptor.setTransparentDelay(1000);
         floatingTypeDescriptor.setAnimating(true);
+
     }
 
 

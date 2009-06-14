@@ -221,8 +221,6 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
         }
     }
 
-    private int a;
-
     protected int loadFromLayout(ToolWindowAction toolWindowAction) {
         Map<ToolWindowAction, Integer> layout = layouts.get(toolWindow.getType());
         if (layout != null) {
