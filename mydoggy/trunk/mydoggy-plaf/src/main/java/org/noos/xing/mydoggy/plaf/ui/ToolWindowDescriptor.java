@@ -241,9 +241,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         if (representativeAnchor != null) {
             representativeAnchor.putClientProperty(ToolWindowDescriptor.class, null);
             representativeAnchor.setUI(null);
+            representativeAnchor = null;
         }
-        
-        representativeAnchor = null;
     }
 
     public int getAnchorIndex() {
