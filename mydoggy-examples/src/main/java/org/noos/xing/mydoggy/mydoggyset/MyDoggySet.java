@@ -349,6 +349,10 @@ public class MyDoggySet {
 
             public void contentSelected(ContentManagerEvent event) {
             }
+
+            public void contentDeselected(ContentManagerEvent event) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
         });
     }
 

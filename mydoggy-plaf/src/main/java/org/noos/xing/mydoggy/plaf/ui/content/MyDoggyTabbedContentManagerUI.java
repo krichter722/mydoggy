@@ -158,6 +158,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
         // Import contents
         lastSelected = null;
+        previousLastSelected = null;
         Content selectedContent = null;
 
         contentValueAdjusting = true;
@@ -230,8 +231,10 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
     public synchronized void setSelected(Content content, boolean selected) {
         if (selected) {
-            if (lastSelected != null)
+            if (lastSelected != null) {
+                previousLastSelected = lastSelected;
                 lastSelected.setSelected(false);
+            }
 
             if (content.isMinimized()) {
                 content.setMinimized(false);
@@ -282,11 +285,19 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
     }
 
     public void selectNextContent(Content content) {
+        if (previousLastSelected != null && contentManager.getContent(previousLastSelected.getId()) != null) {
+            previousLastSelected.setSelected(true);
+            return;
+        }
+                
         // Choose next content to be selected...
         if (tabbedContentPane.getTabCount() == 0) {
             toolWindowManager.resetMainContent();
             lastSelected = null;
+
+            return;
         }
+
 
         if (tabbedContentPane.getTabCount() == 1 && !isShowAlwaysTab()) {
             Content lastContent = contentManager.getSelectedContent();
@@ -327,6 +338,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                     if (newSelected == lastSelected)
                         return;
 
+/*
                     if (lastSelected != null) {
                         try {
 //                            lastSelected.fireSelected(false);
@@ -334,6 +346,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                         } catch (Exception ignoreIt) {
                         }
                     }
+*/
 
                     if (newSelected != null && !newSelected.isMinimized()) {
 //                        newSelected.fireSelected(true);

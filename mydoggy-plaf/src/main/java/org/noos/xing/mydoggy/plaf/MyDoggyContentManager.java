@@ -393,6 +393,13 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
         }
     }
 
+    protected void fireContentDeselected(Content content) {
+        ContentManagerEvent event = new ContentManagerEvent(this, ContentManagerEvent.ActionId.CONTENT_DESELECTED, content);
+        for (ContentManagerListener listener : listeners.getListeners(ContentManagerListener.class)) {
+            listener.contentSelected(event);
+        }
+    }
+
 
     public class SelectedContentPropertyChangeListener implements PropertyChangeListener {
 
@@ -401,6 +408,8 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
 
             if (Boolean.TRUE.equals(evt.getNewValue()))
                 fireContentSelected((Content) evt.getSource());
+            else
+                fireContentDeselected((Content) evt.getSource());
         }
     }
 

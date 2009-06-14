@@ -41,6 +41,7 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
     protected PropertyChangeListener contentUIListener;
 
     protected Content maximizedContent;
+    protected Content previousLastSelected;
     protected Content lastSelected;
 
     protected boolean valueAdjusting;
@@ -52,6 +53,7 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
         this.closeable = this.detachable = this.minimizable = this.maximizable = true;
         this.popupMenuEnabled = true;
         this.contentUIMap = new Hashtable<Content, T>();
+        this.previousLastSelected = null;
     }
 
 

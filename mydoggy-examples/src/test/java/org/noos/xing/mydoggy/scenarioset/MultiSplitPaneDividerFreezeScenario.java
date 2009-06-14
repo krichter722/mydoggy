@@ -7,6 +7,7 @@ import org.noos.xing.mydoggy.mydoggyset.action.StoreWorkspaceAction;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.scenarioset.action.LoadWorkspaceAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +15,7 @@ import java.awt.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class MultiSplitPaneDividerFreeze {
+public class MultiSplitPaneDividerFreezeScenario {
 
     private JFrame frame;
     private ToolWindowManager toolWindowManager;
@@ -42,7 +43,7 @@ public class MultiSplitPaneDividerFreeze {
 
     protected void initComponents() {
         // Init the frame
-        this.frame = new JFrame("ScenarioTestSet: LoadWorkspaceScenarioTest...");
+        this.frame = new JFrame("ScenarioTestSet: LoadWorkspaceScenario...");
         this.frame.setSize(640, 480);
         this.frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -109,7 +110,7 @@ public class MultiSplitPaneDividerFreeze {
     }
 
     public static void main(String[] args) {
-        MultiSplitPaneDividerFreeze test = new MultiSplitPaneDividerFreeze();
+        MultiSplitPaneDividerFreezeScenario test = new MultiSplitPaneDividerFreezeScenario();
         try {
             test.run();
         } catch (Exception e) {
