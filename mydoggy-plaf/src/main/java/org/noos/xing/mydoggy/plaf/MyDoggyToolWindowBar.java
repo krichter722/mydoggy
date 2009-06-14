@@ -1529,6 +1529,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         public boolean dragStart(Transferable transferable, int action) {
             try {
                 if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {
+
                     if (transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_MANAGER).equals(System.identityHashCode(manager))) {
                         if (action == DnDConstants.ACTION_MOVE &&
                             (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF) ||
@@ -1537,6 +1538,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
                             return super.dragStart(transferable, action);
                     }
+                    
                 }
             } catch (Exception e) {
                 e.printStackTrace();

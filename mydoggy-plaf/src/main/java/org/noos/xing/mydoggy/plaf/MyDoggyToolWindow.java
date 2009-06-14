@@ -183,6 +183,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
 
     public void setAvailable(boolean available) {
         setAvailableInternal(available, false);
+        descriptor.getRepresentativeAnchorDescriptor().setVisible(available);
     }
 
     public boolean isVisible() {
@@ -833,8 +834,6 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
                 if (isVisible())
                     setVisible(false);
             }
-
-            getRepresentativeAnchorDescriptor().setVisible(available);
 
             boolean old = this.available;
             this.available = available;
