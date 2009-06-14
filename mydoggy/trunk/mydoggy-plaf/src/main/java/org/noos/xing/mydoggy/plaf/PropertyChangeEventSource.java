@@ -206,6 +206,10 @@ public class PropertyChangeEventSource implements Cleaner {
             this.publicChangeSupport.firePropertyChange(pblEvent);
     }
 
+    protected void firePropertyChangeEventPublicListenerOnly(String property, Object oldValue, Object newValue) {
+        if (canFirePublicEvent())
+            this.publicChangeSupport.firePropertyChange(property, oldValue, newValue);
+    }
 
     private final boolean canFirePublicEvent() {
         return publicEvent && this.publicChangeSupport != null && (firePublicEventQuestion == null || (firePublicEventQuestion != null && firePublicEventQuestion.getAnswer(null)));

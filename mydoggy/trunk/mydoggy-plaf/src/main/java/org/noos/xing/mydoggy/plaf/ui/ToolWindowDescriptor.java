@@ -496,8 +496,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     }
 
     public RepresentativeAnchorDescriptor getRepresentativeAnchorDescriptor() {
-            return representativeAnchorDescriptor;
-        }
+        return representativeAnchorDescriptor;
+    }
 
     public void hideToolWindow() {
         ToolWindowActionHandler toolWindowActionHandler = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class).getToolWindowActionHandler();

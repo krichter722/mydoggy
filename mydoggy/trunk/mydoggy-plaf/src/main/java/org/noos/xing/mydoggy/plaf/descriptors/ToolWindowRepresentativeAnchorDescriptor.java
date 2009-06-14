@@ -194,8 +194,28 @@ public class ToolWindowRepresentativeAnchorDescriptor extends PropertyChangeEven
     }
 
 
+    public void setVisiblePublicListenerOnly(boolean visible) {
+        if (toolWindow.getType() == ToolWindowType.FLOATING_FREE)
+            return;
+
+/*
+        if (!toolWindow.isAvailable())
+            return;
+*/
+
+        if (this.visible == visible)
+            return;
+
+        boolean old = this.visible;
+        this.visible = visible;
+
+//        firePropertyChangeEventPublicListenerOnly("visible", old, visible);
+    }
+
+
     protected void ensureRepresentativeAnchor() {
         if (toolWindowDescriptor.getRepresentativeAnchor() == null)
             setVisible(true);
     }
+
 }
