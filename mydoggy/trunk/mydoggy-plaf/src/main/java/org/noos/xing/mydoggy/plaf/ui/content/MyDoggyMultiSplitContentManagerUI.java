@@ -122,6 +122,7 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
         // Import contents
         lastSelected = null;
+        previousLastSelected = null;
         Content selectedContent = null;
 
         contentValueAdjusting = true;
@@ -193,9 +194,13 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
     }
 
     public synchronized void setSelected(final Content content, boolean selected) {
+//        System.out.println("(1) previousLastSelected = " + previousLastSelected);
+//        System.out.println("(1) lastSelected = " + lastSelected);
         if (selected) {
-            if (lastSelected != null)
+            if (lastSelected != null) {
+                previousLastSelected = lastSelected;
                 lastSelected.setSelected(false);
+            }
 
             if (content.isMinimized()) {
                 content.setMinimized(false);
@@ -271,9 +276,11 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                 throw new IllegalStateException("Invalid content ui state: " + content);
             }
         } else {
-            if (content == lastSelected)
+            if (content == lastSelected) {
                 lastSelected = null;
+            }
         }
+//        System.out.println("(2) previousLastSelected = " + previousLastSelected);
     }
 
     public void updateUI() {
@@ -282,7 +289,10 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
 
     public void selectNextContent(Content content) {
         if (contentManager.getSelectedContent() == null) {
-            if (contentManager.getContentCount() > 0)
+//            System.out.println("previousLastSelected = " + previousLastSelected);
+            if (previousLastSelected != null && contentManager.getContent(previousLastSelected.getId()) != null)
+                previousLastSelected.setSelected(true);
+            else if (contentManager.getContentCount() > 0)
                 contentManager.getContent(0).setSelected(true);
         }
     }
@@ -875,8 +885,8 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                 if (maximizedContent != null && newSelected != maximizedContent)
                     return;
 
-                if (lastSelected != null)
-                    lastSelected.setSelected(false);
+//                if (lastSelected != null)
+//                    lastSelected.setSelected(false);
 
                 focusValueAdj = true;
                 try {
@@ -997,12 +1007,13 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
                 public void stateChanged(ChangeEvent e) {
                     if (!valueAdjusting && !contentValueAdjusting) {
                         Content newSelected = (Content) tabbedContentPane.getSelectedContent();
+
                         if (newSelected != null && !newSelected.isMinimized()) {
                             if (newSelected == lastSelected)
                                 return;
 
-                            if (lastSelected != null)
-                                lastSelected.setSelected(false);
+//                            if (lastSelected != null)
+//                                lastSelected.setSelected(false);
 
                             newSelected.setSelected(true);
                         }

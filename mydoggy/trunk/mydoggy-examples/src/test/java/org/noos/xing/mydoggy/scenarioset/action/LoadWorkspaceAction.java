@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.scenarioset;
+package org.noos.xing.mydoggy.scenarioset.action;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.persistence.PersistenceDelegateCallbackAdapter;

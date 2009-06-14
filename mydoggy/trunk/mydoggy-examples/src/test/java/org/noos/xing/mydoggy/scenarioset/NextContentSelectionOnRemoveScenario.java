@@ -1,19 +1,20 @@
 package org.noos.xing.mydoggy.scenarioset;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.ContentManager;
-import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.event.ContentManagerEvent;
 import org.noos.xing.mydoggy.mydoggyset.action.ExitAction;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
+import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyTabbedContentManagerUI;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
+import org.noos.xing.mydoggy.scenarioset.action.LoadWorkspaceAction;
 
 import javax.swing.*;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class LoadWorkspaceScenarioTest {
+public class NextContentSelectionOnRemoveScenario {
 
     private JFrame frame;
     private ToolWindowManager toolWindowManager;
@@ -41,7 +42,7 @@ public class LoadWorkspaceScenarioTest {
 
     protected void initComponents() {
         // Init the frame
-        this.frame = new JFrame("ScenarioTestSet: LoadWorkspaceScenarioTest...");
+        this.frame = new JFrame("ScenarioTestSet: NextContentSelectionOnRemoveScenario...");
         this.frame.setSize(640, 480);
         this.frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -76,11 +77,32 @@ public class LoadWorkspaceScenarioTest {
 
     protected void initContentManager() {
         ContentManager contentManager = toolWindowManager.getContentManager();
-        contentManager.setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
+        contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
+        contentManager.addContentManagerListener(new ContentManagerListener() {
+            public void contentAdded(ContentManagerEvent event) {
+                System.out.println("contentAdded = " + event);
+            }
+
+            public void contentRemoved(ContentManagerEvent event) {
+                System.out.println("contentRemoved = " + event);
+            }
+
+            public void contentSelected(ContentManagerEvent event) {
+                System.out.println("contentSelected = " + event);
+            }
+        });
+
+        Content one = contentManager.addContent("1", "1", null, new JButton("1"), null, new MultiSplitConstraint(AggregationPosition.TOP));
+        Content two = contentManager.addContent("2", "2", null, new JButton("2"), null, new MultiSplitConstraint(one));
+
+
+        Content three = contentManager.addContent("3", "3", null, new JButton("3"), null, new MultiSplitConstraint(AggregationPosition.BOTTOM));
+        Content four = contentManager.addContent("4", "4", null, new JButton("4"), null, new MultiSplitConstraint(three));
+
     }
 
     public static void main(String[] args) {
-        LoadWorkspaceScenarioTest test = new LoadWorkspaceScenarioTest();
+        NextContentSelectionOnRemoveScenario test = new NextContentSelectionOnRemoveScenario();
         try {
             test.run();
         } catch (Exception e) {
@@ -90,4 +112,3 @@ public class LoadWorkspaceScenarioTest {
 
 
 }
-
