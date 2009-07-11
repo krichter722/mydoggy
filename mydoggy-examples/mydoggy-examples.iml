@@ -18,6 +18,9 @@
     <orderEntry type="module" module-name="mydoggy-itest" exported="" />
     <orderEntry type="library" exported="" name="Maven: org.swinglabs:swingx:0.9.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: com.jhlabs:filters:2.0.235" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.swinglabs:swing-worker:1.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.swinglabs:swing-layout:1.0.3" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.swinglabs:multiplegradientpaint:1.0" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:3.8.1" level="project" />
   </component>
 </module>
