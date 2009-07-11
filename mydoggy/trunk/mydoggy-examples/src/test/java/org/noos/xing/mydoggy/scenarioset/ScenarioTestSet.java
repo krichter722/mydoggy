@@ -67,6 +67,7 @@ public class ScenarioTestSet extends ScenarioSet {
                                                  "My best guess is the getNextContent method seems to always return the first\n" +
                                                  "added window to an Aggregate instead of the last selected content window in\n" +
                                                  "the current aggregate that the content window was closed from."));
+        tutorialSet.addScenario(new TestScenario(tutorialSet, ContentScenario.class, "ScenarioTest - ContentScenario", "..."));
 
         tutorialSet.run();
     }
