@@ -222,7 +222,7 @@ public class MyDoggySet {
         TabbedContentManagerUI contentManagerUI = (TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
         contentManagerUI.setShowAlwaysTab(true);
 
-//        customizeToolWindows();
+        customizeToolWindows();
     }
 
 
@@ -251,7 +251,7 @@ public class MyDoggySet {
 //        });
 
 //        contentManagerUI.setMinimizable(false);
-    }
+   }
 
 
     protected void customizeToolWindows() {
@@ -348,10 +348,11 @@ public class MyDoggySet {
             }
 
             public void contentSelected(ContentManagerEvent event) {
+                System.out.println("contentSelected = " + event);
             }
 
             public void contentDeselected(ContentManagerEvent event) {
-                //To change body of implemented methods use File | Settings | File Templates.
+                System.out.println("contentDeselected = " + event);
             }
         });
     }
