@@ -102,6 +102,10 @@ public class ContentFrame extends JFrame implements ContentWindow {
     }
 
 
+    public boolean isDisposed() {
+        return multiSplitDockableContainer == null;
+    }
+
     public void dispose() {
         super.dispose();
 

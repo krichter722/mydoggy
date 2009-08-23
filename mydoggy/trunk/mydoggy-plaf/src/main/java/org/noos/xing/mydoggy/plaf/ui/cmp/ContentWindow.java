@@ -9,6 +9,8 @@ public interface ContentWindow extends MultiSplitWindow<Content> {
 
     void setVisible(boolean visible);
 
+    boolean isDisposed();
+
     void dispose();
     
 }
