@@ -560,6 +560,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
             addPopupAction(popupMenu, typeDescriptor.getToolWindowAction(ToolWindowAction.MOVE_TO_ACTION_ID));
             addPopupAction(popupMenu, typeDescriptor.getToolWindowAction(ToolWindowAction.MAXIMIZE_ACTION_ID));
             addPopupAction(popupMenu, typeDescriptor.getToolWindowAction(ToolWindowAction.TOOLS_MENU_ACTION_ID));
+            addPopupAction(popupMenu, typeDescriptor.getToolWindowAction(ToolWindowAction.INDEX_MENU_ACTION_ID));
 
             // add user actions
             for (ToolWindowAction toolWindowAction : typeDescriptor.getToolWindowActions()) {
@@ -766,6 +767,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         toolWindow.addToolWindowAction(new AggregateToolWindowAction());
         toolWindow.addToolWindowAction(new AggregateMenuToolWindowAction());
         toolWindow.addToolWindowAction(new ToolsMenuToolWindowAction());
+        toolWindow.addToolWindowAction(new IndexMenuToolWindowAction());
     }
 
     protected void initTypeDescriptors() {

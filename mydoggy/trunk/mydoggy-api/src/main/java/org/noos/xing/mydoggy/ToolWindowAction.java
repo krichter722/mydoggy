@@ -24,6 +24,7 @@ public abstract class ToolWindowAction extends AbstractAction {
     public static final String AGGREGATE_ACTION_ID = "AGGREGATE_ACTION_ID";
     public static final String AGGREGATE_MENU_ACTION_ID = "AGGREGATE_MENU_ACTION_ID";
     public static final String TOOLS_MENU_ACTION_ID = "TOOLS_MENU_ACTION_ID";
+    public static final String INDEX_MENU_ACTION_ID = "INDEX_MENU_ACTION_ID";
 
 
     /**
