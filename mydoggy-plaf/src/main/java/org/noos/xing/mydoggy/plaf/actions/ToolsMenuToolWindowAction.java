@@ -22,7 +22,7 @@ public class ToolsMenuToolWindowAction extends ToolWindowAction implements PlafT
 
     public JMenuItem getMenuItem() {
         JMenu toolsMenu = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class).getToolsMenu();
-        
+
         return toolsMenu != null && toolsMenu.getMenuComponentCount() > 0 ? toolsMenu : null;
     }
 }
