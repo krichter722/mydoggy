@@ -1,8 +1,8 @@
 package org.noos.xing.mydoggy.plaf.persistence.xml;
 
 import org.noos.xing.mydoggy.*;
-import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitWindow;
+import org.noos.xing.mydoggy.plaf.ui.cmp.multisplit.MultiSplitLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
