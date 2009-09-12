@@ -3,6 +3,7 @@ package org.noos.xing.mydoggy.plaf.ui.cmp;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
+import org.noos.xing.mydoggy.plaf.ui.cmp.multisplit.MultiSplitPane;
 import org.noos.xing.mydoggy.plaf.ui.drag.DragListenerAdapter;
 import org.noos.xing.mydoggy.plaf.ui.drag.MyDoggyTransferable;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;

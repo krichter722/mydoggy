@@ -19,10 +19,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package org.noos.xing.mydoggy.plaf.ui.cmp;
+package org.noos.xing.mydoggy.plaf.ui.cmp.multisplit;
 
-import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitLayout.Divider;
-import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitLayout.Node;
+import org.noos.xing.mydoggy.plaf.ui.cmp.multisplit.MultiSplitLayout.Divider;
+import org.noos.xing.mydoggy.plaf.ui.cmp.multisplit.MultiSplitLayout.Node;
 
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;

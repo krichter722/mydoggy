@@ -7,6 +7,7 @@ import org.noos.xing.mydoggy.ContentUI;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.ToFrontWindowFocusListener;
 import org.noos.xing.mydoggy.plaf.ui.cmp.event.WindowTransparencyListener;
+import org.noos.xing.mydoggy.plaf.ui.cmp.multisplit.MultiSplitLayout;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;

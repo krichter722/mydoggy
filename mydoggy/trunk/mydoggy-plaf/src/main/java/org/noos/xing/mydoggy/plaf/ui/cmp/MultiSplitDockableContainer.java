@@ -4,10 +4,12 @@ import org.noos.xing.mydoggy.AggregationPosition;
 import org.noos.xing.mydoggy.Dockable;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
-import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitLayout.Divider;
-import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitLayout.Leaf;
-import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitLayout.Node;
-import org.noos.xing.mydoggy.plaf.ui.cmp.MultiSplitLayout.Split;
+import org.noos.xing.mydoggy.plaf.ui.cmp.multisplit.DockableLeaf;
+import org.noos.xing.mydoggy.plaf.ui.cmp.multisplit.MultiSplitLayout.Divider;
+import org.noos.xing.mydoggy.plaf.ui.cmp.multisplit.MultiSplitLayout.Leaf;
+import org.noos.xing.mydoggy.plaf.ui.cmp.multisplit.MultiSplitLayout.Node;
+import org.noos.xing.mydoggy.plaf.ui.cmp.multisplit.MultiSplitLayout.Split;
+import org.noos.xing.mydoggy.plaf.ui.cmp.multisplit.MultiSplitPane;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -1374,45 +1376,6 @@ public class MultiSplitDockableContainer<D extends Dockable> extends JPanel {
             return component;
         }
 
-    }
-
-    public static class DockableLeaf extends Leaf {
-        private List<String> dockables;
-
-        public DockableLeaf() {
-        }
-
-        public DockableLeaf(String name) {
-            super(name);
-            this.dockables = new ArrayList<String>();
-        }
-
-        public DockableLeaf(String name, String dockableId) {
-            super(name);
-            this.dockables = new ArrayList<String>();
-            this.dockables.add(dockableId);
-        }
-
-
-        public String getDockable() {
-            return dockables.get(0);
-        }
-
-        public List<String> getDockables() {
-            return dockables;
-        }
-
-        public void setDockables(List<String> dockables) {
-            this.dockables = dockables;
-        }
-
-        public void addDockable(String dockableId) {
-            dockables.add(dockableId);
-        }
-
-        public int getNameValue() {
-            return Integer.parseInt(getName());
-        }
     }
 
     public class RepaintRunnable implements Runnable {
