@@ -444,7 +444,6 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
                 }
             }
 
-//            if (label.getBorder() != labelBorder)
             representativeAnchor.setBorder(labelBorder);
             labelBorder.setLineColor(UIManager.getColor(MyDoggyKeySpace.TWRA_MOUSE_IN_BORDER));
             SwingUtil.repaint(representativeAnchor);

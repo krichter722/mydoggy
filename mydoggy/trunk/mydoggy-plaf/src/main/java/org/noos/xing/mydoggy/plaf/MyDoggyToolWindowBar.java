@@ -592,8 +592,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         }
 
         SwingUtil.repaint(toolWindowScrollBar);
-
         dockableDescriptor.resetRepresentativeAnchor();
+        manager.syncPanel(dockableDescriptor.getAnchor());
     }
 
     protected TableLayoutConstraints getRepresentativeAnchorConstraints(Component representativeAnchor) {
@@ -913,7 +913,11 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                     // Store position and remove anchor
                     anchorPositions.put(descriptor, descriptor.getAnchorIndex());
 
-                    removeRepresentativeAnchor(descriptor, descriptor.getRepresentativeAnchor());
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            removeRepresentativeAnchor(descriptor, descriptor.getRepresentativeAnchor());
+                        }
+                    });
                 } else {
                     // Restore the anchor to the old position
                     int index = -1;
