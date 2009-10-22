@@ -72,10 +72,6 @@
 
     <files>
         <file>
-            <source>lib/win32/TransparencyManager.dll</source>
-            <outputDirectory>lib/win32</outputDirectory>
-        </file>
-        <file>
             <source>mydoggy.iml</source>
             <outputDirectory>.</outputDirectory>
         </file>
@@ -85,10 +81,6 @@
         </file>
         <file>
             <source>README.txt</source>
-            <outputDirectory>.</outputDirectory>
-        </file>
-        <file>
-            <source>makefile</source>
             <outputDirectory>.</outputDirectory>
         </file>
     </files>
