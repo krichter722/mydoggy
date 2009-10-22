@@ -108,7 +108,7 @@ public class MyDoggySet {
         long start = System.currentTimeMillis();
         final MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager();
         long end = System.currentTimeMillis();
-        System.out.println("Time (millis) too load the manager : " + (end - start));
+        System.out.println("> Time (millis) too load the manager : " + (end - start));
 
         this.toolWindowManager = myDoggyToolWindowManager;
 
@@ -222,7 +222,9 @@ public class MyDoggySet {
         TabbedContentManagerUI contentManagerUI = (TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
         contentManagerUI.setShowAlwaysTab(true);
 
-        customizeToolWindows();
+        toolWindowManager.getToolWindow("Tool 3").getTypeDescriptor(DockedTypeDescriptor.class).setHideRepresentativeButtonOnVisible(true);
+
+        //customizeToolWindows();
     }
 
 
