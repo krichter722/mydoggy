@@ -169,7 +169,6 @@ public class MyDoggyContentManager extends PropertyChangeEventSource implements 
                 } finally {
                     // clean the content
                     ((MyDoggyContent) content).cleanup();
-
                 }
 
             }
