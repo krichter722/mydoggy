@@ -1,7 +1,6 @@
 package org.noos.xing.mydoggy.mydoggyset.action;
 
 import org.noos.xing.mydoggy.*;
-import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.mydoggyset.MyDoggySet;
 import org.noos.xing.mydoggy.mydoggyset.context.MyDoggySetContext;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
@@ -60,8 +59,6 @@ public class LoadWorkspaceAction extends AbstractAction implements ViewContextCh
                                     myDoggySetContext.put(ToolWindowGroup.class, null);
                                 else if ("Contents".equals(contentId))
                                     myDoggySetContext.put(Content.class, null);
-                                else if ("ITests".equals(contentId))
-                                    myDoggySetContext.put(InteractiveTest.class, null);
                                 else if ("Customize".equals(contentId))
                                     myDoggySetContext.put(ResourceManager.class, null);
                                 else if ("Nested Manager".equals(contentId))
