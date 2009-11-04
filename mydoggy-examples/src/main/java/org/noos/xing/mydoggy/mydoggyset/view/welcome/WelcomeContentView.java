@@ -4,7 +4,6 @@ import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowGroup;
 import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.mydoggyset.context.MyDoggySetContext;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
@@ -67,8 +66,8 @@ public class WelcomeContentView extends ComponentView {
         panel.add(renderLabel("<html>Edit <br>Groups <br> properties</html>"),
                   "7,2,FULL,FULL");
 
-        panel.add(renderButton("ITests", InteractiveTest.class),
-                  "5,4,FULL,FULL");
+//        panel.add(renderButton("ITests", InteractiveTest.class),
+//                  "5,4,FULL,FULL");
         panel.add(renderLabel("<html>Run <br>Interactive <br> Tests</html>"),
                   "7,4,FULL,FULL");
 

@@ -10,7 +10,6 @@ import org.noos.common.context.Context;
 import org.noos.common.object.ObjectCreator;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
-import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.mydoggyset.action.*;
 import org.noos.xing.mydoggy.mydoggyset.context.MyDoggySetContext;
 import org.noos.xing.mydoggy.mydoggyset.ui.DoggyTable;
@@ -148,7 +147,6 @@ public class MyDoggySet {
         contentMenu.add(new ViewContextAction("ToolWindows", myDoggySetContext, ToolWindow.class));
         contentMenu.add(new ViewContextAction("Contents", myDoggySetContext, Content.class));
         contentMenu.add(new ViewContextAction("Groups", myDoggySetContext, ToolWindowGroup.class));
-        contentMenu.add(new ViewContextAction("ITests", myDoggySetContext, InteractiveTest.class));
         contentMenu.add(new ViewContextAction("Customize", myDoggySetContext, ResourceManager.class));
         contentMenu.add(new ViewContextAction("Nested Manager", myDoggySetContext, MyDoggySetContext.ActionKey.NEST_TOOLMANAGER));
 

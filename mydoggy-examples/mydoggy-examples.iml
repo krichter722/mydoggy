@@ -14,10 +14,6 @@
     <orderEntry type="library" exported="" name="Maven: org.swinglabs:swing-worker:1.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.swinglabs:swing-layout:1.0.3" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.swinglabs:multiplegradientpaint:1.0" level="project" />
-    <orderEntry type="module" module-name="mydoggy-api" exported="" />
-    <orderEntry type="module" module-name="mydoggy-plaf" exported="" />
-    <orderEntry type="module" module-name="mydoggy-res" exported="" />
-    <orderEntry type="module" module-name="mydoggy-itest" exported="" />
     <orderEntry type="library" exported="" name="Maven: tablelayout:TableLayout:20050920" level="project" />
     <orderEntry type="module" module-name="mydoggy-api" exported="" />
     <orderEntry type="module" module-name="mydoggy-plaf" exported="" />

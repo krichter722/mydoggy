@@ -11,8 +11,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="mydoggy-api" exported="" />
-    <orderEntry type="module" module-name="mydoggy-res" exported="" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:3.8.1" level="project" />
     <orderEntry type="library" exported="" name="Maven: tablelayout:TableLayout:20050920" level="project" />
     <orderEntry type="module" module-name="mydoggy-api" exported="" />

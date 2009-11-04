@@ -4,13 +4,11 @@ import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowGroup;
 import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.itest.InteractiveTest;
 import org.noos.xing.mydoggy.mydoggyset.MyDoggySet;
 import org.noos.xing.mydoggy.mydoggyset.action.AddContentAction;
 import org.noos.xing.mydoggy.mydoggyset.view.contents.ContentsView;
 import org.noos.xing.mydoggy.mydoggyset.view.customize.CustomizeView;
 import org.noos.xing.mydoggy.mydoggyset.view.group.GroupsView;
-import org.noos.xing.mydoggy.mydoggyset.view.interactive.InteractiveTestView;
 import org.noos.xing.mydoggy.mydoggyset.view.manager.ManagerView;
 import org.noos.xing.mydoggy.mydoggyset.view.nested.NestedManagerView;
 import org.noos.xing.mydoggy.mydoggyset.view.toolwindows.ToolWindowsView;
@@ -62,10 +60,6 @@ public class MyDoggySetContext extends MapViewContext {
                                                                          "Contents", "Contents", null,
                                                                          contentsContentComponent = new ContentsView(toolWindowManager).getComponent(),
                                                                          "Contents", (int) 'C'));
-        addViewContextChangeListener(InteractiveTest.class, new AddContentAction(toolWindowManager,
-                                                                                 "ITests", "Interactive Tests", null,
-                                                                                 interactiveTestContentComponent = new InteractiveTestView(this, parentComponent, toolWindowManager).getComponent(),
-                                                                                 "Interactive Tests", (int) 'I'));
         addViewContextChangeListener(ResourceManager.class, new AddContentAction(toolWindowManager,
                                                                                  "Customize", "Customize", null,
                                                                                  customizeContentComponent = new CustomizeView(parentComponent, toolWindowManager).getComponent(),
