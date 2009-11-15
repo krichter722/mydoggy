@@ -181,8 +181,11 @@ public class FloatingLivePanel extends TranslucentPanel implements FloatingLiveW
             setLayout();
             layeredPane.remove(this);
             setBorder(null);
+            SwingUtil.repaint(layeredPane);
+
             return true;
         }
+
         SwingUtil.repaint(layeredPane);
         return false;
     }

@@ -21,6 +21,9 @@ public interface FloatingLiveWindow extends MultiSplitWindow<ToolWindow> {
 
     boolean isVisible();
 
+    boolean isValid();
+
+
     void setSize(int width, int height);
 
     void setSize(Dimension size);
@@ -42,4 +45,5 @@ public interface FloatingLiveWindow extends MultiSplitWindow<ToolWindow> {
     Rectangle getBounds();
 
     void updateUI();
+
 }

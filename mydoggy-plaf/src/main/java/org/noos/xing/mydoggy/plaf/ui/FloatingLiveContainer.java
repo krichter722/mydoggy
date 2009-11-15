@@ -46,7 +46,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
         toolWindowTitleBar.removeMouseListener(moveMouseInputHandler);
 
         floatingLiveWindow = null;
-        
+
         super.cleanup();
     }
 
@@ -139,14 +139,14 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
             // unmount
             floatingLiveWindow.unmount();
             descriptor.removeFloatingLiveWindow();
-            
+
             floatingLiveWindow = null;
         }
     }
 
     public void setVisible(ToolWindowDescriptor referenceAggregationTool,
                            Component content,
-                           ToolWindowDescriptor aggregationOnTool, 
+                           ToolWindowDescriptor aggregationOnTool,
                            AggregationPosition aggregationPosition) {
         // retrieve common panel
         floatingLiveWindow = ((FloatingLiveContainer) referenceAggregationTool.getToolWindowContainer(ToolWindowType.FLOATING_LIVE)).getFloatingLiveWindow();
@@ -186,7 +186,7 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
         // Init floating live type desrciptor properties listeners
         PropertyChangeEventSource floatingLiveTypeDescriptorSource = (PropertyChangeEventSource) descriptor.getToolWindow().getTypeDescriptor(FloatingLiveTypeDescriptor.class);
-        floatingLiveTypeDescriptorSource.addPlafPropertyChangeListener(propertyChangeListener, "location", "size", "enabled");
+        floatingLiveTypeDescriptorSource.addPlafPropertyChangeListener(propertyChangeListener, "location", "size", "enabled", "visible");
 
         moveMouseInputHandler = new FloatingMoveMouseInputHandler(null);
         livePanelComponentListener = new LivePanelComponentListener();
@@ -219,8 +219,9 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
                 }
             } else if (evt.getOldValue() == ToolWindowType.FLOATING_LIVE) {
                 if (descriptor.getManager().getLayeredPane() != null) {
-                    if (settedListener)
-                        lastBounds = descriptor.getManager().getFloatingLiveWindow(toolWindow).getBounds();
+                    FloatingLiveWindow floatingLiveWindow = descriptor.getManager().getFloatingLiveWindow(toolWindow);
+                    if (settedListener && floatingLiveWindow.isValid())
+                        lastBounds = floatingLiveWindow.getBounds();
 
                     // Remove listeners
                     toolWindowTabPanel.removeEventDispatcherlListener(moveMouseInputHandler);
@@ -288,6 +289,13 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
             if (!newValue && toolWindow.getType() == ToolWindowType.FLOATING_LIVE)
                 toolWindow.setType(ToolWindowType.DOCKED);
+        }
+
+        public void onVisible(PropertyChangeEvent evt) {
+            boolean newValue = (Boolean) evt.getNewValue();
+            if (!newValue)
+                lastBounds = descriptor.getManager().getFloatingLiveWindow(toolWindow).getBounds();
+
         }
     }
 
