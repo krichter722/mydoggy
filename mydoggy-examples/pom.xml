@@ -35,11 +35,6 @@
             <version>1.5.0</version>
         </dependency>
         <dependency>
-            <groupId>org.noos.xing</groupId>
-            <artifactId>mydoggy-itest</artifactId>
-            <version>1.5.0</version>
-        </dependency>
-        <dependency>
            <groupId>org.swinglabs</groupId>
            <artifactId>swingx</artifactId>
            <version>0.9.1</version>

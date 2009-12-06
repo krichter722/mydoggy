@@ -439,27 +439,26 @@ public class MyDoggyMultiSplitContentManagerUI extends MyDoggyContentManagerUI<M
     public class ComponentListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             Content content = (Content) evt.getSource();
+            Component newCmp = (Component) evt.getNewValue();
 
             if (content.isMinimized())
                 return;
 
             if (content.isDetached()) {
-                RootPaneContainer rootPaneContainer = (RootPaneContainer) SwingUtilities.windowForComponent(content.getComponent());
-                Container container = rootPaneContainer.getContentPane();
-                container.removeAll();
-                container.add((Component) evt.getNewValue());
+                ContentWindow contentWindow = (ContentWindow) SwingUtilities.windowForComponent(content.getComponent());
+                contentWindow.setComponent(content, newCmp);
             } else {
                 for (Component c : multiSplitContainer.getTabbedComponents()) {
                     if (c instanceof TabbedContentPane) {
                         TabbedContentPane tabbedContentPane = ((TabbedContentPane) c);
                         int index = tabbedContentPane.indexOfContent(content);
                         if (index != -1) {
-                            tabbedContentPane.setComponentAt(index, (Component) evt.getNewValue());
+                            tabbedContentPane.setComponentAt(index, newCmp);
                             return;
                         }
                     }
                     if (c == content.getComponent()) {
-                        multiSplitContainer.setRootComponent((Component) evt.getNewValue());
+                        multiSplitContainer.setRootComponent(newCmp);
                         return;
                     }
                 }

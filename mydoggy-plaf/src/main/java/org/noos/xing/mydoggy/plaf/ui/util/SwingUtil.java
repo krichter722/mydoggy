@@ -147,7 +147,7 @@ public class SwingUtil {
 
             Window[] windows = frame.getOwnedWindows();
             for (Window window : windows) {
-                if (window instanceof ContentWindow  && frame.isDisplayable() && !((ContentWindow)frame).isDisposed())
+                if (window instanceof ContentWindow  && frame.isDisplayable() && !((ContentWindow)window).isDisposed())
                     containers.add((ContentWindow) window);
             }
         }
@@ -433,8 +433,8 @@ public class SwingUtil {
 
         do {
             if (c instanceof JComponent) {
-                x = ((JComponent) c).getX();
-                y = ((JComponent) c).getY();
+                x = c.getX();
+                y = c.getY();
             } else if (c instanceof java.applet.Applet ||
                     c instanceof java.awt.Window) {
                 try {
