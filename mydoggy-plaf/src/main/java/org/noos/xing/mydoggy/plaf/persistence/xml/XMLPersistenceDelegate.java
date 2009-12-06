@@ -837,9 +837,9 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     writer.endElement("layout");
                 }
 
-                if (toolWindowBar.getVisibleWorkspace() != null) {
+                if (toolWindowBar.getToolsWorkspace() != null) {
                     writer.startElement("workspace");
-                    writer.cdata(Base64.encodeBytes(toolWindowBar.getVisibleWorkspace().toByteArray()));
+                    writer.cdata(Base64.encodeBytes(toolWindowBar.getToolsWorkspace().toByteArray()));
                     writer.endElement("workspace");
                 }
 
