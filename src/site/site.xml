@@ -20,13 +20,11 @@
             <item name="Build Howto" href="buildHowto.html"/>
             <item name="Contact" href="contact.html"/>
             <item img="/images/new.png" name="Tutorial" href="/tutorial/tutorial.html"/>
-            <item img="/images/new.png" name="Statistics" href="statistics.html"/>
         </menu>
 
         <menu name="Demos">
             <item name="MyDoggySet" href="/examples/mydoggyset.html">
                 <item name="Screenshots" href="/examples/mydoggysetScreenshots.html"/>
-                <item name="Videos" href="/examples/mydoggysetVideos.html"/>
                 <item name="Using" href="/examples/mydoggysetUsing.html"/>
             </item>
             <item img="/images/new.png" name="TutorialSet" href="/examples/tutorialset.html"/>

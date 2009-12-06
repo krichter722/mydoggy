@@ -1216,7 +1216,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 if (type != ToolWindowType.EXTERN)
                     toolWindow.setType(type);
 
-                toolWindow.setAutoHide(getBoolean(context, tool, "autoHide", false));
+//                toolWindow.setAutoHide(getBoolean(context, tool, "autoHide", false));
                 toolWindow.setAvailable(getBoolean(context, tool, "available", false));
                 int index = getInteger(context, tool, "index", -1);
                 if (index != -1)

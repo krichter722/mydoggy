@@ -9,7 +9,6 @@ import org.noos.common.Question;
 import org.noos.common.context.Context;
 import org.noos.common.object.ObjectCreator;
 import org.noos.xing.mydoggy.*;
-import org.noos.xing.mydoggy.event.ContentManagerEvent;
 import org.noos.xing.mydoggy.mydoggyset.action.*;
 import org.noos.xing.mydoggy.mydoggyset.context.MyDoggySetContext;
 import org.noos.xing.mydoggy.mydoggyset.ui.DoggyTable;
@@ -17,16 +16,11 @@ import org.noos.xing.mydoggy.mydoggyset.ui.LookAndFeelMenuItem;
 import org.noos.xing.mydoggy.mydoggyset.ui.MonitorPanel;
 import org.noos.xing.mydoggy.mydoggyset.ui.RuntimeMemoryMonitorSource;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.actions.HideToolWindowAction;
 import org.noos.xing.mydoggy.plaf.ui.CustomDockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
-import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
-import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowRepresentativeAnchorUI;
-import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTitleBarUI;
-import org.noos.xing.mydoggy.plaf.ui.util.GraphicsUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.ParentOfQuestion;
 import org.noos.xing.mydoggy.plaf.ui.util.StringUtil;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
@@ -34,13 +28,11 @@ import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.view.ViewContext;
 
 import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.util.Enumeration;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -114,8 +106,11 @@ public class MyDoggySet {
         // Add MyDoggyToolWindowManager to frame
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
 
+        // Init additional dockable
+        this.memoryMonitorDescriptor = new MemoryMonitorDockableDescriptor((MyDoggyToolWindowManager) toolWindowManager, ToolWindowAnchor.BOTTOM);
+
         // Apply now all customization if necessary
-        customizeToolWindowManager(myDoggyToolWindowManager);
+        customize();
 
         // Init the context
         this.myDoggySetContext = new MyDoggySetContext(toolWindowManager, frame);
@@ -216,264 +211,30 @@ public class MyDoggySet {
         for (ToolWindow window : toolWindowManager.getToolWindows()) {
             window.setAvailable(true);
         }
-
-        TabbedContentManagerUI contentManagerUI = (TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
-        contentManagerUI.setShowAlwaysTab(true);
-
-        toolWindowManager.getToolWindow("Tool 3").getTypeDescriptor(DockedTypeDescriptor.class).setHideRepresentativeButtonOnVisible(true);
-
-        //customizeToolWindows();
     }
 
-
-    protected void initContentManager() {
-        // Setup ContentManagerUI
-//        toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
-
-//        MultiSplitContentManagerUI contentManagerUI = (MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
-//        contentManagerUI.setPopupMenuEnabled(false);
-//        contentManagerUI.setCloseable(false);
-//        contentManagerUI.setDetachable(false);
-//        contentManagerUI.setMinimizable(false);
-//        contentManagerUI.setMaximizable(false);
-
-        TabbedContentManagerUI contentManagerUI = (TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
-        contentManagerUI.setShowAlwaysTab(true);
-//        contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
-//        contentManagerUI.setTabLayout(TabbedContentManagerUI.TabLayout.WRAP);
-//        contentManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
-//            public boolean contentUIRemoving(ContentManagerUIEvent event) {
-//                return JOptionPane.showConfirmDialog(frame, "Are you sure?") == JOptionPane.OK_OPTION;
-//            }
-//
-//            public void contentUIDetached(ContentManagerUIEvent event) {
-//            }
-//        });
-
-//        contentManagerUI.setMinimizable(false);
-   }
-
-
-    protected void customizeToolWindows() {
-        ToolWindow toolWindow;
-        DockedTypeDescriptor dockedTypeDescriptor;
-
-        // Setup Tool 1
-        toolWindow = toolWindowManager.getToolWindow("Tool 1");
-        toolWindow.getRepresentativeAnchorDescriptor().setTitle("Hello  World 1!!!");
-        toolWindow.setAutoHide(true);
-        dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
-//        representativeAnchorDescriptor.setPopupMenuEnabled(false);
-        dockedTypeDescriptor.setTitleBarButtonsVisible(false);
-        dockedTypeDescriptor.setTitleBarVisible(false);
-        dockedTypeDescriptor.setDockLength(200);
-
-//        UIManager.put(MyDoggyKeySpace.DEBUG, false);
-
-        toolWindow.addToolWindowAction(new ToolWindowCloseAction());
-
-//        dockedTypeDescriptor.setToolWindowActionHandler(new ToolWindowActionHandler() {
-//            public void onHideButtonClick(final ToolWindow toolWindow) {
-//                toolWindowManager.unregisterToolWindow(toolWindow.getId());
-//            }
-//        });
-
-        // Setup Tool 2
-        toolWindow = toolWindowManager.getToolWindow("Tool 2");
-        dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
-        dockedTypeDescriptor.getToolsMenu().add(new JMenuItem("Prova"));
-
-        toolWindow.setType(ToolWindowType.FLOATING_FREE);
-
-        FloatingTypeDescriptor descriptor = toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class);
-        descriptor.setLocation(100, 100);
-        descriptor.setSize(250, 250);
-
-        // Setup Tool 3
-        toolWindow = toolWindowManager.getToolWindow("Tool 3");
-        toolWindow.getRepresentativeAnchorDescriptor().setTitle("Tool 3 !!!");
-        dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
-
-        JMenuItem menuItem = new JMenuItem("Hello World!!!");
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Hello World!!!");
-            }
-        });
-        dockedTypeDescriptor.getToolsMenu().add(menuItem);
-        toolWindow.getRepresentativeAnchorDescriptor().setPreviewDelay(1500);
-        dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.HIDE_ACTION_ID).setVisibleOnTitleBar(false);
-        dockedTypeDescriptor.getToolWindowAction(ToolWindowAction.MAXIMIZE_ACTION_ID).setVisible(false);
-
-        SlidingTypeDescriptor slidingTypeDescriptor = toolWindow.getTypeDescriptor(SlidingTypeDescriptor.class);
-        slidingTypeDescriptor.setEnabled(false);
-
-        // Setup Tool 4 and 5
-        toolWindowManager.getToolWindow("Tool 4").setType(ToolWindowType.FLOATING_FREE);
-        toolWindowManager.getToolWindow("Tool 5").setType(ToolWindowType.FLOATING_FREE);
-
-        // Setup Tool 7
-        toolWindow = toolWindowManager.getToolWindow("Tool 7");
-        toolWindow.setType(ToolWindowType.FLOATING);
-
-        FloatingTypeDescriptor floatingTypeDescriptor = toolWindow.getTypeDescriptor(FloatingTypeDescriptor.class);
-        floatingTypeDescriptor.setModal(true);
-//        floatingTypeDescriptor.setOsDecorated(true);
-        floatingTypeDescriptor.setAnimating(false);
-
-        // Setup ContentManager
-        toolWindowManager.getContentManager().addContentManagerListener(new ContentManagerListener() {
-            public void contentAdded(ContentManagerEvent event) {
-                event.getContent().addPropertyChangeListener(new PropertyChangeListener() {
-                    public void propertyChange(PropertyChangeEvent evt) {
-/*
-                        StringBuffer sb = new StringBuffer("Event : ");
-                        sb.append(evt.getPropertyName())
-                                .append(" ; ")
-                                .append(evt.getOldValue())
-                                .append(" -> ")
-                                .append(evt.getNewValue())
-                                .append(" ; ")
-                                .append(evt.getSource());
-                        System.out.println(sb);
-*/
-//                new RuntimeException().printStackTrace();
-//                System.out.println("----------------------------------------------------------");
-                    }
-                });
-            }
-
-            public void contentRemoved(ContentManagerEvent event) {
-//                System.out.println("Content removed " + event);
-            }
-
-            public void contentSelected(ContentManagerEvent event) {
-                System.out.println("contentSelected = " + event);
-            }
-
-            public void contentDeselected(ContentManagerEvent event) {
-                System.out.println("contentDeselected = " + event);
-            }
-        });
-    }
-
-    protected void customizeToolWindowManager(MyDoggyToolWindowManager myDoggyToolWindowManager) {
-
-// Setup ContentManagerUI
-//        toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
-
-//        MultiSplitContentManagerUI contentManagerUI = (MultiSplitContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
-//        contentManagerUI.setPopupMenuEnabled(false);
-//        contentManagerUI.setCloseable(false);
-//        contentManagerUI.setDetachable(false);
-//        contentManagerUI.setMinimizable(false);
-//        contentManagerUI.setMaximizable(false);
-
-//        contentManagerUI.setShowAlwaysTab(true);
-//        contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
-//        contentManagerUI.setTabLayout(TabbedContentManagerUI.TabLayout.WRAP);
-//        contentManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
-//            public boolean contentUIRemoving(ContentManagerUIEvent event) {
-//                return JOptionPane.showConfirmDialog(frame, "Are you sure?") == JOptionPane.OK_OPTION;
-//            }
-//
-//            public void contentUIDetached(ContentManagerUIEvent event) {
-//            }
-//        });
-
-//        contentManagerUI.setMinimizable(false);
-
-
-        ToolWindowManagerDescriptor descriptor = myDoggyToolWindowManager.getToolWindowManagerDescriptor();
-        descriptor.setShowUnavailableTools(true);
-
+    protected void customize() {
+        MyDoggyToolWindowManager myDoggyToolWindowManager = (MyDoggyToolWindowManager) toolWindowManager;
         ResourceManager resourceManager = myDoggyToolWindowManager.getResourceManager();
-        // Add customization here. See the page http://mydoggy.sourceforge.net/mydoggy-plaf/resourceManagerUsing.html
-
-/*
-        resourceManager.putProperty("ContentManagerDropTarget.enabled", "true");
-*/
-        resourceManager.putProperty("ContentManagerUI.ContentManagerUiListener.import", "true");
-        resourceManager.putBoolean(MyDoggyKeySpace.TOOL_WINDOW_PREVIEW_FULL, true);
-/*
-        resourceManager.setUserBundle(new ResourceBundle() {
-            protected Object handleGetObject(String key) {
-                if ("Tool 3".equals(key))
-                    return "ciao";
-                return key;
-            }
-
-            public Enumeration<String> getKeys() {
-                return null;
-            }
-        });
-*/
-
-/*
-        //TODO: move this property name to a class...
-        resourceManager.putProperty(MyDoggyKeySpace.DRAG_ICON_TRANSPARENCY, "false");
-        resourceManager.putProperty("drag.icon.useDefault", "true");
-        resourceManager.putBoolean("drag.toolwindow.asTab", true);
-*/
-//        UIManager.put(MyDoggyKeySpace.DRAG_ENABLED, false);
-
-        MyDoggyResourceManager myDoggyResourceManager = (MyDoggyResourceManager) myDoggyToolWindowManager.getResourceManager();
-
-/*
-        resourceManager.putColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_START, Color.BLUE);
-        resourceManager.putColor(MyDoggyKeySpace.TWTB_BACKGROUND_ACTIVE_END, Color.GREEN);
-        resourceManager.putColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_START, Color.BLACK);
-        resourceManager.putColor(MyDoggyKeySpace.TWTB_BACKGROUND_INACTIVE_END, Color.GREEN.darker());
-*/
-
-/*
-        resourceManager.putColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_SELECTED, Color.GREEN);
-        resourceManager.putColor(MyDoggyKeySpace.TWTB_TAB_FOREGROUND_UNSELECTED, Color.DARK_GRAY);
-*/
-
-/*
-        resourceManager.putColor(MyDoggyKeySpace.TWRA_BACKGROUND_ACTIVE_START, Color.RED);
-        resourceManager.putColor(MyDoggyKeySpace.TWRA_BACKGROUND_ACTIVE_END, Color.ORANGE);
-*/
-
-/*
-        resourceManager.putColor(MyDoggyKeySpace.TWRA_FOREGROUND, Color.BLUE);
-*/
-
-//        UIManager.put("ToolWindowTitleButtonPanelUI", "org.noos.xing.mydoggy.plaf.ui.look.MenuToolWindowTitleButtonPanelUI");
-//        UIManager.put("ToolWindowTitleBarUI", "org.noos.xing.mydoggy.mydoggyset.MyDoggySet$CustomToolWindowTitleBarUI");
-//        UIManager.put("ToolWindowRepresentativeAnchorUI", "org.noos.xing.mydoggy.mydoggyset.MyDoggySet$CustomToolWindowRepresentativeAnchorUI");
-
-        UIManager.put(MyDoggyKeySpace.MODAL_WINDOW_BORDER_LENGTH, 4);
-        UIManager.put(MyDoggyKeySpace.DND_CONTENT_OUTSIDE_FRAME, true);
-
-        UIManager.put(MyDoggyKeySpace.TWRA_ROTATE_ICON_ON_ANCHOR, false);
-
-//        UIManager.put("ToolWindowTabTitleUI.font", new Font("Verdana", Font.BOLD, 15));
-        UIManager.put("ToolWindowTitleBarUI.font", new Font("Verdana", Font.BOLD, 15));
-//        UIManager.put("ToolWindowRepresentativeAnchorUI.font", new Font("Verdana", Font.BOLD, 15));
-
-        myDoggyResourceManager.putInstanceCreator(ParentOfQuestion.class, new ObjectCreator() {
+        ((MyDoggyResourceManager) resourceManager).putInstanceCreator(ParentOfQuestion.class, new ObjectCreator() {
             public Object create(Context context) {
-                return new CustomParentOfQuestion(context.get(Component.class),
-                        context.get(ToolWindow.class));
+                return new CustomParentOfQuestion(context.get(Component.class), context.get(ToolWindow.class));
             }
         });
-
-        memoryMonitorDescriptor = new MemoryMonitorDockableDescriptor(myDoggyToolWindowManager, ToolWindowAnchor.BOTTOM);
     }
 
 
     public static void main(String[] args) {
-        final MyDoggySet test = new MyDoggySet();
-        try {
-//            test.run(null);
-//            test.run(new MultiSplitRandomConstraints(test));
-//            test.run(new TabbedRandomConstraints(test));
-            test.run(null);
-        } catch (Exception e) {
-            e.printStackTrace();
+        System.out.println("UIManager.getLookAndFeel() = " + UIManager.getLookAndFeel());
+
+        Enumeration<Object> keysEnumeration = UIManager.getDefaults().keys();
+        while (keysEnumeration.hasMoreElements()) {
+            Object key = keysEnumeration.nextElement();
+            System.out.printf("%s - %s\n", key, UIManager.get(key));
         }
+
+        MyDoggySet test = new MyDoggySet();
+        test.run(null);
     }
 
 
@@ -507,89 +268,6 @@ public class MyDoggySet {
             }
         }
 
-    }
-
-    public static class CustomToolWindowTitleBarUI extends ToolWindowTitleBarUI {
-
-        public static ComponentUI createUI(JComponent c) {
-            return new CustomToolWindowTitleBarUI();
-        }
-
-        public CustomToolWindowTitleBarUI() {
-        }
-
-        protected void updateToolWindowTitleBar(Graphics g, JComponent c, Color backgroundStart, Color backgroundEnd, Color idBackgroundColor, Color idColor) {
-            Rectangle r = c.getBounds();
-            r.x = r.y = 0;
-
-            GraphicsUtil.fillRect(g, r,
-                    backgroundStart, backgroundEnd,
-                    null,
-                    GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
-
-            if (descriptor.isIdVisibleOnTitleBar() ||
-                    toolWindow.getType() == ToolWindowType.FLOATING ||
-                    toolWindow.getType() == ToolWindowType.FLOATING_FREE ||
-                    toolWindow.getType() == ToolWindowType.FLOATING_LIVE) {
-
-                String id = SwingUtil.getUserString(descriptor.getToolWindow().getId());
-                r.width = g.getFontMetrics().stringWidth(id) + 8;
-
-                int halfHeigh = (r.height / 2);
-                GraphicsUtil.fillRect(g, r,
-                        Color.WHITE,
-                        idBackgroundColor,
-                        new Polygon(new int[]{r.x, r.x + r.width - halfHeigh, r.x + r.width - halfHeigh, r.x},
-                                new int[]{r.y, r.y, r.y + r.height, r.y + r.height},
-                                4),
-                        GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
-
-
-                Polygon polygon = new Polygon();
-                polygon.addPoint(r.x + r.width - halfHeigh, r.y);
-                polygon.addPoint(r.x + r.width - halfHeigh + 8, r.y + (r.height / 2));
-                polygon.addPoint(r.x + r.width - halfHeigh, r.y + r.height);
-
-                GraphicsUtil.fillRect(g, r,
-                        Color.WHITE,
-                        idBackgroundColor,
-                        polygon,
-                        GraphicsUtil.LEFT_TO_RIGHT_GRADIENT);
-
-                g.setColor(idColor);
-                g.drawString(id, r.x + 2, r.y + g.getFontMetrics().getAscent());
-            }
-        }
-
-    }
-
-    public static class CustomToolWindowRepresentativeAnchorUI extends ToolWindowRepresentativeAnchorUI {
-
-        public static ComponentUI createUI(JComponent c) {
-            return new CustomToolWindowRepresentativeAnchorUI();
-        }
-
-        public CustomToolWindowRepresentativeAnchorUI() {
-        }
-
-        @Override
-        protected void updateAnchor(Graphics g, JComponent c, Color backgroundStart,
-                                    Color backgroundEnd, boolean active, boolean flashing) {
-            Rectangle r = c.getBounds();
-            r.x = r.y = 0;
-
-            if (flashing || active) {
-                GraphicsUtil.fillRect(g,
-                        r,
-                        backgroundStart,
-                        backgroundEnd,
-                        null,
-                        GraphicsUtil.BOTTOM_TO_UP_GRADIENT);
-            } else {
-                g.setColor(UIManager.getColor(MyDoggyKeySpace.TWRA_BACKGROUND_INACTIVE));
-                g.fillRect(0, 0, r.width, r.height);
-            }
-        }
     }
 
     public static class MemoryMonitorDockableDescriptor extends CustomDockableDescriptor {
@@ -687,7 +365,6 @@ public class MyDoggySet {
 
     }
 
-
     public class MainPanel extends JPanel {
 
         protected JXTitledPanel navigatorPanel = null;
@@ -736,12 +413,4 @@ public class MyDoggySet {
 
     }
 
-    public class ToolWindowCloseAction extends HideToolWindowAction {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            toolWindowManager.unregisterToolWindow(toolWindow.getId());
-        }
-
-    }
 }
