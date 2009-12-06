@@ -108,13 +108,25 @@ public interface ToolWindowBar extends Observable {
     ToolWindow[] getToolWindows();
 
     /**
+     * TODO
+     * @see #setVisible(boolean)
+     */
+    boolean isVisible();
+
+    /**
+     * TODO:
+     * @since 1.5.0
+     */
+    void setVisible(boolean visible);
+
+    /**
      * Returns the value of visible property.
      *
      * @return <code>false</code> if the last call to <code>setVisible</code> was with a false, <code>true</code> otherwise.
      * @since 1.5.0
-     * @see #setVisible(boolean)
+     * @see #setToolsVisible(boolean)
      */
-    boolean isVisible();
+    boolean areToolsVisible();
 
     /**
      * This method is used to store and restore the toolwindows visible on this bar.
@@ -123,8 +135,9 @@ public interface ToolWindowBar extends Observable {
      * When you after call <code>setVisible(true)</code> the state of the bar is restored to the previous saved state.
      *
      * @param visible <code>false</code> to store the state of the bar and hide all docked toolwindows. <code>true</code>
-     * to restore the previous saved state if any.  
+     * to restore the previous saved state if any.
      * @since 1.5.0
+     * @see #areToolsVisible() 
      */
-    void setVisible(boolean visible);
+    void setToolsVisible(boolean visible);
 }

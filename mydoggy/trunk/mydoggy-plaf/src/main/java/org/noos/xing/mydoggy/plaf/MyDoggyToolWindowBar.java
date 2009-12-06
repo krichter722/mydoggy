@@ -42,6 +42,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     protected ToolWindowAnchor anchor;
     protected int dividerSize;
     protected boolean aggregateMode;
+    protected boolean visible = true;
 
     // Bar Components
     protected ToolWindowScrollBar toolWindowScrollBar;
@@ -65,8 +66,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     boolean valueAdjusting = false;
 
     // Used for setVisible store/restore the layout of the bar...
-    protected boolean visible = true;
-    protected ByteArrayOutputStream visibleWorkspace;
+    protected boolean toolsVisible = true;
+    protected ByteArrayOutputStream toolsWorkspace;
 
 
     public MyDoggyToolWindowBar(MyDoggyToolWindowManager manager, JSplitPane splitPane, ToolWindowAnchor anchor) {
@@ -164,13 +165,23 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     }
 
     public void setVisible(boolean visible) {
+        this.visible = visible;
+        
+        firePropertyChangeEvent("visible", !visible, visible);
+    }
+
+    public boolean areToolsVisible() {
+        return toolsVisible;
+    }
+
+    public void setToolsVisible(boolean visible) {
         if (visible) {
-            if (visibleWorkspace != null)
-                manager.getPersistenceDelegate().merge(new ByteArrayInputStream(visibleWorkspace.toByteArray()),
+            if (toolsWorkspace != null)
+                manager.getPersistenceDelegate().merge(new ByteArrayInputStream(toolsWorkspace.toByteArray()),
                                                        PersistenceDelegate.MergePolicy.RESET);
         } else {
-            visibleWorkspace = new ByteArrayOutputStream();
-            manager.getPersistenceDelegate().save(visibleWorkspace, new PersistenceDelegateFilter() {
+            toolsWorkspace = new ByteArrayOutputStream();
+            manager.getPersistenceDelegate().save(toolsWorkspace, new PersistenceDelegateFilter() {
                 public boolean storeToolWindowManagerDescriptor() {
                     return false;
                 }
@@ -193,11 +204,10 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             }
         }
 
-        this.visible = visible;
+        this.toolsVisible = visible;
 
-        firePropertyChangeEvent("visible", !visible, visible);
+        firePropertyChangeEvent("toolsVisible", !visible, visible);
     }
-
 
     public void propertyChange(PropertyChangeEvent evt) {
         propertyChangeSupport.firePropertyChange(evt);
@@ -287,8 +297,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         return valueAdjusting;
     }
 
-    public ByteArrayOutputStream getVisibleWorkspace() {
-        return visibleWorkspace;
+    public ByteArrayOutputStream getToolsWorkspace() {
+        return toolsWorkspace;
     }
 
     public void updateMaximizedToolSize() {

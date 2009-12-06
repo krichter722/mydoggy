@@ -4,7 +4,6 @@ import info.clearthought.layout.TableLayout;
 import org.noos.common.Question;
 import org.noos.common.context.MutableContext;
 import org.noos.xing.mydoggy.*;
-import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
 import org.noos.xing.mydoggy.event.ToolWindowManagerEvent;
 import org.noos.xing.mydoggy.plaf.common.context.DefaultMutableContext;
@@ -39,6 +38,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.List;
+
+import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
 
 /**
  * @author Angelo De Caro
@@ -868,6 +869,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         propertyChangeSupport.addPropertyChangeListener("showUnavailableTools", new ShowUnavailableToolsPropertyChangeListener());
 
         propertyChangeSupport.addPropertyChangeListener("visible", new SourceFilterPropertyChangeListener(new VisiblePropertyChangeListener(), ToolWindow.class));
+        propertyChangeSupport.addPropertyChangeListener("visible", new SourceFilterPropertyChangeListener(new ToolBarVisiblePropertyChangeListener(), ToolWindowBar.class));
         propertyChangeSupport.addPropertyChangeListener("active", new ActivePropertyChangeListener());
         propertyChangeSupport.addPropertyChangeListener("anchor", new AnchorPropertyChangeListener());
         propertyChangeSupport.addPropertyChangeListener("type", new TypePropertyChangeListener());
@@ -947,7 +949,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         MyDoggyToolWindowBar myDoggyToolWindowBar = new MyDoggyToolWindowBar(this,
                                                                              renderSplitPane(splitPaneOrientation),
                                                                              anchor);
-        myDoggyToolWindowBar.addPropertyChangeListener(this, "visible");
+        myDoggyToolWindowBar.addPropertyChangeListener(this);
 
         bars[anchor.ordinal()] = myDoggyToolWindowBar;
 
@@ -1001,36 +1003,56 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         MyDoggyToolWindowBar toolWindowBar = getBar(anchor);
 
         if (anchor == LEFT) {
-            if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTemporarilyVisible() && contentPaneLayout.getColumn(0) != 0) {
+            if (!toolWindowBar.isVisible()) {
                 contentPaneLayout.setColumn(0, 0);
                 revalidate = true;
-            } else if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTemporarilyVisible()) && contentPaneLayout.getColumn(0) == 0) {
-                contentPaneLayout.setColumn(0, getBar(LEFT).getLength());
-                revalidate = true;
+            } else {
+                if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTemporarilyVisible() && contentPaneLayout.getColumn(0) != 0) {
+                    contentPaneLayout.setColumn(0, 0);
+                    revalidate = true;
+                } else if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTemporarilyVisible()) && contentPaneLayout.getColumn(0) == 0) {
+                    contentPaneLayout.setColumn(0, getBar(LEFT).getLength());
+                    revalidate = true;
+                }
             }
         } else if (anchor == RIGHT) {
-            if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTemporarilyVisible() && contentPaneLayout.getColumn(2) != 0) {
+            if (!toolWindowBar.isVisible()) {
                 contentPaneLayout.setColumn(2, 0);
                 revalidate = true;
-            } else if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTemporarilyVisible()) && contentPaneLayout.getColumn(2) == 0) {
-                contentPaneLayout.setColumn(2, getBar(RIGHT).getLength());
-                revalidate = true;
+            } else {
+                if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTemporarilyVisible() && contentPaneLayout.getColumn(2) != 0) {
+                    contentPaneLayout.setColumn(2, 0);
+                    revalidate = true;
+                } else if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTemporarilyVisible()) && contentPaneLayout.getColumn(2) == 0) {
+                    contentPaneLayout.setColumn(2, getBar(RIGHT).getLength());
+                    revalidate = true;
+                }
             }
         } else if (anchor == TOP) {
-            if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTemporarilyVisible() && contentPaneLayout.getRow(0) != 0) {
+            if (!toolWindowBar.isVisible()) {
                 contentPaneLayout.setRow(0, 0);
                 revalidate = true;
-            } else if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTemporarilyVisible()) && contentPaneLayout.getRow(0) == 0) {
-                contentPaneLayout.setRow(0, getBar(TOP).getLength());
-                revalidate = true;
+            } else {
+                if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTemporarilyVisible() && contentPaneLayout.getRow(0) != 0) {
+                    contentPaneLayout.setRow(0, 0);
+                    revalidate = true;
+                } else if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTemporarilyVisible()) && contentPaneLayout.getRow(0) == 0) {
+                    contentPaneLayout.setRow(0, getBar(TOP).getLength());
+                    revalidate = true;
+                }
             }
         } else if (anchor == BOTTOM) {
-            if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTemporarilyVisible() && contentPaneLayout.getRow(2) != 0) {
+            if (!toolWindowBar.isVisible()) {
                 contentPaneLayout.setRow(2, 0);
                 revalidate = true;
-            } else if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTemporarilyVisible()) && contentPaneLayout.getRow(2) == 0) {
-                contentPaneLayout.setRow(2, getBar(BOTTOM).getLength());
-                revalidate = true;
+            } else {                
+                if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTemporarilyVisible() && contentPaneLayout.getRow(2) != 0) {
+                    contentPaneLayout.setRow(2, 0);
+                    revalidate = true;
+                } else if ((toolWindowBar.getAvailableTools() != 0 || toolWindowBar.isTemporarilyVisible()) && contentPaneLayout.getRow(2) == 0) {
+                    contentPaneLayout.setRow(2, getBar(BOTTOM).getLength());
+                    revalidate = true;
+                }
             }
         }
 
@@ -1261,6 +1283,12 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             syncPanel(RIGHT);
             syncPanel(TOP);
             syncPanel(BOTTOM);
+        }
+    }
+
+    public class ToolBarVisiblePropertyChangeListener implements PropertyChangeListener {
+        public void propertyChange(PropertyChangeEvent evt) {
+            syncPanel(((ToolWindowBar) evt.getSource()).getAnchor());
         }
     }
 
