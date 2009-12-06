@@ -55,6 +55,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     protected int availablePosition;
 
     protected AggregationPosition lastAggregationPosition;
+    protected ToolWindowType lastDetachedType;
 
 
     public MyDoggyToolWindow(MyDoggyToolWindowManager manager,
@@ -250,11 +251,20 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     }
 
     public void setDetached(boolean detached) {
-        String detachedType = UIManager.getString(MyDoggyKeySpace.TOOL_WINDOW_DETACH_TYPE);
-        try {
-            setType(ToolWindowType.valueOf(detachedType));
-        } catch (IllegalArgumentException e) {
-            setType(ToolWindowType.FLOATING);
+        if (detached) {
+            ToolWindowType targetType = null;
+            try {
+                targetType = ToolWindowType.valueOf(UIManager.getString(MyDoggyKeySpace.TOOL_WINDOW_DETACH_TYPE));
+            } catch (IllegalArgumentException e) {
+                targetType = ToolWindowType.FLOATING;
+            }
+
+            if (getType() != targetType)
+                lastDetachedType = getType();
+
+            setType(targetType);
+        } else {
+            setType(lastDetachedType);
         }
     }
 

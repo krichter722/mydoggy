@@ -26,7 +26,6 @@ import java.util.List;
  */
 public class MultiSplitDockableContainer<D extends Dockable> extends JPanel {
 
-
     public enum Action {
         ADD_DOCK,
         REMOVE_DOCK
@@ -1082,6 +1081,31 @@ public class MultiSplitDockableContainer<D extends Dockable> extends JPanel {
         }
 
         return dockables;
+    }
+
+    public boolean setComponent(D dockable, Component component) {
+        DockableEntry dockableEntry = entries.get(dockable);
+
+        if (dockableEntry != null) {
+            for (int i = 0; i < multiSplitPane.getComponentCount(); i++) {
+                DockableOwner dockableOwner = (DockableOwner) multiSplitPane.getComponent(i);
+
+                if (dockableOwner instanceof MultiDockableOwner) {
+                    MultiDockableOwner multiDockableOwner = (MultiDockableOwner) dockableOwner;
+                    if (multiDockableOwner.containsDockable(dockable)) {
+                        multiDockableOwner.setComponent(dockable, component);
+                        return true;
+                    }
+                } else {
+                    if (dockableOwner.getDockable() == dockable) {
+                        dockableOwner.setComponent(component);
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     // Methods to manage container root

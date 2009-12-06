@@ -258,6 +258,32 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
     }
 
 
+    public boolean containsDockable(Dockable dockable) {
+        for (Content content : contentMap.values()) {
+            if (content == dockable)
+                return true;
+        }
+        return false;
+    }
+
+    public void setComponent(Dockable dockable, Component component) {
+        for (Integer index : contentMap.keySet()) {
+            if (contentMap.get(index) == dockable) {
+                setComponentAt(index, component);
+                return;
+            }
+        }
+    }
+
+    public Component getComponent() {
+        throw new IllegalStateException("Cannot call this method here.");
+    }
+
+    public void setComponent(Component component) {
+        throw new IllegalStateException("Cannot call this method here.");
+    }
+
+
     public void setToolWindowManager(MyDoggyToolWindowManager toolWindowManager) {
         this.toolWindowManager = toolWindowManager;
 

@@ -91,6 +91,10 @@ public class ToolWindowPanel extends JPanel implements DockableOwner {
         getUI().setComponent(component);
     }
 
+    public Component getComponent() {
+        return getUI().getComponent();
+    }
+
     public void removeComponent(Component component) {
         getUI().removeComponent(component);
     }

@@ -518,10 +518,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                 return;
 
             if (content.isDetached()) {
-                RootPaneContainer rootPaneContainer = (RootPaneContainer) SwingUtilities.windowForComponent(content.getComponent());
-                Container container = rootPaneContainer.getContentPane();
-                container.removeAll();
-                container.add(newCmp);
+                ContentWindow contentWindow = (ContentWindow) SwingUtilities.windowForComponent(content.getComponent());
+                contentWindow.setComponent(content, newCmp);
             } else {
                 int index = tabbedContentPane.indexOfContent(content);
                 if (index != -1)

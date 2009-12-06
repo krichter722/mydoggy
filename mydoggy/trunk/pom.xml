@@ -46,7 +46,6 @@
 
     <modules>
         <module>mydoggy-site-skin</module>
-
         <module>mydoggy-api</module>
         <module>mydoggy-res</module>
         <module>mydoggy-plaf</module>

@@ -15,4 +15,7 @@ public interface MultiDockableOwner extends DockableOwner {
 
     void setPointerVisible(boolean visible);
 
+    boolean containsDockable(Dockable dockable);
+
+    void setComponent(Dockable dockable, Component component);
 }

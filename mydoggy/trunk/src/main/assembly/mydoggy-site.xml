@@ -53,10 +53,6 @@
             <outputDirectory>site/examples/jnlp</outputDirectory>
         </file>
         <file>
-            <source>mydoggy-itest/target/mydoggy-itest-1.5.0.jar</source>
-            <outputDirectory>site/examples/jnlp</outputDirectory>
-        </file>
-        <file>
             <source>mydoggy-examples/target/mydoggy-examples-1.5.0.jar</source>
             <outputDirectory>site/examples/jnlp</outputDirectory>
         </file>

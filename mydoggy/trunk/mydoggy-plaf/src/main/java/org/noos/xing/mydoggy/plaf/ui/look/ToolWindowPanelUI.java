@@ -83,6 +83,13 @@ public class ToolWindowPanelUI extends BasicPanelUI implements PropertyChangeLis
         SwingUtil.repaint(componentContainer);
     }
 
+    public Component getComponent() {
+        JPanel componentContainer = toolWindowPanel.getComponentContainer();
+
+        return componentContainer.getComponent(0);
+    }
+
+
     public void removeComponent(Component component) {
         if (component == null)
             return;
