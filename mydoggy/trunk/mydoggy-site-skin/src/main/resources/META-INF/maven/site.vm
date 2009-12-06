@@ -235,15 +235,6 @@
         #end
 
         #if( $poweredBy.isEmpty() )
-		  <a href="http://sourceforge.net" id="poweredBy">
-			  <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=178005&amp;type=1" width="88" height="31" border="0" alt="SourceForge.net Logo" />
-		  </a>
-          <a href="http://maven.apache.org/" title="$i18n.getString( "site-renderer", $locale, "template.builtby" ) Maven" id="poweredBy">
-            <img border="0" alt="$i18n.getString( "site-renderer", $locale, "template.builtby" ) Maven" src="$relativePath/images/logos/maven-feather.png">
-          </a>
-          <div id="customPoweredBy">
-              <script type="text/javascript" src="http://www.ohloh.net/projects/6945/widgets/project_thin_badge"></script>
-          </div>
           <div id="customPoweredBy">
                 <!-- Piwik -->
             <script type="text/javascript">
@@ -260,15 +251,6 @@
           </div>
         #end
     #else
-		<a href="http://sourceforge.net" id="poweredBy">
-			<img src="http://sflogo.sourceforge.net/sflogo.php?group_id=178005&amp;type=1" width="88" height="31" border="0" alt="SourceForge.net Logo" />
-		</a>
-        <a href="http://maven.apache.org/" title="$i18n.getString( "site-renderer", $locale, "template.builtby" ) Maven" id="poweredBy">
-          <img alt="$i18n.getString( "site-renderer", $locale, "template.builtby" ) Maven" src="$relativePath/images/logos/maven-feather.png">
-        </a>
-        <div id="customPoweredBy">
-            <script type="text/javascript" src="http://www.ohloh.net/projects/6945/widgets/project_thin_badge"></script>
-        </div>
         <div id="customPoweredBy">
             <!-- Piwik -->
             <script type="text/javascript">
