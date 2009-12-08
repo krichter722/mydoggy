@@ -32,52 +32,7 @@
             </table>
         </section>
 
-        <section name="TransparencyManager.dll">
-            <p>
-                MyDoggy comes with some c++ code to support transparency of windows. On Windows platform, starting from
-                Windows 2000, you can see the transparency in action for floating toolwindows and for detached contents.
-                <br/>
-                To see this effect you must put the
-                <strong>TransparencyManager.dll</strong>
-                into a system directory.
-                Into the distribution package you can found a pre-compiled dll and sources. But yon can compile it by yourself.
-            </p>
-
-            <subsection name="Build Howto">
-                <p>
-                    Clearly you can use your preferred c++ compiler. Follows two examples...
-                </p>
-                <ul>
-                    <li title="Mingw">
-                        <strong>Mingw</strong> :
-                        In the distribution there is a makefile to build TransparencyManager.dll. Before use mingw32-make check
-                        all variables into the makefile to validate it.
-                    </li>
-                    <li title="Microsoft Visual C++ 2005 Express Edition">
-                        <strong>Microsoft Visual C++ 2005 Express Edition</strong> : 
-                        I have used Microsoft Visual C++ 2005 Express Edition using following properties:
-                        <br/>
-                        <br/>
-                        For C/C++ Configuration Properties :
-                        <source>/Od /I "E:\Programmi\Java\jdk1.5.0_07\include\win32" /I "E:\Programmi\Java\jdk1.5.0_07\include"
-/D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_USRDLL" /D "TRANSPARENCYMANAGER_EXPORTS"
-/D "_WINDLL" /Gm /EHsc /RTC1 /MDd /Fo"Debug\\" /Fd"Debug\vc80.pdb"
-/W3 /nologo /c /Wp64 /ZI /TP /errorReport:prompt
-                        </source>
-                        For Linker Configuration Properties :
-                        <source>/OUT:"..\mydoggy\TransparencyManager.dll" /INCREMENTAL /NOLOGO
-/LIBPATH:"E:\Programmi\Java\jdk1.5.0_07\lib" /DLL /MANIFEST
-/MANIFESTFILE:"Debug\TransparencyManager.dll.intermediate.manifest"
-/DEBUG /PDB:"e:\sourceforge\java\prjs\mydoggy\mydoggy\TransparencyManager.pdb"
-/SUBSYSTEM:WINDOWS /MACHINE:X86 /ERRORREPORT:PROMPT user32.lib jawt.lib kernel32.lib
-                        </source>
-                    </li>
-                </ul>
-
-            </subsection>
-        </section>
-
-        <section name="User Defined TransparencyManager">
+        <section name="Custom TransparencyManager">
 
             <subsection name="JNA">
                 <p>
@@ -145,6 +100,7 @@ myDoggyToolWindowManager.getResourceManager().setTransparencyManager(
         new JNAWindowTransparencyManager()
 );</source>
             </subsection>
+            
         </section>
     </body>
 </document>
