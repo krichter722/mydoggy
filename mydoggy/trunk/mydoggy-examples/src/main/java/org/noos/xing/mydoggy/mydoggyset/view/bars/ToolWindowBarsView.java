@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.mydoggyset.view.nested;
+package org.noos.xing.mydoggy.mydoggyset.view.bars;
 
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
@@ -11,11 +11,11 @@ import java.awt.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class NestedManagerView implements View {
+public class ToolWindowBarsView implements View {
     protected ToolWindowManager toolWindowManager;
     protected Component parentComponent;
 
-    public NestedManagerView(Component parentComponent, ToolWindowManager toolWindowManager) {
+    public ToolWindowBarsView(Component parentComponent, ToolWindowManager toolWindowManager) {
         this.parentComponent = parentComponent;
         this.toolWindowManager = toolWindowManager;
     }

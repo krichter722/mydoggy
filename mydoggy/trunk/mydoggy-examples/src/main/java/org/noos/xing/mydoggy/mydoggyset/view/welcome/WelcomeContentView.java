@@ -1,10 +1,6 @@
 package org.noos.xing.mydoggy.mydoggyset.view.welcome;
 
-import org.noos.xing.mydoggy.Content;
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowGroup;
-import org.noos.xing.mydoggy.ToolWindowManager;
-import org.noos.xing.mydoggy.mydoggyset.context.MyDoggySetContext;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
@@ -43,37 +39,34 @@ public class WelcomeContentView extends ComponentView {
 
         panel.add(renderButton("Manager", ToolWindowManager.class),
                   "1,2,FULL,FULL");
-        panel.add(renderLabel("<html>Edit <br>ToolWindowManager <br> properties </html>"),
+        panel.add(renderLabel("<html>Edit <br>ToolWindowManager <br> Properties </html>"),
                   "3,2,FULL,FULL");
 
         panel.add(renderButton("Tools", ToolWindow.class),
                   "1,4,FULL,FULL");
-        panel.add(renderLabel("<html>Edit <br>ToolWindows <br> properties</html>"),
+        panel.add(renderLabel("<html>Edit <br>ToolWindow <br> Properties</html>"),
                   "3,4,FULL,FULL");
 
         panel.add(renderButton("Contents", Content.class),
                   "1,6,FULL,FULL");
-        panel.add(renderLabel("<html>Edit <br>Contents <br> properties</html>"),
+        panel.add(renderLabel("<html>Edit <br>Content <br> Properties</html>"),
                   "3,6,FULL,FULL");
 
-        panel.add(renderButton("<html>Nested<br> Tool Manager", MyDoggySetContext.ActionKey.NEST_TOOLMANAGER),
-                  "1,8,FULL,FULL");
-        panel.add(renderLabel("<html>Nested <br>ToolWindowManager</html>"),
-                  "3,8,FULL,FULL");
 
         panel.add(renderButton("Groups", ToolWindowGroup.class),
                   "5,2,FULL,FULL");
-        panel.add(renderLabel("<html>Edit <br>Groups <br> properties</html>"),
+        panel.add(renderLabel("<html>Edit <br>Group <br> Properties</html>"),
                   "7,2,FULL,FULL");
 
-//        panel.add(renderButton("ITests", InteractiveTest.class),
-//                  "5,4,FULL,FULL");
-        panel.add(renderLabel("<html>Run <br>Interactive <br> Tests</html>"),
+
+        panel.add(renderButton("Tool Bars", ToolWindowBar.class),
+                  "5,4,FULL,FULL");
+        panel.add(renderLabel("<html>Edit<br> ToolWindowBar <br> Properties"),
                   "7,4,FULL,FULL");
 
         panel.add(renderButton("Customize", ResourceManager.class),
                   "5,6,FULL,FULL");
-        panel.add(renderLabel("<html>Customize <br>MyDoggy</html>"),
+        panel.add(renderLabel("<html>Customize <br>Colors and Icons</html>"),
                   "7,6,FULL,FULL");
 
         // Setup main panel
