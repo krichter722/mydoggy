@@ -30,24 +30,34 @@
             <item img="/images/new.png" name="TutorialSet" href="/examples/tutorialset.html"/>
         </menu>
 
-        <menu name="Modules">
-            <item name="MyDoggy-Api" href="/api/index.html"/>
-            <item name="MyDoggy-Plaf" href="/plaf/index.html"/>
-            <item name="MyDoggy-Res" href="/res/index.html"/>
-        </menu>
+        <menu name="Interfaces">
+            <item name="ToolWindowManager" href="/api/toolwindowManager.html">
+                <item name="Usage" href="/api/toolwindowManagerUsage.html"/>
+            </item>
 
-        <menu name="API">
-            <item name="ToolWindowManager" href="/api/toolwindowManager.html"/>
-            <item name="ToolWindow" href="/api/toolwindow.html"/>
-            <item name="ToolWindowGroup" href="/api/toolwindowGroups.html"/>
+            <item name="ToolWindow" href="/api/toolwindow.html">
+                <item name="Types" href="/api/toolwindowTypes.html"/>
+                <item name="Usage" href="/api/toolwindowUsage.html"/>
+            </item>
 
-            <item name="ContentManager" href="/api/contentManager.html"/>
-            <item name="ContentManagerUI" href="/api/contentManagerUI.html"/>
+            <item name="ToolWindowGroup" href="/api/toolwindowGroups.html">
+                <item name="Usage" href="/api/toolwindowUsage.html"/>
+            </item>
 
-            <item name="PersistenceDelgate" href="/plaf/persistenceDelegate.html"/>
+            <item name="ContentManager" href="/api/contentManager.html">
+                <item name="Usage" href="/api/contentManagerUsage.html"/>
+            </item>
+
+            <item name="ContentManagerUI" href="/api/contentManagerUI.html">
+                <item name="Usage" href="/api/contentManagerUIUsage.html"/>
+            </item>
+
+            <item name="PersistenceDelegate" href="/plaf/persistenceDelegate.html"/>
+
             <item name="TransparencyManager" href="/plaf/transparency.html"/>
+
             <item name="ResourceManager" href="/plaf/resourceManager.html">
-                <item name="Using" href="/plaf/resourceManagerUsing.html"/>
+                <item name="Usage" href="/plaf/resourceManagerUsing.html"/>
             </item>
         </menu>
 
