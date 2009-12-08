@@ -108,9 +108,11 @@ public class ToolWindowPanelUI extends BasicPanelUI implements PropertyChangeLis
 
         JPanel componentContainer = toolWindowPanel.getComponentContainer();
         componentContainer.setLayout(new ExtendedTableLayout(new double[][]{{-1}, {-1}}));
+        componentContainer.removeAll();
         componentContainer.add(toolWindowPanel.getToolWindowDescriptor().getComponent(), "0,0,FULL,FULL");
         componentContainer.setBorder(null);
 
+        toolWindowPanel.removeAll();
         toolWindowPanel.add(toolWindowPanel.getToolWindowTitleBar(), "0,0");
         toolWindowPanel.add(componentContainer, "0,1");
 
