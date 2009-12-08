@@ -30,10 +30,8 @@ import org.noos.xing.yasaf.view.ViewContext;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 import java.awt.*;
-import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Enumeration;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -118,14 +116,6 @@ public class MyDoggySet {
 
         // Load Menu Bar
         initMenuBar();
-
-
-        Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
-            public void eventDispatched(AWTEvent event) {
-                System.out.println("event = " + event);
-            }
-        }, AWTEvent.MOUSE_MOTION_EVENT_MASK);
-
     }
 
     protected void initMenuBar() {
@@ -234,6 +224,13 @@ public class MyDoggySet {
 
 
     public static void main(String[] args) {
+/*
+        Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
+            public void eventDispatched(AWTEvent event) {
+                System.out.println("event = " + event);
+            }
+        }, AWTEvent.MOUSE_MOTION_EVENT_MASK);
+
         System.out.println("UIManager.getLookAndFeel() = " + UIManager.getLookAndFeel());
 
         Enumeration<Object> keysEnumeration = UIManager.getDefaults().keys();
@@ -241,8 +238,9 @@ public class MyDoggySet {
             Object key = keysEnumeration.nextElement();
             System.out.printf("%s - %s\n", key, UIManager.get(key));
         }
+*/
 
-        MyDoggySet test = new MyDoggySet();
+        final MyDoggySet test = new MyDoggySet();
         test.run(null);
     }
 

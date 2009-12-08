@@ -1,16 +1,13 @@
 package org.noos.xing.mydoggy.mydoggyset.context;
 
-import org.noos.xing.mydoggy.Content;
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowGroup;
-import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.mydoggyset.MyDoggySet;
 import org.noos.xing.mydoggy.mydoggyset.action.AddContentAction;
+import org.noos.xing.mydoggy.mydoggyset.view.bars.ToolWindowBarsView;
 import org.noos.xing.mydoggy.mydoggyset.view.contents.ContentsView;
 import org.noos.xing.mydoggy.mydoggyset.view.customize.CustomizeView;
 import org.noos.xing.mydoggy.mydoggyset.view.group.GroupsView;
 import org.noos.xing.mydoggy.mydoggyset.view.manager.ManagerView;
-import org.noos.xing.mydoggy.mydoggyset.view.nested.NestedManagerView;
 import org.noos.xing.mydoggy.mydoggyset.view.toolwindows.ToolWindowsView;
 import org.noos.xing.mydoggy.mydoggyset.view.welcome.WelcomeContentView;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
@@ -36,7 +33,7 @@ public class MyDoggySetContext extends MapViewContext {
     protected Component managerContentComponent;
     protected Component welcomeContentComponent;
     protected Component customizeContentComponent;
-    protected Component nestedManagerContentComponent;
+    protected Component toolBarsContentComponent;
 
     public MyDoggySetContext(ToolWindowManager toolWindowManager, final Component parentComponent) {
         addViewContextChangeListener(MyDoggySet.class, new AddContentAction(toolWindowManager,
@@ -63,10 +60,10 @@ public class MyDoggySetContext extends MapViewContext {
                                                                                  "Customize", "Customize", null,
                                                                                  customizeContentComponent = new CustomizeView(parentComponent, toolWindowManager).getComponent(),
                                                                                  "Customize", (int) 'u'));
-        addViewContextChangeListener(ActionKey.NEST_TOOLMANAGER, new AddContentAction(toolWindowManager,
-                                                                                      "Nested Manager", "Nested Manager", null,
-                                                                                      nestedManagerContentComponent = new NestedManagerView(parentComponent, toolWindowManager).getComponent(),
-                                                                                      "Nested Manager", (int) 'N'));
+        addViewContextChangeListener(ToolWindowBar.class, new AddContentAction(toolWindowManager,
+                                                                                      "Tool Bars", "Tool Bars", null,
+                                                                                      toolBarsContentComponent = new ToolWindowBarsView(parentComponent, toolWindowManager).getComponent(),
+                                                                                      "Tool Bars", (int) 'B'));
 
         addViewContextChangeListener(UIManager.class, new ViewContextChangeListener() {
             public void contextChange(ViewContextChangeEvent evt) {
@@ -81,7 +78,7 @@ public class MyDoggySetContext extends MapViewContext {
                     SwingUtilities.updateComponentTreeUI(managerContentComponent);
                     SwingUtilities.updateComponentTreeUI(welcomeContentComponent);
                     SwingUtilities.updateComponentTreeUI(customizeContentComponent);
-                    SwingUtilities.updateComponentTreeUI(nestedManagerContentComponent);
+                    SwingUtilities.updateComponentTreeUI(toolBarsContentComponent);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
