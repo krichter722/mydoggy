@@ -35,7 +35,6 @@ public class MyDoggySetContext extends MapViewContext {
     protected Component contentsContentComponent;
     protected Component managerContentComponent;
     protected Component welcomeContentComponent;
-    protected Component interactiveTestContentComponent;
     protected Component customizeContentComponent;
     protected Component nestedManagerContentComponent;
 
@@ -81,7 +80,6 @@ public class MyDoggySetContext extends MapViewContext {
                     SwingUtilities.updateComponentTreeUI(contentsContentComponent);
                     SwingUtilities.updateComponentTreeUI(managerContentComponent);
                     SwingUtilities.updateComponentTreeUI(welcomeContentComponent);
-                    SwingUtilities.updateComponentTreeUI(interactiveTestContentComponent);
                     SwingUtilities.updateComponentTreeUI(customizeContentComponent);
                     SwingUtilities.updateComponentTreeUI(nestedManagerContentComponent);
                 } catch (Exception e) {

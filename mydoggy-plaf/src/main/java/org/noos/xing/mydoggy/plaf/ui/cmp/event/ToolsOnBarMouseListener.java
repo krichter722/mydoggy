@@ -58,7 +58,7 @@ public class ToolsOnBarMouseListener extends MouseAdapter implements ActionListe
 
                     // Add store/restore item
                     JMenuItem showTool = new JMenuItem();
-                    showTool.setText(toolWindowBar.isVisible() ? SwingUtil.getString("@@tool.bar.hide") : SwingUtil.getString("@@tool.bar.show"));
+                    showTool.setText(toolWindowBar.areToolsVisible() ? SwingUtil.getString("@@tool.bar.tools.hide") : SwingUtil.getString("@@tool.bar.tools.show"));
                     showTool.setActionCommand("bar.visible");
                     showTool.addActionListener(this);
                     popupMenu.add(showTool);
@@ -76,7 +76,7 @@ public class ToolsOnBarMouseListener extends MouseAdapter implements ActionListe
             String toolId = actionCommand.substring(13);
             toolWindowManager.getToolWindow(toolId).setActive(true);
         } else if ("bar.visible".equals(actionCommand)) {
-            toolWindowBar.setVisible(!toolWindowBar.isVisible());
+            toolWindowBar.setToolsVisible(!toolWindowBar.areToolsVisible());
         }
     }
 

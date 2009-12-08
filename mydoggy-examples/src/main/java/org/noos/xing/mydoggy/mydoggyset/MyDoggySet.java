@@ -30,6 +30,7 @@ import org.noos.xing.yasaf.view.ViewContext;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 import java.awt.*;
+import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
@@ -117,6 +118,14 @@ public class MyDoggySet {
 
         // Load Menu Bar
         initMenuBar();
+
+
+        Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
+            public void eventDispatched(AWTEvent event) {
+                System.out.println("event = " + event);
+            }
+        }, AWTEvent.MOUSE_MOTION_EVENT_MASK);
+
     }
 
     protected void initMenuBar() {

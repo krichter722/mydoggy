@@ -408,10 +408,9 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     }
 
     public void updateUI() {
-        // TODO: check this procedure..
-//        getToolWindowContainer().updateUI();
+        getToolWindowContainer().updateUI();
 
-//        SwingUtilities.updateComponentTreeUI(getComponent());
+        SwingUtilities.updateComponentTreeUI(getComponent());
 
         for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
             SwingUtilities.updateComponentTreeUI(tab.getComponent());
@@ -689,6 +688,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     protected void initContainers() {
         if (toolWindowPanel != null)
             return;
+
         // init components
         toolWindowPanel = new ToolWindowPanel(this);
 
