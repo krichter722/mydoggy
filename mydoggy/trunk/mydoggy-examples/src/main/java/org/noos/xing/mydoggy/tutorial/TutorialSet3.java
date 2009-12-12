@@ -71,6 +71,7 @@ public class TutorialSet3 {
                                              null,                         // Icon
                                              new JButton("Debug Tool"),    // Component
                                              ToolWindowAnchor.LEFT);       // Anchor
+
         setupDebugTool();
 
         // Made all tools available
@@ -84,6 +85,7 @@ public class TutorialSet3 {
 
     protected void setupDebugTool() {
         ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
+        debugTool.setVisible(true);
 
         // RepresentativeAnchorDescriptor
         RepresentativeAnchorDescriptor representativeAnchorDescriptor = debugTool.getRepresentativeAnchorDescriptor();
@@ -93,6 +95,8 @@ public class TutorialSet3 {
 
         // DockedTypeDescriptor
         DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.DOCKED);
+        dockedTypeDescriptor.setAnimating(true);
+        dockedTypeDescriptor.setHideRepresentativeButtonOnVisible(true);
         dockedTypeDescriptor.setDockLength(300);
         dockedTypeDescriptor.setPopupMenuEnabled(true);
         JMenu toolsMenu = dockedTypeDescriptor.getToolsMenu();
