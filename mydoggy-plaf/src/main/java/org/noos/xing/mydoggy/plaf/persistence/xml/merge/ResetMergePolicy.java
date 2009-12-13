@@ -39,9 +39,12 @@ public class ResetMergePolicy implements MergePolicyApplier {
                     toolWindow.setVisible(visible);
             }
         } else {
-            if (visible)
-                toolWindow.aggregate();
-            else
+            if (visible) {
+                if (toolNode.getBoolean("autoHide", false))
+                    toolWindow.setVisible(true);
+                else
+                    toolWindow.aggregate();
+            } else
                 toolWindow.setVisible(false);
         }
     }

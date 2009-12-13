@@ -1,6 +1,9 @@
 package org.noos.xing.mydoggy.mydoggyset.view.welcome;
 
-import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.Content;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowGroup;
+import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
 import org.noos.xing.mydoggy.plaf.ui.cmp.border.LineBorder;
@@ -58,16 +61,10 @@ public class WelcomeContentView extends ComponentView {
         panel.add(renderLabel("<html>Edit <br>Group <br> Properties</html>"),
                   "7,2,FULL,FULL");
 
-
-        panel.add(renderButton("Tool Bars", ToolWindowBar.class),
-                  "5,4,FULL,FULL");
-        panel.add(renderLabel("<html>Edit<br> ToolWindowBar <br> Properties"),
-                  "7,4,FULL,FULL");
-
         panel.add(renderButton("Customize", ResourceManager.class),
-                  "5,6,FULL,FULL");
+                  "5,4,FULL,FULL");
         panel.add(renderLabel("<html>Customize <br>Colors and Icons</html>"),
-                  "7,6,FULL,FULL");
+                  "7,4,FULL,FULL");
 
         // Setup main panel
         JPanel main = new JPanel(new ExtendedTableLayout(new double[][]{{3, -1, 3}, {3, 93, 5, -1, 3}}));
