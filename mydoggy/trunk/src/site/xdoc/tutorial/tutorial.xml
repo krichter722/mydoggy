@@ -18,6 +18,13 @@
                 <br/>
                 In every step, pay attention to the code in green that highlights the new code introduced in that step.
             </p>
+            <p>
+                TutorialSet is the result of this tutorial.
+                <br/>
+                Launch
+                <a href="./jnlp/tutorialset.jnlp">TutorialSet</a>
+                using Java Web Start.
+            </p>
 
             <table style="text-align: left;"
                    border="0" cellpadding="2" cellspacing="2">

@@ -8,28 +8,37 @@
     </properties>
 
     <body>
-        <section name="Build Howto">
-            <p>
-                MyDoggy is build using Maven-2. So first you have to download Maven-2 from
-                <a href="http://maven.apache.org">http://maven.apache.org</a>.
-                <br/>
-                The POM declares a few dependencies which are hosted on any publicly available Maven Repository.
-                <br/>
-                You then should be ready to build MyDoggy.
-                <br/>
-                To build MyDoggy for JDK5 simply call :
-            </p>
-            <source>mvn clean package install</source>
-            <p>
-                <br/>
-                To build the binary and the source distribution simply call :
-            </p>
-            <source>mvn -Ddistro clean package install assembly:assembly</source>
-            <p>
-                <br/>
-                To build the site simply call :
-            </p>
-            <source>mvn -Dsite clean package site assembly:assembly</source>
+        <section name="Build HowTo">
+
+            <subsection name="Where are the sources?">
+                <p>
+                    You can obtain the sources by
+                    <a href="./download.html">downloading</a>
+                    a distro package or
+                    <a href="source-repository.html">checking out</a>
+                    the latest head from the repository.
+                </p>
+            </subsection>
+
+            <subsection name="Build System">
+                <p>
+                    MyDoggy is built using Maven 2. You can download it from
+                    <a href="http://maven.apache.org">http://maven.apache.org</a>.
+                    <br/>
+                    There are a few dependencies which are hosted on any publicly available Maven Repository so Maven
+                    will be able to resolve them automatically.
+                </p>
+
+                <p>
+                    To build and install (into the local maven repository) MyDoggy simply type in a shell the following:
+                </p>
+                <source>mvn clean package install</source>
+                <p>
+                    To build a distribution simply type :
+                </p>
+                <source>mvn -Ddistro clean package install assembly:assembly</source>
+            </subsection>
+
         </section>
     </body>
 </document>

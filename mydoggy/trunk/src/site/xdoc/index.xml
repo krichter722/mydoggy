@@ -53,7 +53,7 @@
 
                 <div>
                     <a href="http://sourceforge.net">
-                        <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=178005&amp;type=1" width="88" height="31" border="1" alt="SourceForge.net Logo" />
+                        <img style="border:1px solid black" src="http://sflogo.sourceforge.net/sflogo.php?group_id=178005&amp;type=1" width="88" height="31" alt="SourceForge.net Logo" />
                     </a>
 
           	        <a href="http://maven.apache.org/" title="Maven" >
@@ -81,37 +81,35 @@
                 <br/>
             </p>
 
-            <subsection name="Main Modules">
+            <subsection name="Modules">
                 <p>
-                    MyDoggy is separated in two main modules.
+                    MyDoggy is composed by the following modules:
                 </p>
                 <ul>
                     <li>
-                        <a href="./api/index.html">MyDoggy-Api</a>
-                        contains the application program interface of MyDoggy to manage every aspects of
+                        <strong style="color:green">MyDoggy-Api</strong> :
+                        contains the application program interface used to manage every aspects of
                         the framework.
                     </li>
                     <li>
-                        <a href="./plaf/index.html">MyDoggy-Plaf</a>
-                        contains the default implementation of mydoggy-api.
-                        <ul>
-                            <li>
-                                <a href="./res/index.html">MyDoggy-Res</a> contains all resources (icons and messages) used by mydoggy-plaf. Look at
-                                ResourceManager link to know how to customize mydoggy in a deep way.
-                            </li>
-                        </ul>
+                        <strong style="color:green">MyDoggy-Plaf</strong> :
+                        contains the default implementation of the api.
                     </li>
-                </ul>
-            </subsection>
-
-            <subsection name="Other Modules">
-                There are also other modules that cover secondary aspects of MyDoggy.
-                <ul>
                     <li>
-                        <a href="./examples/index.html">MyDoggy-Examples</a>
+                        <strong style="color:green">MyDoggy-Res</strong> :
+                        contains all resources (icons and messages). Look
+                        <a href="./plaf/resourceManager.html">here</a>
+                        to know how to customize mydoggy in a deep way.
+                    </li>
+                    <li>
+                        <strong style="color:green">MyDoggy-Examples</strong> :
                         contains some examples to see MyDoggy in action.
                     </li>
                 </ul>
+
+                <p>
+                    In MyDoggy distribution each module correspond to a directory where you will find the sources of the module and other stuff.
+                </p>
             </subsection>
         </section>
     </body>
