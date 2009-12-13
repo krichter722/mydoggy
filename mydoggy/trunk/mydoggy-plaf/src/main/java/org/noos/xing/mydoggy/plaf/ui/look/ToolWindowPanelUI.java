@@ -83,6 +83,16 @@ public class ToolWindowPanelUI extends BasicPanelUI implements PropertyChangeLis
         SwingUtil.repaint(componentContainer);
     }
 
+    public void updateComponent() {
+        JPanel componentContainer = toolWindowPanel.getComponentContainer();
+
+        componentContainer.removeAll();
+        if (toolWindowPanel.getComponent() !=  null)
+            componentContainer.add(toolWindowPanel.getComponent(), "0,0,FULL,FULL");
+
+        SwingUtil.repaint(componentContainer);
+    }
+
     public Component getComponent() {
         JPanel componentContainer = toolWindowPanel.getComponentContainer();
 
@@ -90,11 +100,11 @@ public class ToolWindowPanelUI extends BasicPanelUI implements PropertyChangeLis
     }
 
 
-    public void removeComponent(Component component) {
-        if (component == null)
+    public void removeComponent() {
+        if (toolWindowPanel.getComponent() == null)
             return;
         JPanel componentContainer = toolWindowPanel.getComponentContainer();
-        componentContainer.remove(component);
+        componentContainer.remove(toolWindowPanel.getComponent());
 
         SwingUtil.repaint(componentContainer);
     }

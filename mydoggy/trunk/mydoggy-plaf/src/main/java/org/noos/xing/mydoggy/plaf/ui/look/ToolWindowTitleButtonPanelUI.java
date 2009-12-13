@@ -154,16 +154,22 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
         toolWindow.addPlafPropertyChangeListener(this);
 
         descriptor.getCleaner().addCleaner(this);
+
     }
 
     protected void unistallListeners() {
-        descriptor.getDockedTypeDescriptor().removePropertyChangeListener(this);
+        descriptor.removeTypeDescriptorChangePropertyListener(this);
         toolWindow.removePlafPropertyChangeListener(this);
 
         descriptor.getCleaner().removeCleaner(this);
     }
 
     protected void uninstallComponents() {
+        for (Component component : toolWindowTitleButtonPanel.getComponents()) {
+            ToolWindowTitleButton toolWindowTitleButton = (ToolWindowTitleButton) component;
+            toolWindowTitleButton.getAction().removePropertyChangeListener(this);
+        }
+
         toolWindowTitleButtonPanel.removeAll();
     }
 
@@ -176,7 +182,7 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
         storeCurrentLayout(oldType);
 
         // remove all actions from the container
-        toolWindowTitleButtonPanel.removeAll();
+        uninstallComponents();
         containerLayout.setColumn(new double[]{0,0});
 
         // add actions for the current type...
@@ -318,6 +324,8 @@ public class ToolWindowTitleButtonPanelUI extends BasicPanelUI implements Cleane
     }
 
     protected void removeToolWindowAction(ToolWindowAction toolWindowAction) {
+        toolWindowAction.removePropertyChangeListener(this);
+
         for (Component component : toolWindowTitleButtonPanel.getComponents()) {
             ToolWindowTitleButton toolWindowTitleButton = (ToolWindowTitleButton) component;
 
