@@ -27,7 +27,6 @@
                 <item name="Screenshots" href="/examples/mydoggysetScreenshots.html"/>
                 <item name="Using" href="/examples/mydoggysetUsing.html"/>
             </item>
-            <item img="/images/new.png" name="TutorialSet" href="/examples/tutorialset.html"/>
         </menu>
 
         <menu name="Interfaces">

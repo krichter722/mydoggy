@@ -10,20 +10,13 @@
     <body>
         <section name="Tutorial">
             <p>
-                This tutorial is based on the
-                <a href="./../mydoggy-plaf/index.html">default implementation</a>
-                of mydoggy.
-                We'll build a simple application based called
-                <strong style="color:green">TutorialSet</strong>
+                In this tutorial we'll build a simple application called
+                <strong style="color:green">TutorialSet</strong>. We will learn how to use the api provided by MyDoggy.
                 <br/>
                 In every step, pay attention to the code in green that highlights the new code introduced in that step.
             </p>
             <p>
-                TutorialSet is the result of this tutorial.
-                <br/>
-                Launch
-                <a href="./jnlp/tutorialset.jnlp">TutorialSet</a>
-                using Java Web Start.
+                Launch <a href="./examples/jnlp/tutorialset.jnlp">TutorialSet</a> using Java Web Start.
             </p>
 
             <table style="text-align: left;"

@@ -25,6 +25,7 @@ public class GlassPanel extends JPanel implements ContainerListener {
     protected int height;
     protected Rectangle visibleRect = null;
 
+
     public GlassPanel(RootPaneContainer rootPaneContainer) {
         this.rootPaneContainer = rootPaneContainer;
 
@@ -35,7 +36,6 @@ public class GlassPanel extends JPanel implements ContainerListener {
     }
 
 
-    @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
 

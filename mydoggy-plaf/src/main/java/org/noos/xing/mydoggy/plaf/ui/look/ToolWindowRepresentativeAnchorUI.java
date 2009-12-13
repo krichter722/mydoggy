@@ -2,7 +2,6 @@ package org.noos.xing.mydoggy.plaf.ui.look;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
-import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
 import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
@@ -33,6 +32,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
+
+import static org.noos.xing.mydoggy.ToolWindowAnchor.*;
 
 /**
  * @author Angelo De Caro
@@ -572,33 +573,35 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
             previewPanel.setSize(width + 4, height + 4);
 
             Rectangle containerRect = descriptor.getManagerBounds();
+            Rectangle raBound = representativeAnchor.getParent().getBounds();
+
             switch (descriptor.getToolWindow().getAnchor()) {
                 case LEFT:
                     previewPanel.setLocation(
                             containerRect.x +
-                            representativeAnchor.getX() + representativeAnchor.getWidth() + 3,
+                            raBound.x + raBound.width + 3,
 
                             (jMenuBar != null ? jMenuBar.getHeight() : 0) +
                             containerRect.y +
-                            representativeAnchor.getY() +
+                            raBound.y +
                             (descriptor.getToolBar(TOP).getSize())
                     );
                     break;
                 case TOP:
                     previewPanel.setLocation(
                             containerRect.x +
-                            representativeAnchor.getX() +
+                            raBound.x +
                             (descriptor.getToolBar(LEFT).getSize()),
 
                             (jMenuBar != null ? jMenuBar.getHeight() : 0) +
                             containerRect.y +
-                            representativeAnchor.getY() + representativeAnchor.getHeight() + 3
+                            raBound.y + raBound.height + 3
                     );
                     break;
                 case BOTTOM:
                     previewPanel.setLocation(
                             containerRect.x +
-                            representativeAnchor.getX() +
+                            raBound.x +
                             (descriptor.getToolBar(LEFT).getSize()),
 
                             (jMenuBar != null ? jMenuBar.getHeight() : 0) +
@@ -615,7 +618,7 @@ public class ToolWindowRepresentativeAnchorUI extends MetalLabelUI implements Cl
 
                             (jMenuBar != null ? jMenuBar.getHeight() : 0) +
                             containerRect.y +
-                            representativeAnchor.getY() +
+                            raBound.y +
                             (descriptor.getToolBar(TOP).getSize())
                     );
                     break;

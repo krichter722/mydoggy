@@ -34,7 +34,7 @@
                         <img src="./images/new.png" alt=""/>
                         <a href="tutorial/tutorial.html">Tutorial</a>
                         <small>
-                            <a href="./examples/jnlp/tutorials.jnlp">WebStart</a>
+                            <a href="./examples/jnlp/tutorialset.jnlp">WebStart</a>
                         </small>
                     </li>
                     <li>
