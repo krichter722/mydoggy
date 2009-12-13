@@ -1,20 +1,14 @@
 package org.noos.xing.mydoggy.mydoggyset;
 
 import info.clearthought.layout.TableLayout;
-import info.clearthought.layout.TableLayoutConstants;
-import org.jdesktop.swingx.JXDatePicker;
 import org.jdesktop.swingx.JXMonthView;
-import org.jdesktop.swingx.JXTitledPanel;
 import org.noos.common.Question;
 import org.noos.common.context.Context;
 import org.noos.common.object.ObjectCreator;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.mydoggyset.action.*;
 import org.noos.xing.mydoggy.mydoggyset.context.MyDoggySetContext;
-import org.noos.xing.mydoggy.mydoggyset.ui.DoggyTable;
-import org.noos.xing.mydoggy.mydoggyset.ui.LookAndFeelMenuItem;
-import org.noos.xing.mydoggy.mydoggyset.ui.MonitorPanel;
-import org.noos.xing.mydoggy.mydoggyset.ui.RuntimeMemoryMonitorSource;
+import org.noos.xing.mydoggy.mydoggyset.ui.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.CustomDockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
@@ -28,10 +22,10 @@ import org.noos.xing.yasaf.plaf.action.ViewContextAction;
 import org.noos.xing.yasaf.view.ViewContext;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicSplitPaneUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
@@ -138,11 +132,10 @@ public class MyDoggySet {
         contentMenu.addSeparator();
         contentMenu.add(new ViewContextAction("Welcome", myDoggySetContext, MyDoggySet.class));
         contentMenu.add(new ViewContextAction("Manager", myDoggySetContext, ToolWindowManager.class));
-        contentMenu.add(new ViewContextAction("ToolWindows", myDoggySetContext, ToolWindow.class));
+        contentMenu.add(new ViewContextAction("Tools", myDoggySetContext, ToolWindow.class));
         contentMenu.add(new ViewContextAction("Contents", myDoggySetContext, Content.class));
         contentMenu.add(new ViewContextAction("Groups", myDoggySetContext, ToolWindowGroup.class));
         contentMenu.add(new ViewContextAction("Customize", myDoggySetContext, ResourceManager.class));
-        contentMenu.add(new ViewContextAction("Nested Manager", myDoggySetContext, MyDoggySetContext.ActionKey.NEST_TOOLMANAGER));
 
         // L&F Menu
         JMenu lafMenu = new JMenu("Looks");
@@ -167,49 +160,23 @@ public class MyDoggySet {
 
     protected void initToolWindows() {
         // Register tools
+        Random random = new Random();
+        for (int i = 1; i < 11; i++) {
+            toolWindowManager.registerToolWindow("Tool " + i, "Title " + i, null, new JButton("Hello World " + i), ToolWindowAnchor.values()[random.nextInt(4)]);
+        }
 
-        // JXDatePicker panel
-        JPanel toolOnePanel = new JPanel();
 
-        final JLabel label = new JLabel();
-        label.setText("Choose Date by selecting below.");
-        toolOnePanel.add(label, BorderLayout.NORTH);
-        final JXDatePicker datePicker = new JXDatePicker(System.currentTimeMillis());
-        datePicker.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                label.setText(datePicker.getDate().toString());
-            }
-        });
-        toolOnePanel.add(datePicker, BorderLayout.CENTER);
-
-        toolWindowManager.registerToolWindow("Tool 1", "Title 1", null, toolOnePanel, ToolWindowAnchor.BOTTOM);
-
-        JPanel toolTwoPanel = new JPanel(new ExtendedTableLayout(new double[][]{{20, -1, 20}, {20, -1, 20}}));
-        toolTwoPanel.add(new JButton("Hello World 2"), "1,1,FULL,FULL");
-        toolWindowManager.registerToolWindow("Tool 2", "Title 2", null, toolTwoPanel, ToolWindowAnchor.RIGHT);
-
-        toolWindowManager.registerToolWindow("Tool 3", "Title 3", SwingUtil.loadIcon("org/noos/xing/mydoggy/mydoggyset/icons/save.png"), new MainPanel(), ToolWindowAnchor.LEFT);
-        toolWindowManager.registerToolWindow("Tool 4", "Title 4", null, new JButton("Hello World 4"), ToolWindowAnchor.TOP);
-        toolWindowManager.registerToolWindow("Tool 5", "Title 5", null, new JButton("Hello World 5"), ToolWindowAnchor.TOP);
-        toolWindowManager.registerToolWindow("Tool 6", "Title 6", null, new JButton("Hello World 6"), ToolWindowAnchor.BOTTOM);
-        toolWindowManager.registerToolWindow("Tool 7", "Title 7", null, new MonitorPanel(new RuntimeMemoryMonitorSource()).start(), ToolWindowAnchor.TOP);
-        toolWindowManager.registerToolWindow("Tool 8", "Title 8", null, new JButton("Hello World 8"), ToolWindowAnchor.RIGHT);
-        toolWindowManager.registerToolWindow("Tool 9", "Title 9", null, new JButton("Hello World 9"), ToolWindowAnchor.RIGHT);
-
-        JPanel toolTenPanel = new JPanel();
-        toolTenPanel.setFocusCycleRoot(true);
-        toolTenPanel.add(new JTextField(10));
-        toolWindowManager.registerToolWindow("Tool 10", "Title 10", null, toolTenPanel, ToolWindowAnchor.RIGHT);
-
-        toolWindowManager.registerToolWindow("Tool 11", "Title 11", null, new JButton("Hello World 11"), ToolWindowAnchor.RIGHT);
-        toolWindowManager.registerToolWindow("Tool 12", "Title 12", null, new JButton("Hello World 12"), ToolWindowAnchor.RIGHT);
-        toolWindowManager.registerToolWindow("Tool 13", "Title 13", null, new JButton("Hello World 13"), ToolWindowAnchor.RIGHT);
-        toolWindowManager.registerToolWindow("Some Doggy Table", "Doggy Style", null, new JScrollPane(new DoggyTable()), ToolWindowAnchor.TOP);
+        toolWindowManager.registerToolWindow("Navigation Panel", "Navigation Panel", null, new NavigationPanel(), ToolWindowAnchor.values()[random.nextInt(4)]);
+        toolWindowManager.registerToolWindow("Date Picker", "Date Picker", null, new DatePicker(), ToolWindowAnchor.values()[random.nextInt(4)]);
+        toolWindowManager.registerToolWindow("Monitor Panel", "Monitor Panel", null, new MonitorPanel(new RuntimeMemoryMonitorSource()).start(), ToolWindowAnchor.values()[random.nextInt(4)]);
+        toolWindowManager.registerToolWindow("Doggy Table", "Doggy Table", null, new JScrollPane(new DoggyTable()), ToolWindowAnchor.values()[random.nextInt(4)]);
 
         // Make all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows()) {
             window.setAvailable(true);
         }
+
+
     }
 
     protected void customize() {
@@ -217,7 +184,7 @@ public class MyDoggySet {
         ResourceManager resourceManager = myDoggyToolWindowManager.getResourceManager();
         ((MyDoggyResourceManager) resourceManager).putInstanceCreator(ParentOfQuestion.class, new ObjectCreator() {
             public Object create(Context context) {
-                return new CustomParentOfQuestion(context.get(Component.class), context.get(ToolWindow.class));
+                return new DatePickerParentOfSupport(context.get(Component.class), context.get(ToolWindow.class));
             }
         });
     }
@@ -245,11 +212,11 @@ public class MyDoggySet {
     }
 
 
-    public static class CustomParentOfQuestion implements Question<Component, Boolean> {
+    public static class DatePickerParentOfSupport implements Question<Component, Boolean> {
         protected Component parent;
         protected ToolWindow toolWindow;
 
-        public CustomParentOfQuestion(Component parent, ToolWindow toolWindow) {
+        public DatePickerParentOfSupport(Component parent, ToolWindow toolWindow) {
             this.parent = parent;
             this.toolWindow = toolWindow;
         }
@@ -258,20 +225,15 @@ public class MyDoggySet {
             if (param == null)
                 return false;
 
-//            System.out.println("--------------------------------");
-
             Component cursor = param;
             try {
                 while (cursor != null) {
-//                    System.out.println("cursor = " + cursor);
                     if ((cursor instanceof JXMonthView && toolWindow.isActive()) || cursor == parent)
                         return true;
                     cursor = cursor.getParent();
                 }
                 return false;
             } finally {
-//                System.out.println("--------------------------------");
-
             }
         }
 
@@ -369,54 +331,6 @@ public class MyDoggySet {
             }
 
         }
-
-    }
-
-    public class MainPanel extends JPanel {
-
-        protected JXTitledPanel navigatorPanel = null;
-        protected JXTitledPanel infoPanel = null;
-
-
-        public MainPanel() {
-            super();
-            init();
-        }
-
-        /**
-         * Initialize the main panel
-         */
-        protected void init() {
-            navigatorPanel = new JXTitledPanel("Navigation");
-
-
-            JPanel jPanel = new JPanel();
-            double size[][] = {{TableLayoutConstants.FILL}, // Columns
-                    {25, 25, 25, 25, TableLayoutConstants.FILL}}; // Rows
-            jPanel.setLayout(new TableLayout(size));
-            jPanel.add(new JTextField("textfield1"), "0,0");
-            jPanel.add(new JTextField("textfield2"), "0,1");
-            jPanel.add(new JTextField("textfield3"), "0,2");
-            jPanel.add(new JTextField("textfield4"), "0,3");
-            infoPanel = new JXTitledPanel("Information", jPanel);
-
-
-            JSplitPane mainSP = createSplitPane(200, JSplitPane.HORIZONTAL_SPLIT);
-            mainSP.setLeftComponent(navigatorPanel);
-            mainSP.setRightComponent(infoPanel);
-
-            this.setLayout(new BorderLayout());
-            this.add(infoPanel);
-        }
-
-        private JSplitPane createSplitPane(int dividerLocation, int orientation) {
-            JSplitPane splitPane = new JSplitPane(orientation);
-            splitPane.setDividerLocation(dividerLocation);
-            splitPane.setBorder(null);
-            ((BasicSplitPaneUI) splitPane.getUI()).getDivider().setBorder(BorderFactory.createEmptyBorder());
-            return splitPane;
-        }
-
 
     }
 
