@@ -46,6 +46,7 @@ public class DockableDropPanelUI extends BasicPanelUI {
         this.dockableDropPanel = (DockableDropPanel) c;
 
         super.installUI(c);
+        updateComponent();
 
         installListeners(c);
     }
@@ -238,6 +239,12 @@ public class DockableDropPanelUI extends BasicPanelUI {
     public void setComponent(Component component) {
         dockableDropPanel.removeAll();
         dockableDropPanel.add(component, "1,1,FULL,FULL");
+    }
+
+    public void updateComponent() {
+        dockableDropPanel.removeAll();
+        if (dockableDropPanel.getComponent() != null)
+            dockableDropPanel.add(dockableDropPanel.getComponent(), "1,1,FULL,FULL");
     }
 
     public void resetComponent() {

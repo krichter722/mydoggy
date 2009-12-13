@@ -87,8 +87,8 @@ public class RepresentativeAnchorBalloonTipUI extends BasicPanelUI implements Pr
         p.setLayout(new TableLayout(new double[][]{{-1}, {-1}}));
         p.setBorder(new RoundedBalloonBorder(SwingUtil.getInt("RepresentativeAnchorBalloonTipUI.arcWidth", 7),
                                              SwingUtil.getInt("RepresentativeAnchorBalloonTipUI.arcHeight", 7),
-                                             SwingUtil.getColor("RepresentativeAnchorBalloonTipUI.fillColor", new Color(161, 238, 161)),
-                                             SwingUtil.getColor("RepresentativeAnchorBalloonTipUI.borderColor", Color.LIGHT_GRAY)));
+                                             SwingUtil.getColor("RepresentativeAnchorBalloonTipUI.fillColor", new Color(193, 240, 193)),
+                                             SwingUtil.getColor("RepresentativeAnchorBalloonTipUI.borderColor", Color.GRAY)));
         p.setOpaque(false);
 
         int borderLength = SwingUtil.getInt("RepresentativeAnchorBalloonTipUI.borderLength", 15);

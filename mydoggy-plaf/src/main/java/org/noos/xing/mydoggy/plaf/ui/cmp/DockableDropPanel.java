@@ -22,6 +22,7 @@ public class DockableDropPanel extends JPanel {
 
     protected Class<? extends Dockable>[] targets;
     protected int threshold;
+    protected Component component;
 
 
     public DockableDropPanel(Class<? extends Dockable>... targets) {
@@ -74,15 +75,17 @@ public class DockableDropPanel extends JPanel {
     }
 
     public Component getComponent() {
-        return getUI().getComponent();
+        return component;
     }
 
     public void setComponent(Component component) {
-        getUI().setComponent(component);
+        this.component = component;
+        getUI().updateComponent();
     }
 
     public void resetComponent() {
         getUI().resetComponent();
+        this.component = null;
     }
 
     public Class<? extends Dockable>[] getTargets() {

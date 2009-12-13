@@ -24,6 +24,7 @@ public class ToolWindowPanel extends JPanel implements DockableOwner {
 
     protected ToolWindowTitleBar toolWindowTitleBar;
     protected JPanel componentContainer;
+    protected Component component;
 
 
     public ToolWindowPanel(ToolWindowDescriptor toolWindowDescriptor) {
@@ -74,7 +75,6 @@ public class ToolWindowPanel extends JPanel implements DockableOwner {
         super.setUI(ui);
     }
 
-
     public ToolWindowDescriptor getToolWindowDescriptor() {
         return toolWindowDescriptor;
     }
@@ -88,15 +88,17 @@ public class ToolWindowPanel extends JPanel implements DockableOwner {
     }
 
     public void setComponent(Component component) {
-        getUI().setComponent(component);
+        this.component = component;
+        getUI().updateComponent();
     }
 
     public Component getComponent() {
-        return getUI().getComponent();
+        return component;
     }
 
     public void removeComponent(Component component) {
-        getUI().removeComponent(component);
+        getUI().removeComponent();
+        this.component = null;
     }
 
     public Component getFocusable() {

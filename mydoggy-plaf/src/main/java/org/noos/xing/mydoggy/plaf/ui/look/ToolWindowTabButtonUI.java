@@ -51,6 +51,7 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
     protected MyDoggyToolWindowTab tab;
 
     protected MouseListener titleBarMouseListener;
+    protected TabButtonToolWindowListener tabButtonToolWindowListener;
 
     protected TableLayout layout;
     protected JLabel titleLabel;
@@ -68,7 +69,6 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
 
     // Drag fields
     protected RemoveNotifyDragListener removeNotifyDragListener;
-
 
 
     public ToolWindowTabButtonUI() {
@@ -349,18 +349,15 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
         tab.addPlafPropertyChangeListener(this); 
         tab.getCleanerAggregator().addCleaner(this);
 
-        toolWindow.addToolWindowListener(new TabButtonToolWindowListener());
+        toolWindow.addToolWindowListener(tabButtonToolWindowListener = new TabButtonToolWindowListener());
 
         toolWindowTabButton.addMouseListener(toolWindowTabPanel.getMouseEventDispatcher());
         toolWindowTabButton.addMouseMotionListener(toolWindowTabPanel.getMouseEventDispatcher());
 
-        titleLabel.addMouseListener(titleBarMouseListener = new TitleBarMouseAdapter(
-                ((MyDoggyToolWindowManager) tab.getOwner().getDockableManager()).getDescriptor(tab.getOwner())
-        ));
+        titleLabel.addMouseListener(titleBarMouseListener = new TitleBarMouseAdapter(((MyDoggyToolWindowManager) tab.getOwner().getDockableManager()).getDescriptor(tab.getOwner())));
         titleLabel.addMouseListener(toolWindowTabPanel.getMouseEventDispatcher());
         titleLabel.addMouseMotionListener(toolWindowTabPanel.getMouseEventDispatcher());
         titleLabel.addMouseListener(this);
-
 
         closeButton.addActionListener(this);
         minimizeButton.addActionListener(this);
@@ -378,10 +375,11 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
     protected void uninstallListeners() {
         // Remove drag gesture
         removeNotifyDragListener.cleanup();
-        toolWindow.getDescriptor().getManager().removeRemoveNotifyListener(removeNotifyDragListener);
 
-        tab.removePropertyChangeListener(this);
+        tab.removePlafPropertyChangeListener(this);
         tab.getCleanerAggregator().removeCleaner(this);
+
+        toolWindow.removeToolWindowListener(tabButtonToolWindowListener);
 
         toolWindowTabButton.removeMouseListener(toolWindowTabPanel.getMouseEventDispatcher());
         toolWindowTabButton.removeMouseMotionListener(toolWindowTabPanel.getMouseEventDispatcher());
@@ -393,6 +391,8 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
 
         closeButton.removeActionListener(this);
         minimizeButton.removeActionListener(this);
+
+        toolWindow.getDescriptor().getManager().removeRemoveNotifyListener(removeNotifyDragListener);
     }
 
 

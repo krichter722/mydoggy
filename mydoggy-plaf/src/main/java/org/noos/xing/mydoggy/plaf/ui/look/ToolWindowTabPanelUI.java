@@ -288,6 +288,7 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
 
                 if (tabButton.getToolWindowTab() == toolWindowTab) {
                     TableLayoutConstraints constraints = containerLayout.getConstraints(component);
+                    tabButton.setUI(null);
                     tabContainer.remove(component);
 
                     if (flag)
