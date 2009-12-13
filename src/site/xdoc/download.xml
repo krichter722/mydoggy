@@ -92,32 +92,30 @@
             <subsection name="Usage">
                 <ol type="1">
                     <li>Unzip
-                        <tt>mydoggy-1.5.0.zip</tt>
+                        <tt><strong style="color:green">mydoggy-1.5.0.zip</strong></tt>
                         to the directory you wish to unzip MyDoggy 1.5.0.
                     </li>
-                    <li>Move to
-                        <tt>lib</tt>
-                        directory where you can found mydoggy jar files.
+                    <li>To use MyDoggy add to your classpath
+                        <ol type="1">
+                            <li>
+                                <strong style="color:red"><tt>mydoggy_1.5.0-api.jar</tt></strong>,
+                            </li>
+
+                            <li>
+                                <strong style="color:red"><tt>mydoggy_1.5.0-plaf.jar</tt></strong>,
+                            </li>
+                            <li>
+                                <strong style="color:red"><tt>mydoggy_1.5.0-red.jar</tt></strong>
+                                and
+                            </li>
+                            <li>
+                                <strong style="color:red"><tt>TableLayout-20020517.jar</tt></strong>.
+                            </li>
+                        </ol>
                     </li>
-                    <li>To use mydoggy add to your classpath
-                        <tt>mydoggy_1.5.0-api.jar</tt> and
-                        <tt>mydoggy_1.5.0-plaf.jar</tt> and
-                        <tt>mydoggy_1.5.0-res.jar</tt> and
-						<tt>TableLayout-20020517.jar</tt>
-					</li>
                 </ol>
-                <h4>Transparency on Windows 2000/XP</h4>
                 <p>
-                    To see the transparency effect in action, you have to put TransparencyManager.dll into a system
-                    directory. Refers to java property "java.library.path" for those directories.
-                    <br/>
-                    You can found the precompiled TransparencyManager.dll file into <tt>/lib/win32</tt>
-                    starting from the directory you have choosed to unzip mydoggy.
-                </p>
-                <p>
-                    But you can customize the transparency manager. See
-                    <a href="./mydoggy-plaf/transparency.html">this</a>
-                    .
+                    You will find these dependencies into the jars folder.
                 </p>
             </subsection>
 
@@ -147,7 +145,7 @@
                 <h4>Unix-based Operating Systems (Linux, Solaris and Mac OS X)</h4>
                 <ol type="1">
                     <li>Unzip
-                        <tt>mydoggy-1.5.0.zip</tt>
+                        <tt>mydoggy-1.5.0.tar.gz</tt>
                         to the directory you wish to install MyDoggy 1.5.0. These instructions assume you chose
                         <tt>/usr/local/mydoggy-1.5.0</tt>
                     </li>

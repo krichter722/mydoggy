@@ -11,7 +11,7 @@
         <links>
             <item name="Maven" href="http://maven.apache.org/"/>
             <item name="SourceForge" href="http://sourceforge.net/"/>
-            <item name="Project page" href="http://sourceforge.net/projects/mydoggy/"/>
+            <item name="SF Project page" href="http://sourceforge.net/projects/mydoggy/"/>
         </links>
 
         <menu name="MyDoggy">
