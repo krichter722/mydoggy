@@ -467,7 +467,8 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
         }
 
         public void cleanup() {
-            toolWindow.removeToolWindowListener(this);
+            if (toolWindow != null)
+                toolWindow.removeToolWindowListener(this);
         }
     }
 }
