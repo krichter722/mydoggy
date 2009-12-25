@@ -144,8 +144,10 @@ public abstract class ToolWindowAction extends AbstractAction {
     }
 
     public void setVisible(boolean visible) {
-        setVisibleOnMenuBar(visible);
-        setVisibleOnTitleBar(visible);
+        firePropertyChange("visibleOnTitleBar", !visible, visible);
+        firePropertyChange("visibleOnMenuBar", !visible, visible);
+//        setVisibleOnMenuBar(visible);
+//        setVisibleOnTitleBar(visible);
     }
 
     public JMenuItem getMenuItem() {
