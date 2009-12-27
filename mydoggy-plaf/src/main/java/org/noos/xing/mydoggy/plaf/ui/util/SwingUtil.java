@@ -920,6 +920,51 @@ public class SwingUtil {
 
     // Look and Feel
 
+    /**
+     * A simple minded look and feel change: ask each node in the tree
+     * to <code>updateUI()</code> -- that is, to initialize its UI property
+     * with the current look and feel.
+     */
+    public static void updateComponentTreeUI(Component c) {
+        updateComponentTreeUI0(c, 0);
+
+        c.invalidate();
+        c.validate();
+        c.repaint();
+    }
+
+    private static void updateComponentTreeUI0(Component c, int level) {
+        System.out.printf("%s%s", space(level), c.toString());
+        if (c instanceof JComponent) {
+            JComponent jc = (JComponent) c;
+            jc.updateUI();
+            JPopupMenu jpm =jc.getComponentPopupMenu();
+            if(jpm != null && jpm.isVisible() && jpm.getInvoker() == jc) {
+                updateComponentTreeUI(jpm);
+            }
+        }
+
+        Component[] children = null;
+        if (c instanceof JMenu) {
+            children = ((JMenu)c).getMenuComponents();
+        }
+        else if (c instanceof Container) {
+            children = ((Container)c).getComponents();
+        }
+        if (children != null) {
+            for(int i = 0; i < children.length; i++) {
+                updateComponentTreeUI0(children[i], level + 1);
+            }
+        }
+    }
+
+    public static String space(int level) {
+        StringBuffer buffer = new StringBuffer();
+        for (int i = 0; i < level; i++) {
+            buffer.append("  ");
+        }
+        return buffer.toString();
+    }
 
     public static void installColorsAndFont(JComponent c,
                                             String defaultBgName,

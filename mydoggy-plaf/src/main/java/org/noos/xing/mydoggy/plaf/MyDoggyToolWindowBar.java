@@ -67,7 +67,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
 
     // Used for setVisible store/restore the layout of the bar...
     protected boolean toolsVisible = true;
-    protected ByteArrayOutputStream toolsWorkspace;
+    protected byte[] toolsWorkspace;
 
 
     public MyDoggyToolWindowBar(MyDoggyToolWindowManager manager, JSplitPane splitPane, ToolWindowAnchor anchor) {
@@ -177,11 +177,11 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
     public void setToolsVisible(boolean visible) {
         if (visible) {
             if (toolsWorkspace != null)
-                manager.getPersistenceDelegate().merge(new ByteArrayInputStream(toolsWorkspace.toByteArray()),
+                manager.getPersistenceDelegate().merge(new ByteArrayInputStream(toolsWorkspace),
                                                        PersistenceDelegate.MergePolicy.RESET);
         } else {
-            toolsWorkspace = new ByteArrayOutputStream();
-            manager.getPersistenceDelegate().save(toolsWorkspace, new PersistenceDelegateFilter() {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            manager.getPersistenceDelegate().save(outputStream, new PersistenceDelegateFilter() {
                 public boolean storeToolWindowManagerDescriptor() {
                     return false;
                 }
@@ -198,6 +198,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                     return false;
                 }
             });
+            toolsWorkspace = outputStream.toByteArray();
 
             for (ToolWindow toolWindow : getToolWindows()) {
                 toolWindow.setVisible(false);
@@ -297,9 +298,15 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         return valueAdjusting;
     }
 
-    public ByteArrayOutputStream getToolsWorkspace() {
+    public byte[] getToolsWorkspace() {
         return toolsWorkspace;
     }
+
+    public void setToolWorkspace(byte[] workspace, boolean toolsVisible) {
+        this.toolsWorkspace = workspace;
+        this.toolsVisible = toolsVisible;
+    }
+
 
     public void updateMaximizedToolSize() {
         setSplitDividerLocation(-1);
