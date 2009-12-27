@@ -216,11 +216,11 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             throw new IllegalArgumentException("Cannot register tool window with passed id. An already registered dockable exists. [id : " + id + "]");
 
         MyDoggyToolWindow toolWindow = new MyDoggyToolWindow(this,
-                                                             id,
-                                                             index,
-                                                             anchor,
-                                                             ToolWindowType.DOCKED,
-                                                             title, icon, component
+                id,
+                index,
+                anchor,
+                ToolWindowType.DOCKED,
+                title, icon, component
         );
         toolWindow.addPlafPropertyChangeListener(this);
         toolWindow.getRepresentativeAnchorDescriptor().addPropertyChangeListener(this);
@@ -235,9 +235,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         final ToolWindowDescriptor toolWindowDescriptor = tools.get(id);
 
         if (toolWindowDescriptor != null) {
-            try {
-                ToolWindow toolWindow = toolWindowDescriptor.getToolWindow();
+            ToolWindow toolWindow = toolWindowDescriptor.getToolWindow();
 
+            try {
                 // Check for delegator
                 removeIfDockableDelegator(toolWindow);
 
@@ -252,7 +252,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                 for (ToolWindowTab toolWindowTab : toolWindowDescriptor.getToolWindow().getToolWindowTabs()) {
                     toolWindow.removeToolWindowTab(toolWindowTab);
                 }
-
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
                 // Remove from the list
                 tools.remove(toolWindowDescriptor.getToolWindow().getId());
                 dockableDescriptorMap.remove(toolWindowDescriptor.getToolWindow().getId());
@@ -266,7 +268,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
                 // Fire event
                 fireUnregisteredToolEvent(toolWindowDescriptor.getToolWindow());
-            } finally {
+
                 // Clean
                 toolWindowDescriptor.cleanup();
             }
@@ -443,14 +445,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                     throw new RuntimeException("Manager doesn't contain that ToolWindow. [id : " + descriptor.getDockable().getId() + "]");
                 }
             }
-        } else if (!(source instanceof Dockable) && 
-                   !(source instanceof MyDoggyToolWindowBar) &&
-                   !(source instanceof MyDoggyToolWindowManagerDescriptor) &&
-                   !(source instanceof MyDoggyToolWindowManager) &&
-                   !(source instanceof MyDoggyToolWindowTab) &&
-                   !(source instanceof ToolWindowTypeDescriptor) &&
-                   !(source instanceof ContentManager) &&
-                   !(source instanceof RepresentativeAnchorDescriptor)) {
+        } else if (!(source instanceof Dockable) &&
+                !(source instanceof MyDoggyToolWindowBar) &&
+                !(source instanceof MyDoggyToolWindowManagerDescriptor) &&
+                !(source instanceof MyDoggyToolWindowManager) &&
+                !(source instanceof MyDoggyToolWindowTab) &&
+                !(source instanceof ToolWindowTypeDescriptor) &&
+                !(source instanceof ContentManager) &&
+                !(source instanceof RepresentativeAnchorDescriptor)) {
             throw new RuntimeException("Illegal Source : " + source);
         }
 
@@ -499,6 +501,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         // Restore all detached ddckable...
         for (ToolWindow toolWindow : getToolWindows()) {
+            System.out.println("toolWindow = " + toolWindow);
             if (toolWindow.getType() == ToolWindowType.FLOATING && toolWindow.isVisible()) {
                 toolWindow.setVisible(false);
             }
@@ -905,7 +908,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected void initKeyboardFocusManagerListeners() {
         propertyChangeSupport.addPropertyChangeListener("managerWindowAncestor", new PropertyChangeListener() {
             final ShortcutProcessor shortcutProcessor = new ShortcutProcessor(MyDoggyToolWindowManager.this,
-                                                                              MyDoggyToolWindowManager.this);
+                    MyDoggyToolWindowManager.this);
             final FocusOwnerChangeListener focusOwnerChangeListener = new FocusOwnerChangeListener();
 
             public void propertyChange(PropertyChangeEvent evt) {
@@ -947,8 +950,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     protected JSplitPane addBar(ToolWindowAnchor anchor, int splitPaneOrientation, String barConstraints) {
         // Initialize bar
         MyDoggyToolWindowBar myDoggyToolWindowBar = new MyDoggyToolWindowBar(this,
-                                                                             renderSplitPane(splitPaneOrientation),
-                                                                             anchor);
+                renderSplitPane(splitPaneOrientation),
+                anchor);
         myDoggyToolWindowBar.addPropertyChangeListener(this);
 
         bars[anchor.ordinal()] = myDoggyToolWindowBar;
@@ -961,8 +964,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     protected void fireRegisteredToolEvent(ToolWindow toolWindow) {
         ToolWindowManagerEvent event = new ToolWindowManagerEvent(this,
-                                                                  ToolWindowManagerEvent.ActionId.TOOL_REGISTERED,
-                                                                  toolWindow);
+                ToolWindowManagerEvent.ActionId.TOOL_REGISTERED,
+                toolWindow);
 
         for (ToolWindowManagerListener listener : twmListeners.getListeners(ToolWindowManagerListener.class)) {
             listener.toolWindowRegistered(event);
@@ -971,8 +974,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     protected void fireUnregisteredToolEvent(ToolWindow toolWindow) {
         ToolWindowManagerEvent event = new ToolWindowManagerEvent(this,
-                                                                  ToolWindowManagerEvent.ActionId.TOOL_UNREGISTERED,
-                                                                  toolWindow);
+                ToolWindowManagerEvent.ActionId.TOOL_UNREGISTERED,
+                toolWindow);
         for (ToolWindowManagerListener listener : twmListeners.getListeners(ToolWindowManagerListener.class)) {
             listener.toolWindowUnregistered(event);
         }
@@ -980,8 +983,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     protected void fireAddedGroupEvent(ToolWindowGroup toolWindowGroup) {
         ToolWindowManagerEvent event = new ToolWindowManagerEvent(this,
-                                                                  ToolWindowManagerEvent.ActionId.GROUP_ADDED,
-                                                                  toolWindowGroup);
+                ToolWindowManagerEvent.ActionId.GROUP_ADDED,
+                toolWindowGroup);
         for (ToolWindowManagerListener listener : twmListeners.getListeners(ToolWindowManagerListener.class)) {
             listener.toolWindowGroupAdded(event);
         }
@@ -989,8 +992,8 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
     protected void fireRemovedGroupEvent(ToolWindowGroup toolWindowGroup) {
         ToolWindowManagerEvent event = new ToolWindowManagerEvent(this,
-                                                                  ToolWindowManagerEvent.ActionId.GROUP_REMOVED,
-                                                                  toolWindowGroup);
+                ToolWindowManagerEvent.ActionId.GROUP_REMOVED,
+                toolWindowGroup);
         for (ToolWindowManagerListener listener : twmListeners.getListeners(ToolWindowManagerListener.class)) {
             listener.toolWindowGroupRemoved(event);
         }
@@ -1045,7 +1048,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             if (!toolWindowBar.isVisible()) {
                 contentPaneLayout.setRow(2, 0);
                 revalidate = true;
-            } else {                
+            } else {
                 if (toolWindowBar.getAvailableTools() == 0 && !toolWindowBar.isTemporarilyVisible() && contentPaneLayout.getRow(2) != 0) {
                     contentPaneLayout.setRow(2, 0);
                     revalidate = true;
@@ -1087,13 +1090,13 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public int getJMenuBarExtraHeight() {
-        if  (getRootPane() == null)
+        if (getRootPane() == null)
             return 0;
 
         JMenuBar jMenuBar = getRootPane().getJMenuBar();
         if (jMenuBar != null && jMenuBar.isVisible())
             return jMenuBar.getHeight();
-        
+
         return 0;
     }
 
@@ -1226,17 +1229,17 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
             if (floatingTypeDescriptor.isAddToTaskBar()) {
                 floatingWindow = new FloatingFrame(this,
-                                             toolWindow,
-                                             floatingTypeDescriptor.isAlwaysOnTop()
-                                                ? windowAncestor instanceof Window ? (Window) windowAncestor : null
-                                                : null,
-                                             floatingTypeDescriptor.isModal());
+                        toolWindow,
+                        floatingTypeDescriptor.isAlwaysOnTop()
+                                ? windowAncestor instanceof Window ? (Window) windowAncestor : null
+                                : null,
+                        floatingTypeDescriptor.isModal());
             } else
                 floatingWindow = new FloatingDialog(this,
-                                              floatingTypeDescriptor.isAlwaysOnTop()
-                                                ? windowAncestor instanceof Window ? (Window) windowAncestor : null
-                                                : null,
-                                              floatingTypeDescriptor.isModal());
+                        floatingTypeDescriptor.isAlwaysOnTop()
+                                ? windowAncestor instanceof Window ? (Window) windowAncestor : null
+                                : null,
+                        floatingTypeDescriptor.isModal());
 
             floatingWindow.setName("toolWindow.floating.window." + toolWindow.getId());
             floatingWindow.setAlwaysOnTop(floatingTypeDescriptor.isAlwaysOnTop());
@@ -1303,7 +1306,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
             // Fire "visible.before" to all bars
             PropertyChangeEvent event = new PropertyChangeEvent(evt.getSource(), "visible.before",
-                                                                evt.getOldValue(), evt.getNewValue());
+                    evt.getOldValue(), evt.getNewValue());
             for (MyDoggyToolWindowBar bar : bars)
                 bar.propertyChange(event);
 
@@ -1342,7 +1345,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
             // Fire "active.before" for all bars
             PropertyChangeEvent event = new PropertyChangeEvent(evt.getSource(), "active.before",
-                                                                evt.getOldValue(), evt.getNewValue());
+                    evt.getOldValue(), evt.getNewValue());
             for (MyDoggyToolWindowBar bar : bars)
                 bar.propertyChange(event);
 
@@ -1357,7 +1360,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
                     for (MyDoggyToolWindowBar bar : bars) {
                         if (bar.valueAdjusting &&
-                            getBar(sourceTool.getAnchor()) == bar) {
+                                getBar(sourceTool.getAnchor()) == bar) {
                             shouldRequest = false;
                             break;
                         }
@@ -1386,10 +1389,10 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
             ToolWindowType toolType = sourceTool.getType();
             if (toolType == ToolWindowType.FLOATING ||
-                toolType == ToolWindowType.FLOATING_FREE ||
-                toolType == ToolWindowType.FLOATING_LIVE ||
-                force ||
-                !sourceTool.isAvailable()) {
+                    toolType == ToolWindowType.FLOATING_FREE ||
+                    toolType == ToolWindowType.FLOATING_LIVE ||
+                    force ||
+                    !sourceTool.isAvailable()) {
 
                 PropertyChangeEvent avEvent = new UserPropertyChangeEvent(evt.getSource(), "available", true, false, new Object[]{-1, true});
                 getBar(oldAnchor).propertyChange(avEvent);
@@ -1397,7 +1400,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
                 assert evt instanceof UserPropertyChangeEvent;
                 avEvent = new UserPropertyChangeEvent(evt.getSource(), "available", false, true,
-                                                      new Object[]{((UserPropertyChangeEvent) evt).getUserObject(), true});
+                        new Object[]{((UserPropertyChangeEvent) evt).getUserObject(), true});
                 getBar(newAnchor).propertyChange(avEvent);
                 syncPanel(newAnchor);
             }
@@ -1558,7 +1561,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
     }
 
     public class InternalContentMananagerListener implements ContentManagerListener,
-                                                             PropertyChangeListener {
+            PropertyChangeListener {
 
         public void contentAdded(ContentManagerEvent event) {
             MyDoggyContent content = (MyDoggyContent) event.getContent();
@@ -1590,9 +1593,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
                     if (transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_MANAGER).equals(System.identityHashCode(MyDoggyToolWindowManager.this))) {
                         if (action == DnDConstants.ACTION_MOVE &&
-                            (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF) ||
-                             transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF) ||
-                             transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)))
+                                (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF) ||
+                                        transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF) ||
+                                        transferable.isDataFlavorSupported(MyDoggyTransferable.CONTENT_ID_DF)))
 
                             return super.dragStart(transferable, action);
                     }
@@ -1817,9 +1820,9 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         public String toString() {
             return "MyDoggyToolWindowGroup{" +
-                   "name='all'" +
-                   ", tools=" + tools +
-                   '}';
+                    "name='all'" +
+                    ", tools=" + tools +
+                    '}';
         }
     }
 

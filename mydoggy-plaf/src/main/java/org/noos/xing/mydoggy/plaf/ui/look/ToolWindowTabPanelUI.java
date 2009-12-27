@@ -172,6 +172,7 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
 
     protected void uninstallListeners() {
         // cleaner
+        propertyChangeBridge.cleanup();
         descriptor.getCleaner().removeCleaner(propertyChangeBridge);
         descriptor.getCleaner().removeCleaner(this);
         descriptor.removePopupUpdater(popupUpdater);
