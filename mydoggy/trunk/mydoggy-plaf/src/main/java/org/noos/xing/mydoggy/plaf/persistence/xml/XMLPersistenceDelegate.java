@@ -819,6 +819,9 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 attributes.addAttribute(null, "anchor", null, null, toolWindowBar.getAnchor().toString());
                 attributes.addAttribute(null, "dividerSize", null, null, String.valueOf(toolWindowBar.getDividerSize()));
                 attributes.addAttribute(null, "aggregateMode", null, null, String.valueOf(toolWindowBar.isAggregateMode()));
+                attributes.addAttribute(null, "length", null, null, String.valueOf(toolWindowBar.getLength()));
+                attributes.addAttribute(null, "visible", null, null, String.valueOf(toolWindowBar.isVisible()));
+                attributes.addAttribute(null, "toolsVisible", null, null, String.valueOf(toolWindowBar.areToolsVisible()));
                 writer.startElement("toolWindowBar", attributes);
 
                 // Check for model
@@ -839,7 +842,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
                 if (toolWindowBar.getToolsWorkspace() != null) {
                     writer.startElement("workspace");
-                    writer.cdata(Base64.encodeBytes(toolWindowBar.getToolsWorkspace().toByteArray()));
+                    writer.cdata(Base64.encodeBytes(toolWindowBar.getToolsWorkspace()));
                     writer.endElement("workspace");
                 }
 
@@ -1541,9 +1544,10 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             final ToolWindowAnchor anchor = ToolWindowAnchor.valueOf(element.getAttribute("anchor"));
 
             // load toolWindowBar properties
-            ToolWindowBar toolWindowBar = context.get(ToolWindowManager.class).getToolWindowBar(anchor);
-            toolWindowBar.setDividerSize(getInteger(context, element, "left", 3));
+            MyDoggyToolWindowBar toolWindowBar = (MyDoggyToolWindowBar) context.get(ToolWindowManager.class).getToolWindowBar(anchor);
+            toolWindowBar.setDividerSize(getInteger(context, element, "dividerSize", 3));
             toolWindowBar.setAggregateMode(getBoolean(context, element, "aggregateMode", false));
+            toolWindowBar.setLength(getInteger(context, element, "length", 23));
 
             Element layoutElement = getElement(element, "layout");
             if (layoutElement != null) {
@@ -1559,6 +1563,12 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 });
             }
 
+            Element workspaceElement = getElement(element, "workspace");
+            if (workspaceElement != null) {
+                byte[] workspace = Base64.decode(workspaceElement.getTextContent());
+                toolWindowBar.setToolWorkspace(workspace, getBoolean(context, element, "toolsVisible", false));
+            }
+            
             return false;
         }
 

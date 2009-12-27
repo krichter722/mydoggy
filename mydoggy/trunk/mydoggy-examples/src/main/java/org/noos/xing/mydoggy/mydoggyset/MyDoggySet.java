@@ -14,6 +14,7 @@ import org.noos.xing.mydoggy.plaf.ui.CustomDockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.cmp.ExtendedTableLayout;
+import org.noos.xing.mydoggy.plaf.ui.cmp.ToolWindowPanel;
 import org.noos.xing.mydoggy.plaf.ui.look.MyDoggyResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.util.ParentOfQuestion;
 import org.noos.xing.mydoggy.plaf.ui.util.StringUtil;
@@ -170,6 +171,17 @@ public class MyDoggySet {
         toolWindowManager.registerToolWindow("Date Picker", "Date Picker", null, new DatePicker(), ToolWindowAnchor.values()[random.nextInt(4)]);
         toolWindowManager.registerToolWindow("Monitor Panel", "Monitor Panel", null, new MonitorPanel(new RuntimeMemoryMonitorSource()).start(), ToolWindowAnchor.values()[random.nextInt(4)]);
         toolWindowManager.registerToolWindow("Doggy Table", "Doggy Table", null, new JScrollPane(new DoggyTable()), ToolWindowAnchor.values()[random.nextInt(4)]);
+
+        final JButton jButton = new JButton();
+        jButton.setAction(new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                ToolWindowPanel toolWindowPanel = SwingUtil.getParent(jButton, ToolWindowPanel.class);
+
+                SwingUtilities.updateComponentTreeUI(toolWindowPanel);
+
+            }
+        });
+        toolWindowManager.registerToolWindow("Change UI", "Change UI", null, jButton, ToolWindowAnchor.values()[random.nextInt(4)]);
 
         // Make all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows()) {
