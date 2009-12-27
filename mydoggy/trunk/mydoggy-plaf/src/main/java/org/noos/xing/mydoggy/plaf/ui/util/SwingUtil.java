@@ -636,8 +636,7 @@ public class SwingUtil {
         DragGestureRecognizer recognizer = dragSource.createDefaultDragGestureRecognizer(c, DnDConstants.ACTION_MOVE, dragListener);
         dragSource.addDragSourceMotionListener(dragListener);
 
-        dragEntryMap.put(c, new DragEntry(recognizer,
-                dragListener));
+        dragEntryMap.put(c, new DragEntry(recognizer, dragListener));
 
         return recognizer;
     }

@@ -462,8 +462,9 @@ public class ToolWindowTabButtonUI extends BasicPanelUI implements Cleaner,
         }
 
         public void toolWindowTabRemoved(ToolWindowTabEvent event) {
-            if (MyDoggyUtil.getNumTabs(toolWindow) == 1) 
-                hideAllButtons();
+            if (toolWindow != null)
+                if (MyDoggyUtil.getNumTabs(toolWindow) == 1) 
+                    hideAllButtons();
         }
 
         public void cleanup() {
