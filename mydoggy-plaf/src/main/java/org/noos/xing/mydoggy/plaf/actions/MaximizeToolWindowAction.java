@@ -74,9 +74,11 @@ public class MaximizeToolWindowAction extends ToolWindowAction implements PlafTo
         public void onMaximized(PropertyChangeEvent evt) {
             if ((Boolean) evt.getNewValue()) {
                 setIcon(UIManager.getIcon(MyDoggyKeySpace.MINIMIZE));
+                putValue(Action.SHORT_DESCRIPTION, SwingUtil.getString("@@tool.tooltip.restore"));
                 flag = true;
             } else if (flag) {
                 setIcon(UIManager.getIcon(MyDoggyKeySpace.MAXIMIZE));
+                putValue(Action.SHORT_DESCRIPTION, SwingUtil.getString("@@tool.tooltip.maximize"));
                 flag = false;
             }
         }
