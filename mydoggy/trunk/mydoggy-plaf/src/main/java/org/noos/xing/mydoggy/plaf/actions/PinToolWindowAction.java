@@ -72,10 +72,10 @@ public class PinToolWindowAction extends ToolWindowAction implements PlafToolWin
 
             if (newValue) {
                 setIcon(UIManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_ON));
-                putValue(Action.LONG_DESCRIPTION, SwingUtil.getString("@@tool.tooltip.pin"));
+                putValue(Action.SHORT_DESCRIPTION, SwingUtil.getString("@@tool.tooltip.pin"));
             } else {
                 setIcon(UIManager.getIcon(MyDoggyKeySpace.AUTO_HIDE_OFF));
-                putValue(Action.LONG_DESCRIPTION, SwingUtil.getString("@@tool.tooltip.unpin"));
+                putValue(Action.SHORT_DESCRIPTION, SwingUtil.getString("@@tool.tooltip.unpin"));
             }
 
         }
