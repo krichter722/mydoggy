@@ -139,7 +139,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             context.put("standalone", standalone);
 
             masterElementWriter.write(writer, context);
-            writer.close();
+            
+            writer.flush();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
