@@ -1260,7 +1260,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                         boolean selected = getBoolean(context, tabElement, "selected", false);
                         boolean maximized = getBoolean(context, tabElement, "maximized", false);
 
-                        Dockable dockable = context.get(ToolWindowManager.class).getDockableById(dockableId);
+                        Dockable dockable = context.get(ToolWindowManager.class).lookupDockable(dockableId);
                         if (dockable != null) {
                             ToolWindowTab tab = toolWindow.addToolWindowTab(dockable);
 

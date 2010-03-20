@@ -1581,7 +1581,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                         // Chech if it was a tab
                         if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)) {
                             // Remove from tab
-                            ToolWindowTab tab = (ToolWindowTab) manager.getDockable(
+                            ToolWindowTab tab = (ToolWindowTab) manager.lookupDockable(
                                     transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)
                             );
                             tab.getOwner().removeToolWindowTab(tab);
