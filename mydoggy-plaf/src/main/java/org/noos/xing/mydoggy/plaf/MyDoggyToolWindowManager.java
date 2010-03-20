@@ -212,7 +212,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         if (index > 9)
             index = -1;
 
-        if (getDockableById(id) != null)
+        if (lookupDockable(id) != null)
             throw new IllegalArgumentException("Cannot register tool window with passed id. An already registered dockable exists. [id : " + id + "]");
 
         MyDoggyToolWindow toolWindow = new MyDoggyToolWindow(this,
@@ -394,13 +394,14 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         throw new IllegalStateException("Doen't exist a TypeDescriptor for. [type :" + type + "]");
     }
 
-    public Dockable getDockable(Object id) {
-        Dockable result = getToolWindow(id);
+    public Dockable lookupDockable(Object key) {
+        Dockable result = getToolWindow(key);
+
         if (result == null) {
             // Try tab
             for (ToolWindow toolWindow : getToolWindows()) {
                 for (ToolWindowTab tab : toolWindow.getToolWindowTabs()) {
-                    if (tab.getId().equals(id)) {
+                    if (tab.getId().equals(key)) {
                         result = tab;
                         break;
                     }
@@ -411,7 +412,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
             if (result == null) {
                 // Try content
-                result = getContentManager().getContent(id);
+                result = getContentManager().getContent(key);
             }
         }
 
@@ -441,7 +442,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
         if (source instanceof DockableDescriptor) {
             DockableDescriptor descriptor = (DockableDescriptor) source;
             if (descriptor.getDockableType() != DockableDescriptor.DockableType.CUSTOM) {
-                if (getDockable(descriptor.getDockable().getId()) != descriptor.getDockable()) {
+                if (lookupDockable(descriptor.getDockable().getId()) != descriptor.getDockable()) {
                     throw new RuntimeException("Manager doesn't contain that ToolWindow. [id : " + descriptor.getDockable().getId() + "]");
                 }
             }
@@ -501,7 +502,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
 
         // Restore all detached ddckable...
         for (ToolWindow toolWindow : getToolWindows()) {
-            System.out.println("toolWindow = " + toolWindow);
+//            System.out.println("toolWindow = " + toolWindow);
             if (toolWindow.getType() == ToolWindowType.FLOATING && toolWindow.isVisible()) {
                 toolWindow.setVisible(false);
             }
@@ -1619,7 +1620,7 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
                         // Chech if it was a tab
                         if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)) {
                             // Remove from tab
-                            ToolWindowTab tab = (ToolWindowTab) getDockable(
+                            ToolWindowTab tab = (ToolWindowTab) lookupDockable(
                                     transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)
                             );
                             tab.getOwner().removeToolWindowTab(tab);

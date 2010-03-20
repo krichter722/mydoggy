@@ -33,7 +33,7 @@ public class ScenarioTestSet extends ScenarioSet {
                                                  "--> The divider between Content_1 and Content_3 is freezing and could not be\n" +
                                                  "moved."));
         tutorialSet.addScenario(new TestScenario(tutorialSet, NextContentSelectionOnRemoveScenario.class, "ScenarioTest - Remove a Content does not select the right last content win.",
-                                                 "When clicking the x in the content window tab and multiple content windows\n" +
+                                                 "When clicking the x1 in the content window tab and multiple content windows\n" +
                                                  "are opened. The expected behavior would be that after a remove content\n" +
                                                  "window event, the last content window that the user clicked would be\n" +
                                                  "selected. However the window that is selected seems to always be the first\n" +
@@ -53,7 +53,7 @@ public class ScenarioTestSet extends ScenarioSet {
                                                  "7) Then select one of the BOTTOM aggregate window. Not just the tab but\n" +
                                                  "select a component in the JPanel so the panel in the BOTTOM window has\n" +
                                                  "focus.\n" +
-                                                 "8) Click the x in the tab of one of the BOTTOM aggregate windows.\n" +
+                                                 "8) Click the x1 in the tab of one of the BOTTOM aggregate windows.\n" +
                                                  "9)This is where the problem occurs. The second TOP window is showing and\n" +
                                                  "you would expect it to keep showing since it was selected prior to the\n" +
                                                  "BOTTOM selection. However it looses focus and the first TOP window switches\n" +

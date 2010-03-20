@@ -55,7 +55,7 @@ public class FloatingWindowDockableDropPanel extends DockableDropPanel {
                     // Chech if it was a tab
                     if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)) {
                         // Remove from tab
-                        ToolWindowTab tab = (ToolWindowTab) toolWindowManager.getDockable(
+                        ToolWindowTab tab = (ToolWindowTab) toolWindowManager.lookupDockable(
                                 transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_TAB_ID_DF)
                         );
                         tab.getOwner().removeToolWindowTab(tab);

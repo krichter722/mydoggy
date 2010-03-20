@@ -17,7 +17,7 @@ public class DragListenerDelegate implements DragListener {
     }
 
     public DragListenerDelegate() {
-        System.out.println(System.identityHashCode(this));
+//        System.out.println(System.identityHashCode(this));
     }
 
 
