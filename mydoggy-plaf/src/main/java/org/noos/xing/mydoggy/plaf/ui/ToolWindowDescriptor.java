@@ -12,6 +12,7 @@ import org.noos.xing.mydoggy.plaf.cleaner.Cleaner;
 import org.noos.xing.mydoggy.plaf.cleaner.CleanerAggregator;
 import org.noos.xing.mydoggy.plaf.cleaner.DefaultCleanerAggregator;
 import org.noos.xing.mydoggy.plaf.common.context.DefaultMutableContext;
+import org.noos.xing.mydoggy.plaf.descriptors.DefaultExternTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.InternalTypeDescriptor;
 import org.noos.xing.mydoggy.plaf.descriptors.ToolWindowRepresentativeAnchorDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.cmp.*;
@@ -66,6 +67,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
     protected SlidingTypeDescriptor slidingTypeDescriptor;
     protected FloatingLiveTypeDescriptor floatingLiveTypeDescriptor;
     protected RepresentativeAnchorDescriptor representativeAnchorDescriptor;
+    protected ToolWindowTypeDescriptor externTypeDescriptor;
 
     // Field for adjusting
     boolean dockLengthValueAdjusting = false;
@@ -480,6 +482,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
                 return dockedTypeDescriptor;
             case SLIDING:
                 return slidingTypeDescriptor;
+            case EXTERN:
+                return externTypeDescriptor;
         }
         
         throw new IllegalStateException("Doen't exist a TypeDescriptor for. [type : " + type + "]");
@@ -784,6 +788,8 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
 
         representativeAnchorDescriptor = new ToolWindowRepresentativeAnchorDescriptor(this);
         representativeAnchorDescriptor.addPropertyChangeListener(this);
+
+        externTypeDescriptor = new DefaultExternTypeDescriptor();
     }
 
     protected void initPopupMenu() {
