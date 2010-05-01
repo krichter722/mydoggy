@@ -34,12 +34,17 @@ public class PropertyChangeEventSource implements Cleaner {
         if (publicChangeSupport != null)
             publicChangeSupport.cleanup();
         publicChangeSupport = null;
-        
+
         if (plafChangeSupport != null)
             plafChangeSupport.cleanup();
         plafChangeSupport = null;
 
         firePublicEventQuestion = null;
+    }
+
+
+    protected CleanablePropertyChangeSupport initPropertyChangeSupport() {
+        return new CleanablePropertyChangeSupport(this);
     }
 
 
@@ -49,7 +54,7 @@ public class PropertyChangeEventSource implements Cleaner {
 
         if (publicChangeSupport == null)
             publicChangeSupport = initPropertyChangeSupport();
-        
+
         publicChangeSupport.addPropertyChangeListener(listener);
     }
 
@@ -66,20 +71,6 @@ public class PropertyChangeEventSource implements Cleaner {
         publicChangeSupport.addPropertyChangeListener(listener);
     }
 
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        if (listener == null || publicChangeSupport == null)
-            return;
-
-        publicChangeSupport.removePropertyChangeListener(listener);
-    }
-
-    public PropertyChangeListener[] getPropertyChangeListeners() {
-        if (publicChangeSupport == null)
-            return new PropertyChangeListener[0];
-
-        return publicChangeSupport.getPropertyChangeListeners();
-    }
-
     public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         if (listener == null)
             return;
@@ -90,19 +81,6 @@ public class PropertyChangeEventSource implements Cleaner {
         publicChangeSupport.addPropertyChangeListener(propertyName, listener);
     }
 
-    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-        if (listener == null || publicChangeSupport == null)
-            return;
-
-        publicChangeSupport.removePropertyChangeListener(propertyName, listener);
-    }
-
-    public PropertyChangeListener[] getPropertyChangeListeners(String propertyName) {
-        if (publicChangeSupport == null) {
-            return new PropertyChangeListener[0];
-        }
-        return publicChangeSupport.getPropertyChangeListeners(propertyName);
-    }
 
     public void addPlafPropertyChangeListener(PropertyChangeListener listener) {
         if (listener == null)
@@ -112,20 +90,6 @@ public class PropertyChangeEventSource implements Cleaner {
             plafChangeSupport = initPropertyChangeSupport();
 
         plafChangeSupport.addPropertyChangeListener(listener);
-    }
-
-    public void removePlafPropertyChangeListener(PropertyChangeListener listener) {
-        if (listener == null || plafChangeSupport == null)
-            return;
-
-        plafChangeSupport.removePropertyChangeListener(listener);
-    }
-
-    public PropertyChangeListener[] getPlafPropertyChangeListeners() {
-        if (plafChangeSupport == null)
-            return new PropertyChangeListener[0];
-
-        return plafChangeSupport.getPropertyChangeListeners();
     }
 
     public void addPlafPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
@@ -144,6 +108,28 @@ public class PropertyChangeEventSource implements Cleaner {
         }
     }
 
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        if (listener == null || publicChangeSupport == null)
+            return;
+
+        publicChangeSupport.removePropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        if (listener == null || publicChangeSupport == null)
+            return;
+
+        publicChangeSupport.removePropertyChangeListener(propertyName, listener);
+    }
+
+    public void removePlafPropertyChangeListener(PropertyChangeListener listener) {
+        if (listener == null || plafChangeSupport == null)
+            return;
+
+        plafChangeSupport.removePropertyChangeListener(listener);
+    }
+
     public void removePlafPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         if (listener == null || plafChangeSupport == null)
             return;
@@ -151,17 +137,41 @@ public class PropertyChangeEventSource implements Cleaner {
         plafChangeSupport.removePropertyChangeListener(propertyName, listener);
     }
 
+    public void removePlafPropertyChangeListener(PropertyChangeListener listener, String... propertyNames) {
+        for (String propertyName : propertyNames) {
+            removePlafPropertyChangeListener(propertyName, listener);
+        }
+    }
+
+
+    public PropertyChangeListener[] getPropertyChangeListeners() {
+        if (publicChangeSupport == null)
+            return new PropertyChangeListener[0];
+
+        return publicChangeSupport.getPropertyChangeListeners();
+    }
+
+    public PropertyChangeListener[] getPropertyChangeListeners(String propertyName) {
+        if (publicChangeSupport == null) {
+            return new PropertyChangeListener[0];
+        }
+        return publicChangeSupport.getPropertyChangeListeners(propertyName);
+    }
+
+    public PropertyChangeListener[] getPlafPropertyChangeListeners() {
+        if (plafChangeSupport == null)
+            return new PropertyChangeListener[0];
+
+        return plafChangeSupport.getPropertyChangeListeners();
+    }
+
     public PropertyChangeListener[] getPlafPropertyChangeListeners(String propertyName) {
         if (plafChangeSupport == null)
             return new PropertyChangeListener[0];
-        
+
         return plafChangeSupport.getPropertyChangeListeners(propertyName);
     }
 
-
-    protected CleanablePropertyChangeSupport initPropertyChangeSupport() {
-        return new CleanablePropertyChangeSupport(this);
-    }
 
     protected void firePropertyChangeEvent(PropertyChangeEvent event) {
         if (this.plafChangeSupport != null)
@@ -211,11 +221,12 @@ public class PropertyChangeEventSource implements Cleaner {
             this.publicChangeSupport.firePropertyChange(property, oldValue, newValue);
     }
 
+
     private final boolean canFirePublicEvent() {
         return publicEvent && this.publicChangeSupport != null && (firePublicEventQuestion == null || (firePublicEventQuestion != null && firePublicEventQuestion.getAnswer(null)));
     }
 
-    
+
     public class ExcludePropertyChangeListener implements PropertyChangeListener {
         protected PropertyChangeListener delegate;
         protected Set<String> excludePropertiesSet;
@@ -232,6 +243,5 @@ public class PropertyChangeEventSource implements Cleaner {
         }
 
     }
-
 
 }

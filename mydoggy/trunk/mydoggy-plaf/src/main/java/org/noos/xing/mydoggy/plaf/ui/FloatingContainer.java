@@ -24,8 +24,11 @@ import java.beans.PropertyChangeListener;
 public class FloatingContainer extends MyDoggyToolWindowContainer {
     protected FloatingWindow window;
 
+    // Listeners
     protected FloatingMoveMouseInputHandler moveMouseInputHandler;
     protected WindowComponentAdapter windowComponentAdapter;
+    protected PropertyChangeListener propertyChangeListener;
+    protected AnimationListener animationListener;
 
     protected boolean valueAdjusting = false;
 
@@ -46,6 +49,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
     public void cleanup() {
         // uninstall listeners
+        removeListeners();
         uninstallWindowListeners();
 
         // Finalize
@@ -188,7 +192,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 
     protected void initListeners() {
         // Init tool window properties listeners
-        PropertyChangeListener propertyChangeListener = new PropertyListener();
+        propertyChangeListener = new PropertyListener();
 
         PropertyChangeEventSource toolWindowSource = descriptor.getToolWindow();
         toolWindowSource.addPlafPropertyChangeListener(propertyChangeListener, "type", "maximized");
@@ -198,7 +202,7 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
         floatingTypeDescriptorSource.addPlafPropertyChangeListener(propertyChangeListener);
 
         // Animation listener
-        floatingAnimation.addAnimationListener(new AnimationListener() {
+        floatingAnimation.addAnimationListener(animationListener = new AnimationListener() {
             public void onFinished() {
                 if (assignFocusOnAnimFinished) {
                     descriptor.assignFocus();
@@ -206,6 +210,22 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 }
             }
         });
+
+        // Init window listeners
+        moveMouseInputHandler = new FloatingMoveMouseInputHandler(null);
+        windowComponentAdapter = new WindowComponentAdapter();
+    }
+
+    protected void removeListeners() {
+        PropertyChangeEventSource toolWindowSource = descriptor.getToolWindow();
+        toolWindowSource.removePlafPropertyChangeListener(propertyChangeListener, "type", "maximized");
+
+        // Init floating type descriptor properties listeners
+        PropertyChangeEventSource floatingTypeDescriptorSource = (PropertyChangeEventSource) descriptor.getToolWindow().getTypeDescriptor(FloatingTypeDescriptor.class);
+        floatingTypeDescriptorSource.removePlafPropertyChangeListener(propertyChangeListener);
+
+        // Animation listener
+        floatingAnimation.removeAnimationListener(animationListener);
 
         // Init window listeners
         moveMouseInputHandler = new FloatingMoveMouseInputHandler(null);

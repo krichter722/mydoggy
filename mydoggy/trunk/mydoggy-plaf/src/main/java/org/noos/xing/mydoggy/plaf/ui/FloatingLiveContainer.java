@@ -22,6 +22,8 @@ import java.beans.PropertyChangeListener;
  */
 public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
     protected FloatingLiveWindow floatingLiveWindow;
+
+    protected PropertyChangeListener propertyChangeListener;
     protected FloatingMoveMouseInputHandler moveMouseInputHandler;
     protected ComponentListener livePanelComponentListener;
 
@@ -39,14 +41,8 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
 
     public void cleanup() {
-        // Remove Listeners
-        toolWindowTabPanel.removeEventDispatcherlListener(moveMouseInputHandler);
-
-        toolWindowTitleBar.removeMouseMotionListener(moveMouseInputHandler);
-        toolWindowTitleBar.removeMouseListener(moveMouseInputHandler);
-
+        removeListeners();
         floatingLiveWindow = null;
-
         super.cleanup();
     }
 
@@ -178,11 +174,8 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
     protected void initListeners() {
         // Init property listeners
-        PropertyChangeListener propertyChangeListener = new PropertyListener();
-
         PropertyChangeEventSource toolWindowSource = descriptor.getToolWindow();
-
-        toolWindowSource.addPlafPropertyChangeListener(propertyChangeListener, "type", "maximized");
+        toolWindowSource.addPlafPropertyChangeListener(propertyChangeListener = new PropertyListener(), "type", "maximized");
 
         // Init floating live type desrciptor properties listeners
         PropertyChangeEventSource floatingLiveTypeDescriptorSource = (PropertyChangeEventSource) descriptor.getToolWindow().getTypeDescriptor(FloatingLiveTypeDescriptor.class);
@@ -190,6 +183,21 @@ public class FloatingLiveContainer extends MyDoggyToolWindowContainer {
 
         moveMouseInputHandler = new FloatingMoveMouseInputHandler(null);
         livePanelComponentListener = new LivePanelComponentListener();
+    }
+
+    protected void removeListeners() {
+        // Init property listeners
+        PropertyChangeEventSource toolWindowSource = descriptor.getToolWindow();
+        toolWindowSource.removePlafPropertyChangeListener(propertyChangeListener, "type", "maximized");
+
+        // Init floating live type desrciptor properties listeners
+        PropertyChangeEventSource floatingLiveTypeDescriptorSource = (PropertyChangeEventSource) descriptor.getToolWindow().getTypeDescriptor(FloatingLiveTypeDescriptor.class);
+        floatingLiveTypeDescriptorSource.removePlafPropertyChangeListener(propertyChangeListener, "location", "size", "enabled", "visible");
+
+        toolWindowTabPanel.removeEventDispatcherlListener(moveMouseInputHandler);
+
+        toolWindowTitleBar.removeMouseMotionListener(moveMouseInputHandler);
+        toolWindowTitleBar.removeMouseListener(moveMouseInputHandler);
     }
 
 

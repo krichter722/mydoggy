@@ -217,10 +217,10 @@ public class MyDoggySet {
             Object key = keysEnumeration.nextElement();
             System.out.printf("%s - %s\n", key, UIManager.get(key));
         }
-*/
 
         final MyDoggySet test = new MyDoggySet();
         test.run(null);
+*/
     }
 
 
