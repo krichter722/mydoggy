@@ -21,6 +21,8 @@ import java.io.ByteArrayOutputStream;
  */
 public class DockedContainer extends MyDoggyToolWindowContainer {
 
+    protected PropertyChangeListener typeListener, maximizedListener;
+
 
     public DockedContainer(ToolWindowDescriptor descriptor) {
         super(descriptor);
@@ -30,6 +32,8 @@ public class DockedContainer extends MyDoggyToolWindowContainer {
 
 
     public void cleanup() {
+        removeListeners();
+
         // Finalize
         toolWindow = null;
         descriptor = null;
@@ -39,13 +43,19 @@ public class DockedContainer extends MyDoggyToolWindowContainer {
     protected void initListeners() {
         // Init tool window properties listeners
         PropertyChangeEventSource toolWindowSource = descriptor.getToolWindow();
-        toolWindowSource.addPlafPropertyChangeListener("type", new TypePropertyChangeListener());
-        toolWindowSource.addPlafPropertyChangeListener("maximizedBefore", new MaximizedBeforePropertyChangeListener());
+        toolWindowSource.addPlafPropertyChangeListener("type", typeListener = new TypePropertyChangeListener());
+        toolWindowSource.addPlafPropertyChangeListener("maximizedBefore", maximizedListener = new MaximizedBeforePropertyChangeListener());
 
         toolWindow.addToolWindowListener(new DockedToolWindowListener());
 
         // Window Gesture
         descriptor.getManager().addComponentListener(new ComponentResizer());
+    }
+
+    protected void removeListeners() {
+        PropertyChangeEventSource toolWindowSource = descriptor.getToolWindow();
+        toolWindowSource.removePlafPropertyChangeListener("type", typeListener);
+        toolWindowSource.removePlafPropertyChangeListener("maximizedBefore", maximizedListener);
     }
 
 

@@ -18,10 +18,7 @@ import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -31,13 +28,17 @@ import java.beans.PropertyChangeListener;
 public class SlidingContainer extends MyDoggyToolWindowContainer implements Cleaner {
     protected SlidingAnimation slidingAnimation;
 
+    // Components
     protected SlidingBorder border;
     protected Container barContainer;
     protected JLayeredPane layeredPane;
     protected JPanel mainPanel;
     protected TranslucentPanel sheet;
 
+    // Listeners
     protected SlidingMouseInputHandler slidingMouseInputHandler;
+    protected PropertyChangeListener propertyChangeListener;
+    protected ComponentListener componentListener;
 
 
     public SlidingContainer(ToolWindowDescriptor toolWindowDescriptor) {
@@ -49,11 +50,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
 
 
     public void cleanup() {
-        // Remove listeners
-        if (sheet != null) {
-            sheet.removeMouseMotionListener(slidingMouseInputHandler);
-            sheet.removeMouseListener(slidingMouseInputHandler);
-        }
+        removeListeners();
 
         // Finalize
         layeredPane = null;
@@ -143,7 +140,7 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
 
     protected void initListeners() {
         // Init tool window properties listeners
-        PropertyChangeListener propertyChangeListener = new PropertyListener();
+        propertyChangeListener = new PropertyListener();
 
         PropertyChangeEventSource toolWindowSource = descriptor.getToolWindow();
         toolWindowSource.addPlafPropertyChangeListener(propertyChangeListener, "anchor", "type", "active", "maximized");
@@ -159,8 +156,32 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
         slidingMouseInputHandler = new SlidingMouseInputHandler(descriptor);
 
         // Window Gesture
-        descriptor.getManager().addComponentListener(new ComponentResizer());
+        descriptor.getManager().addComponentListener(componentListener = new ComponentResizer());
     }
+
+    protected void removeListeners() {
+        if (sheet != null) {
+            sheet.removeMouseMotionListener(slidingMouseInputHandler);
+            sheet.removeMouseListener(slidingMouseInputHandler);
+        }
+
+        PropertyChangeEventSource toolWindowSource = descriptor.getToolWindow();
+        toolWindowSource.removePlafPropertyChangeListener(propertyChangeListener, "anchor", "type", "active", "maximized");
+
+        // Init sliding type descriptor properties listeners
+        PropertyChangeEventSource slidingDescriptorSource = (PropertyChangeEventSource) descriptor.getToolWindow().getTypeDescriptor(SlidingTypeDescriptor.class);
+        slidingDescriptorSource.removePlafPropertyChangeListener("type", propertyChangeListener);
+
+        descriptor.getManager().removeInternalPropertyChangeListener("temporarilyVisible", propertyChangeListener);
+        descriptor.getManager().removeInternalPropertyChangeListener("managerWindowAncestor", propertyChangeListener);
+
+        // Mouse Gesture
+        slidingMouseInputHandler.cleanup();
+
+        // Window Gesture
+        descriptor.getManager().removeComponentListener(componentListener);
+    }
+
 
     protected void update() {
         // Reset Layout

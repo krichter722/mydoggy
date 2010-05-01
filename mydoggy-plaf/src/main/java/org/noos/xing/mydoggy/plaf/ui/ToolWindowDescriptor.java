@@ -327,7 +327,6 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
 
     public void cleanup() {
         getCleaner().cleanup();
-
     }
 
 
