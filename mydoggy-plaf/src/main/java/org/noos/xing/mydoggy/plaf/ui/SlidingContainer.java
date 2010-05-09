@@ -175,9 +175,6 @@ public class SlidingContainer extends MyDoggyToolWindowContainer implements Clea
         descriptor.getManager().removeInternalPropertyChangeListener("temporarilyVisible", propertyChangeListener);
         descriptor.getManager().removeInternalPropertyChangeListener("managerWindowAncestor", propertyChangeListener);
 
-        // Mouse Gesture
-        slidingMouseInputHandler.cleanup();
-
         // Window Gesture
         descriptor.getManager().removeComponentListener(componentListener);
     }
