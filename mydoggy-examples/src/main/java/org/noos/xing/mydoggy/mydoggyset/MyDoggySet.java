@@ -203,24 +203,8 @@ public class MyDoggySet {
 
 
     public static void main(String[] args) {
-/*
-        Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
-            public void eventDispatched(AWTEvent event) {
-                System.out.println("event = " + event);
-            }
-        }, AWTEvent.MOUSE_MOTION_EVENT_MASK);
-
-        System.out.println("UIManager.getLookAndFeel() = " + UIManager.getLookAndFeel());
-
-        Enumeration<Object> keysEnumeration = UIManager.getDefaults().keys();
-        while (keysEnumeration.hasMoreElements()) {
-            Object key = keysEnumeration.nextElement();
-            System.out.printf("%s - %s\n", key, UIManager.get(key));
-        }
-
         final MyDoggySet test = new MyDoggySet();
         test.run(null);
-*/
     }
 
 
