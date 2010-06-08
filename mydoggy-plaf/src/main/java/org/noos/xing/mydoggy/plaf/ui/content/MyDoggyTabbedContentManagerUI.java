@@ -832,8 +832,22 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                             index = (Integer) addUIForContent(content, detachedContentUIMap.get(content));
                         }
 
-                        tabbedContentPane.setSelectedIndex(index);
-                        componentInFocusRequest = findAndRequestFocus(tabbedContentPane.getComponentAt(index));
+                        if (index != -1) {
+                            tabbedContentPane.setSelectedIndex(index);
+                            componentInFocusRequest = findAndRequestFocus(tabbedContentPane.getComponentAt(index));
+                        }
+
+/* TODO: should I use the following...
+                        if (constraint != null) {
+                            addUIForContent(content, constraint);
+                        } else
+                            addUIForContent(content, detachedContentUIMap.get(content));
+
+                        content.setSelected(true);
+
+                        componentInFocusRequest = findAndRequestFocus(content.getComponent());
+*/
+
                     } finally {
                         contentValueAdjusting = false;
                         detachedContentUIMap.remove(content);
