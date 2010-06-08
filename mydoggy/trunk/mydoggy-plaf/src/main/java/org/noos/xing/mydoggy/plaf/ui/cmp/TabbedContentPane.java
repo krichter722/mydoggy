@@ -349,16 +349,17 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
                     return (o1 < o2 ? 1 : (o1.equals(o2) ? 0 : -11));
                 }
             });
-            for (Integer key : keys) {
-                if (key >= index)
-                    contentMap.put(key + 1, contentMap.remove(key));
-            }
 
             insertTab(content.getTitle(),
                       content.getIcon(),
                       component,
                       tip,
                       index);
+
+            for (Integer key : keys) {
+                if (key >= index && contentMap.containsKey(key))
+                    contentMap.put(key + 1, contentMap.remove(key));
+            }
 
             setForegroundAt(index, content.getForeground());
             setDisabledIconAt(index, content.getDisabledIcon());
