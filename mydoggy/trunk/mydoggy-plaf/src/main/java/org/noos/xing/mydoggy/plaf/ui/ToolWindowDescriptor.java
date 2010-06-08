@@ -534,8 +534,10 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
                         toolWindowPanelFocusable.setFocusable(false);
                     } else
                         toolWindowPanelFocusable.requestFocusInWindow();
-                } else
-                    SwingUtilities.invokeLater(this);
+                } else {
+                    //SwingUtilities.invokeLater(this);
+                    assignFocus();
+                }
             }
         });
 
