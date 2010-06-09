@@ -120,7 +120,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         if (showAlwaysTab) {
             if (contentManager.getContentCount() == 1 && toolWindowManager.getMainContent() != tabbedContentPane && tabbedContentPane.getParent() == null) {
                 valueAdjusting = true;
-                addTab(contentManager.getContent(0));
+                addTab(contentManager.getContentByComponent(toolWindowManager.getMainContent()));
                 valueAdjusting = false;
 
                 toolWindowManager.setMainContent(tabbedContentPane);
@@ -450,7 +450,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
         } else {
             if (!showAlwaysTab && tabbedContentPane.getParent() == null) {
                 valueAdjusting = true;
-                addTab(contentManager.getContent(0));
+                addTab(contentManager.getContentByComponent(toolWindowManager.getMainContent()));
                 valueAdjusting = false;
             }
 
