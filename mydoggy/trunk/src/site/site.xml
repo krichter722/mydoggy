@@ -19,36 +19,28 @@
             <item name="Download" href="download.html"/>
             <item name="Build Howto" href="buildHowto.html"/>
             <item name="Contact" href="contact.html"/>
-            <item img="/images/new.png" name="Tutorial" href="/tutorial/tutorial.html"/>
+            <item name="Tutorial" href="/tutorial/tutorial.html"/>
         </menu>
 
         <menu name="Demos">
             <item name="MyDoggySet" href="/examples/mydoggyset.html">
-                <item name="Screenshots" href="/examples/mydoggysetScreenshots.html"/>
-                <item name="Using" href="/examples/mydoggysetUsing.html"/>
             </item>
         </menu>
 
-        <menu name="Interfaces">
+        <menu name="Documentation">
             <item name="ToolWindowManager" href="/api/toolwindowManager.html">
-                <item name="Usage" href="/api/toolwindowManagerUsage.html"/>
             </item>
 
             <item name="ToolWindow" href="/api/toolwindow.html">
-                <item name="Types" href="/api/toolwindowTypes.html"/>
-                <item name="Usage" href="/api/toolwindowUsage.html"/>
             </item>
 
             <item name="ToolWindowGroup" href="/api/toolwindowGroups.html">
-                <item name="Usage" href="/api/toolwindowUsage.html"/>
             </item>
 
             <item name="ContentManager" href="/api/contentManager.html">
-                <item name="Usage" href="/api/contentManagerUsage.html"/>
             </item>
 
             <item name="ContentManagerUI" href="/api/contentManagerUI.html">
-                <item name="Usage" href="/api/contentManagerUIUsage.html"/>
             </item>
 
             <item name="PersistenceDelegate" href="/plaf/persistenceDelegate.html"/>

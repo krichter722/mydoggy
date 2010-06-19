@@ -34,5 +34,222 @@
                 </tbody>
             </table>
         </section>
+
+        <section name="MyDoggySet Screenshots">
+            <p>
+                Here are some screenshots of MyDoggySet.
+            </p>
+            <table>
+                <a name="slidingTrasparent"/>
+                <a name="PushAwayMode"/>
+                <tr>
+                    <td>
+                        <a href="./../images/examples/screenshots/mydoggyset/tw_sliding_transparency.png">
+                            <img src="./../images/examples/screenshots/mydoggyset/thumbs/tw_sliding_transparency.png"
+                                 alt="ToolWindow Sliding Transparent"/>
+                        </a>
+                        <p align="center">A ToolWindowType.SLIDING ToolWindow transparent.</p>
+                    </td>
+                    <td>
+                        <a href="./../images/examples/screenshots/mydoggyset/pushAwayHorizontal.png">
+                            <img src="./../images/examples/screenshots/mydoggyset/thumbs/pushAwayHorizontal.png"
+                                 alt="PushAwayMode.HORIZONTAL"/>
+                        </a>
+                        <p align="center">PushAwayMode.HORIZONTAL</p>
+                    </td>
+                    <td>
+                        <a href="./../images/examples/screenshots/mydoggyset/pushAwayVertical.png">
+                            <img src="./../images/examples/screenshots/mydoggyset/thumbs/pushAwayVertical.png"
+                                 alt="PushAwayMode.VERTICAL"/>
+                        </a>
+                        <p align="center">PushAwayMode.VERTICAL</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="./../images/examples/screenshots/mydoggyset/pushAwayAnticlockwise.png">
+                            <img src="./../images/examples/screenshots/mydoggyset/thumbs/pushAwayAnticlockwise.png"
+                                 alt="PushAwayMode.ANTICLOKWISE"/>
+                        </a>
+                        <p align="center">PushAwayMode.ANTICLOKWISE</p>
+                    </td>
+                    <td>
+                        <a href="./../images/examples/screenshots/mydoggyset/desktopContentManager.png">
+                            <img src="./../images/examples/screenshots/mydoggyset/thumbs/desktopContentManager.png"
+                                 alt="DesktopContentManager"/>
+                        </a>
+                        <p align="center">ContentManager using a DesktopContentManagerUI.</p>
+                    </td>
+                    <td>
+                        <a href="./../images/examples/screenshots/mydoggyset/multisplitContentManager.png">
+                            <img src="./../images/examples/screenshots/mydoggyset/thumbs/multisplitContentManager.png"
+                                 alt="MultiSplitContentManager"/>
+                        </a>
+                        <p align="center">ContentManager using a MultiSplitContentManagerUI.</p>
+                    </td>
+                </tr>
+                <a name="UnavailableTools"/>
+                <tr>
+                    <td align="center">
+                        <a href="./../images/examples/screenshots/mydoggyset/mydoggyset.png">
+                            <img src="./../images/examples/screenshots/mydoggyset/thumbs/mydoggyset.png" alt="MyDoggySet"/>
+                        </a>
+                        <p align="center">MyDoggySet</p>
+                    </td>
+                    <td>
+                        <a href="./../images/examples/screenshots/mydoggyset/floatingLiveType.png">
+                            <img src="./../images/examples/screenshots/mydoggyset/thumbs/floatingLiveType.png"
+                                 alt="FloatingLive Type"/>
+                        </a>
+                        <p align="center">A ToolWindow with ToolWindowType.FLOATING_LIVE type.</p>
+                    </td>
+                    <td>
+                        <a href="./../images/examples/screenshots/mydoggyset/unavailableTools.png">
+                            <img src="./../images/examples/screenshots/mydoggyset/thumbs/unavailableTools.png"
+                                 alt="Unavailable Tools"/>
+                        </a>
+                        <p align="center">Representative anchor buttons shown for unavailable tools.</p>
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <section name="MyDoggySet Using">
+            <subsection name="To show tool window">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="./../images/examples/toolwindowShow.png" alt="To show tool window" border="0" hspace="18"/>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li>
+                                        <strong style="color:green">Right-click</strong> on the representative toolwindow button. Now you can choose :
+                                        <ul>
+                                           <li>
+                                               <strong style="color:green">Show</strong><br/>
+                                               The tool shows the component in a way that depends on tool window type and becomes visible.
+                                           </li>
+                                            <li>
+                                                <strong style="color:green">Aggregate</strong><br/>
+                                                Used to set to the true value the visible property of the tool.
+                                                The tool becomes visible in a special way. In fact, if there is another tool visible
+                                                with the same anchor then these two tools will be aggregate to be visible both.
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <strong style="color:green">Left-click</strong> on the representative toolwindow button.
+                                        If you press <strong style="color:green">SHIFT</strong> during the click then
+                                        if aggregateMode is disabled, aggregate method is used to show the tool else
+                                        if aggregateMode is enabled then the aggregateMode is temporarily disabled just to make
+                                        the tool visible without aggregation.
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </subsection>
+            <subsection name="To hide a tool window">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="./../images/examples/toolwindowHide.png" alt="To hide a tool window" border="0" hspace="18"/>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li>
+                                        Click
+                                        <img src="./../images/examples/toolwindowHideButton.png" alt="Hide Button"/>
+                                        button on the titlebar of the toolwindow to hide.
+                                    </li>
+                                    <li>
+                                        Right-click on the representative toolwindow button and choose <strong style="color:green">Hide</strong> on the context menu.
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </subsection>
+            <subsection name="To move a tool window">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="./../images/examples/toolwindowMove.png" alt="To move a tool window" border="0" hspace="18"/>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li>
+                                        Right-click on the representative toolwindow button and choose <strong style="color:green">Move</strong> on the context menu.
+                                        On the submenu, choose the destination anchor.
+                                    </li>
+                                    <li>
+                                        Drag the representative toolwindow button or the titlebar to the new position.
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </subsection>
+            <subsection name="To change type of a tool window">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="./../images/examples/toolwindowTypes.png" alt="To change type of a tool window" border="0" hspace="18"/>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li>
+                                        Click
+                                        <img src="./../images/examples/toolwindowFloatingButton.png" alt="Floating Button"/>
+                                        button on the titlebar of the toolwindow to set <code>ToolWindowType.FLOATING</code> type.
+                                    </li>
+                                    <li>
+                                        Click
+                                        <img src="./../images/examples/toolwindowSlidingButton.png" alt="Sliding Button"/>
+                                        button on the titlebar of the toolwindow to set <code>ToolWindowType.SLIDING</code> type.
+                                    </li>
+                                    <li>
+                                        Right-click on the representative toolwindow button and choose the mode.
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </subsection>
+            <subsection name="To hide or detach a content">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="./../images/examples/contentManager.png" alt="To hide or detach a content" border="0" hspace="18"/>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li>
+                                        Click
+                                        <img src="./../images/examples/contentManagerContentClose.png" alt="Close Button"/>
+                                        button to remove the content.
+                                    </li>
+                                    <li>
+                                        Click
+                                        <img src="./../images/examples/contentManagerContentDetach.png" alt="Detach Button"/>
+                                        button to detach the content from the window.
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </subsection>
+        </section>
     </body>
 </document>
