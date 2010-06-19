@@ -270,7 +270,8 @@ public abstract class MyDoggyContentManagerUI<T extends ContentUI> extends Prope
         }
 
         public void windowGainedFocus(WindowEvent e) {
-            if (!valueAdjusting && !contentValueAdjusting) {
+            if (!valueAdjusting && !contentValueAdjusting && e.getComponent().isValid()) {
+                System.out.println(e.getComponent());
                 Content newSelected = content;
 
                 if (newSelected == lastSelected)

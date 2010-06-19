@@ -74,6 +74,9 @@ public class MainWindow extends javax.swing.JFrame
 
         panelOne.add(button);
         panelOne.add(createPopupButton(CommandButtonDisplayState.MEDIUM));
+
+
+        panelTwo.add(new JButton("hello world!!!"));
     }
 
 

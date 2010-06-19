@@ -19,15 +19,20 @@ public class FindFocusableQuestion implements Question<Component, Component> {
             !(cmp instanceof JScrollPane) &&
             !(cmp instanceof JViewport) &&
             !(cmp instanceof JToolBar) &&
-            !(cmp instanceof JSplitPane))
+            !(cmp instanceof JSplitPane) &&
+            !(cmp instanceof JLayeredPane) &&
+            !(cmp instanceof RootPaneContainer) &&
+            !(cmp instanceof JRootPane)
+                )
             return cmp;
 
         if (cmp instanceof Container) {
             Container container = (Container) cmp;
+            
             for (int i = 0, size = container.getComponentCount(); i < size; i++) {
-                Component finded = getAnswer(container.getComponent(i));
-                if (finded != null)
-                    return finded;
+                Component found = getAnswer(container.getComponent(i));
+                if (found != null)
+                    return found;
             }
         }
         return null;
