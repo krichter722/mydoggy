@@ -1766,7 +1766,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         }
 
         protected boolean checkCondition(ToolWindow toolWindow) {
-            if (toolWindow.getAnchor() != anchor)
+/*            if (toolWindow.getAnchor() != anchor)
                 return true;
 
             int visibleNum = 0;
@@ -1778,7 +1778,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                     flag = true;
             }
 
-            return (!flag || visibleNum != 1);
+            return (!flag || visibleNum != 1);*/
+            return true;
 
         }
     }

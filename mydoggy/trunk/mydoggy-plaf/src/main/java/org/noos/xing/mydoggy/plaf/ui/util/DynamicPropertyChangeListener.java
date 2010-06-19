@@ -41,7 +41,7 @@ public class DynamicPropertyChangeListener implements PropertyChangeListener {
             try {
                 method.invoke(source, evt);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Invocation Failed. " + evt.getPropertyName() + " - " + method.toGenericString(), e);
             }
     }
 }
