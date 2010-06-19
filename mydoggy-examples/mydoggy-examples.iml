@@ -11,13 +11,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: tablelayout:TableLayout:20050920" level="project" />
-    <orderEntry type="module" module-name="mydoggy-api" />
-    <orderEntry type="module" module-name="mydoggy-plaf" />
-    <orderEntry type="module" module-name="mydoggy-res" />
-    <orderEntry type="library" name="Maven: org.swinglabs:swingx:0.9.1" level="project" />
-    <orderEntry type="library" name="Maven: com.jhlabs:filters:2.0.235" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:3.8.1" level="project" />
     <orderEntry type="module-library">
       <library name="flamingo">
         <CLASSES>
@@ -27,6 +20,13 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="Maven: tablelayout:TableLayout:20050920" level="project" />
+    <orderEntry type="module" module-name="mydoggy-api" />
+    <orderEntry type="module" module-name="mydoggy-plaf" />
+    <orderEntry type="module" module-name="mydoggy-res" />
+    <orderEntry type="library" name="Maven: org.swinglabs:swingx:0.9.1" level="project" />
+    <orderEntry type="library" name="Maven: com.jhlabs:filters:2.0.235" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:3.8.1" level="project" />
   </component>
 </module>
 
