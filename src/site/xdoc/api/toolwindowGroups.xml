@@ -53,5 +53,148 @@ ToolWindowGroup group = toolWindowManager
                 </tbody>
             </table>
         </section>
+
+        <section name="Using ToolWindowGroup">
+            <subsection name="To get a group">
+                Use the following :
+                <source>
+ToolWindowGroup group = toolWindowManager.getToolWindowGroup("group_name");
+</source>
+                <p>
+                    Returns the tool window group to which this manager maps the specified name.
+                    If the manager contains no mapping for this name then the manager create a new instance
+                    of ToolWindowGroup and associates the group created with the specified name in this manager.
+                </p>
+            </subsection>
+            <subsection name="To remove a group">
+                Use the following :
+                <source>
+toolWindowManager.removeToolWindowGroup("group_name");
+</source>
+                <p>
+                    Removes the tool window group for this name from this manager if it is present.
+                </p>
+            </subsection>
+            <subsection name="To check if a group exists">
+                Use the following :
+                <source>
+boolean contains = toolWindowManager.containsGroup("group_name");
+</source>
+                <p>
+                    Returns <tt>true</tt> if this manager contains a group for the specified name.
+                </p>
+            </subsection>
+            <subsection name="To add a toolwindow">
+                Use the following :
+                <source>
+ToolWindowGroup group = toolWindowManager.getToolWindowGroup("group_name");
+ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
+group.addToolWindow(debugTool);
+</source>
+                <p>
+                    Appends the specified tool window to the end of this group.
+                </p>
+            </subsection>
+            <subsection name="To remove a toolwindow">
+                Use the following :
+                <source>
+ToolWindowGroup group = toolWindowManager.getToolWindowGroup("group_name");
+ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
+group.removeToolWindow(debugTool);
+</source>
+                <p>
+                    Removes the occurrence in this group of the specified tool window.
+                </p>
+            </subsection>
+            <subsection name="To show or hide a group">
+                Use the following :
+                <source>
+ToolWindowGroup group = toolWindowManager.getToolWindowGroup("group_name");
+group.setVisible(true);
+</source>
+                <p>
+                    Invokes <code>setVisible(visible)</code> on all toolwindows contained in this group
+                    in proper sequence.
+                </p>
+            </subsection>
+            <subsection name="To add a ToolWindowGroupListener">
+                Use the following :
+                <source>
+ToolWindowGroup group = toolWindowManager.getToolWindowGroup("group_name");
+group.addToolWindowGroupListener(listener);
+</source>
+                <p>
+                    Registers <code>listener</code> so that it will receive events when
+                    the groups are made visibile or invisible, when a tool is added or removed.
+                    If listener <code>listener</code> is <code>null</code>,
+                    no exception is thrown and no action is performed.
+                </p>
+            </subsection>
+
+        </section>
+
+        <section name="Using ToolWindowGoup">
+            <subsection name="To Show or Hide">
+                Use the following :
+                <source>
+ToolWindow tool = toolWindowManager.getToolWindow(0);
+tool.setVisibile(true); // false to hide
+</source>
+                <p>
+                    The tool shows or hides the component in a way that depends on tool window type.
+                    <br/>
+                    There is an another way to show a tool. You can use the aggregate methedo
+                </p>
+                <source>
+ToolWindow tool = toolWindowManager.getToolWindow(0);
+tool.aggregate();
+</source>
+                <p>
+                    The method is used to set to the true value the visible property of the tool.
+                    The tool becomes visible in a special way. In fact, if there is another tool visible
+                    with the same anchor than these two tools will be aggregate to be visible both.
+                </p>
+            </subsection>
+            <subsection name="To Activate">
+                Use the following :
+                <source>
+ToolWindow tool = toolWindowManager.getToolWindow(0);
+tool.setActive(true); // false to deactivate
+</source>
+                <p>The tool grabs the focus from focus owner and becomes active.</p>
+            </subsection>
+            <subsection name="To Move">
+                Use the following :
+                <source>
+ToolWindow tool = toolWindowManager.getToolWindow(0);
+tool.setAnchor(ToolWindowAnchor.TOP);
+</source>
+                <p>The anchor specifies the position of the tool when it is anchored to the docking system.</p>
+            </subsection>
+            <subsection name="Add PropertyChangeListener">
+                Use the following :
+                <source>
+ToolWindow tool = toolWindowManager.getToolWindow(0);
+tool.setAnchor(ToolWindowAnchor.TOP);
+</source>
+                <p>
+                     Adds a PropertyChangeListener to the listener list. The listener is
+                     registered for all bound properties of this class, including the
+                     following:
+                     <ul>
+                         <li>this tool's index ("index")</li>
+                         <li>this tool's aailable status ("available")</li>
+                         <li>this tool's visible status ("visible")</li>
+                         <li>this tool's active status ("active")</li>
+                         <li>this tool's anchor ("anchor")</li>
+                         <li>this tool's autoHide ("autoHide")</li>
+                         <li>this tool's type ("type")</li>
+                         <li>this tool's icon ("icon")</li>
+                         <li>this tool's title ("title")</li>
+                     </ul>
+                </p>
+            </subsection>
+
+        </section>
     </body>
 </document>

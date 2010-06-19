@@ -8,109 +8,99 @@
     </properties>
 
     <body>
-        <section name="Introduction">
-            <div id="downloadbox">
-                <h5>Get MyDoggy 1.5.0 Now!!!</h5>
-                <span style="display: block; text-align: right; font-size: smaller">Released: February 28, 2009</span>
-                <p>
-                    <a href="download.html">MyDoggy 1.5.0</a>
-                    <small>(distro 5.0 Mb - core 775 Kb)</small>
-                </p>
-                <ul>
-                    <li>
-                        <a href="download.html#requirements">System Requirements</a>
-                    </li>
-                    <li>
-                        <a href="download.html#usage">MyDoggy Usage</a>
-                    </li>
-                    <li>
-                        <a href="./examples/mydoggyset.html">MyDoggySet</a>
-                        <small>
-                            <a href="./examples/jnlp/mydoggyset.jnlp">WebStart</a>,
-                            <a href="./examples/mydoggysetScreenshots.html">Screenshots</a>,
-                        </small>
-                    </li>
-                    <li>
-                        <img src="./images/new.png" alt=""/>
-                        <a href="tutorial/tutorial.html">Tutorial</a>
-                        <small>
-                            <a href="./examples/jnlp/tutorialset.jnlp">WebStart</a>
-                        </small>
-                    </li>
-                    <li>
-                        <img src="./images/new.png" alt=""/>
-                        <a href="changes-report.html">Changes Report</a>
-                    </li>
-                    <li>
-                        <a href="license.html">License (LGPL)</a>
-                    </li>
-                    <li>
-                        <img src="./images/new.png" alt=""/>
-                        <a href="contact.html">Contact. Chat with me.</a>
-                    </li>
+        <div id="downloadbox">
+            <h5>Get MyDoggy 1.5.0 Now!!!</h5>
+            <span style="display: block; text-align: right; font-size: smaller">Released: February 28, 2009</span>
+            <p>
+                <a href="download.html">MyDoggy 1.5.0</a>
+                <small>(distro 5.0 Mb - core 775 Kb)</small>
+            </p>
+            <ul>
+                <li>
+                    <a href="download.html#requirements">System Requirements</a>
+                </li>
+                <li>
+                    <a href="download.html#usage">MyDoggy Usage</a>
+                </li>
+                <li>
+                    <a href="./examples/mydoggyset.html">MyDoggySet</a>
+                    <small>
+                        <a href="./examples/jnlp/mydoggyset.jnlp">WebStart</a>,
+                        <a href="./examples/mydoggysetScreenshots.html">Screenshots</a>,
+                    </small>
+                </li>
+                <li>
+                    <img src="./images/new.png" alt=""/>
+                    <a href="tutorial/tutorial.html">Tutorial</a>
+                    <small>
+                        <a href="./examples/jnlp/tutorialset.jnlp">WebStart</a>
+                    </small>
+                </li>
+                <li>
+                    <img src="./images/new.png" alt=""/>
+                    <a href="changes-report.html">Changes Report</a>
+                </li>
+                <li>
+                    <a href="license.html">License (LGPL)</a>
+                </li>
+                <li>
+                    <img src="./images/new.png" alt=""/>
+                    <a href="contact.html">Contact. Chat with me.</a>
+                </li>
 
-                </ul>
+            </ul>
 
-                <div>
-                    <a href="http://sourceforge.net">
-                        <img style="border:1px solid black" src="http://sflogo.sourceforge.net/sflogo.php?group_id=178005&amp;type=1" width="88" height="31" alt="SourceForge.net Logo" />
-                    </a>
+            <div>
+                <a href="http://sourceforge.net">
+                    <img style="border:1px solid black" src="http://sflogo.sourceforge.net/sflogo.php?group_id=178005&amp;type=1" width="88" height="31" alt="SourceForge.net Logo" />
+                </a>
 
-          	        <a href="http://maven.apache.org/" title="Maven" >
-                        <img style="border:1px solid black" alt="Maven" src="./images/logos/maven-feather.png"/>
-                    </a>
+                  <a href="http://maven.apache.org/" title="Maven" >
+                    <img style="border:1px solid black" alt="Maven" src="./images/logos/maven-feather.png"/>
+                </a>
 
-                    <script type="text/javascript" src="http://www.ohloh.net/projects/6945/widgets/project_thin_badge"></script>
-                </div>
-
+                <script type="text/javascript" src="http://www.ohloh.net/projects/6945/widgets/project_thin_badge"></script>
             </div>
+        </div>
+
+        <section name="Introduction">
 
             <p>
-                <a href="./examples/mydoggyset.html">
-                    <img src="./images/mydoggy.png" alt="MyDoggy" border="0" hspace="18" align="left"/>
-                </a>
                 MyDoggy is a Java docking framework to be used in cross-platform Swing applications.
                 MyDoggy is an IntelliJ Idea like docking framework for managing secondary windows within the main
                 window.
                 MyDoggy allows to move,resize or extract those secondary windows.
                 Also, MyDoggy provides support for content management of the main window.
                 Like Eclipse, MyDoggy supports the concept of "prospective" using mydoggy groups.
-                <br/>
-                <br/>
-                <br/>
-                <br/>
             </p>
-
-            <subsection name="Modules">
-                <p>
-                    MyDoggy is composed by the following modules:
-                </p>
-                <ul>
-                    <li>
-                        <strong style="color:green">MyDoggy-Api</strong> :
-                        contains the application program interface used to manage every aspects of
-                        the framework.
-                    </li>
-                    <li>
-                        <strong style="color:green">MyDoggy-Plaf</strong> :
-                        contains the default implementation of the api.
-                    </li>
-                    <li>
-                        <strong style="color:green">MyDoggy-Res</strong> :
-                        contains all resources (icons and messages). Look
-                        <a href="./plaf/resourceManager.html">here</a>
-                        to know how to customize mydoggy in a deep way.
-                    </li>
-                    <li>
-                        <strong style="color:green">MyDoggy-Examples</strong> :
-                        contains some examples to see MyDoggy in action.
-                    </li>
-                </ul>
-
-                <p>
-                    In MyDoggy distribution each module correspond to a directory where you will find the sources of the module and other stuff.
-                </p>
-            </subsection>
+            <p>
+                MyDoggy is composed by the following modules:
+            </p>
+            <ul>
+                <li>
+                    <strong style="color:green">MyDoggy-Api</strong> :
+                    contains the application program interface used to manage every aspects of
+                    the framework.
+                </li>
+                <li>
+                    <strong style="color:green">MyDoggy-Plaf</strong> :
+                    contains the default implementation of the api.
+                </li>
+                <li>
+                    <strong style="color:green">MyDoggy-Res</strong> :
+                    contains all resources (icons and messages). Look
+                    <a href="./plaf/resourceManager.html">here</a>
+                    to know how to customize mydoggy in a deep way.
+                </li>
+                <li>
+                    <strong style="color:green">MyDoggy-Examples</strong> :
+                    contains some examples to see MyDoggy in action.
+                </li>
+            </ul>
+            <p>
+                In MyDoggy distribution each module correspond to a directory where you will find the sources of the module and other stuff.
+            </p>
+            
         </section>
     </body>
 </document>
