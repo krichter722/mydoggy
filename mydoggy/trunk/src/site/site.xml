@@ -28,16 +28,26 @@
         </menu>
 
         <menu name="Documentation">
-            <item name="ToolWindowManager" href="/api/toolwindowManager.html">
+            <item name="ToolWindowManager" href="/api/toolwindowManager.html" collapse="true">
+                <item name="Using Manager" href="/api/toolwindowManager.html#UsingToolWindowManager"/>
+                <item name="Using ManagerDescriptor" href="/api/toolwindowManager.html#UsingToolWindowManagerDescriptor"/>
             </item>
 
-            <item name="ToolWindow" href="/api/toolwindow.html">
+            <item name="ToolWindow" href="/api/toolwindow.html" collapse="true">
+                <item name="ToolWindowTab" href="/api/toolwindow.html#ToolWindowTab"/>
+                <item name="ToolWindowTypes" href="/api/toolwindow.html#ToolWindowTypes"/>
+                <item name="Using ToolWindow" href="/api/toolwindow.html#UsingToolWindow"/>
+                <item name="Using ToolWindowTab" href="/api/toolwindow.html#UsingToolWindowTab"/>
+                <item name="Using Docked Type" href="/api/toolwindow.html#UsingDocked"/>
+                <item name="Using Sliding Type" href="/api/toolwindow.html#UsingSliding"/>
+                <item name="Using Floating Type" href="/api/toolwindow.html#UsingFloating"/>
             </item>
 
             <item name="ToolWindowGroup" href="/api/toolwindowGroups.html">
             </item>
 
             <item name="ContentManager" href="/api/contentManager.html">
+                <item name="Content" href="/api/contentManager.html#Content"/>
             </item>
 
             <item name="ContentManagerUI" href="/api/contentManagerUI.html">
@@ -48,7 +58,6 @@
             <item name="TransparencyManager" href="/plaf/transparency.html"/>
 
             <item name="ResourceManager" href="/plaf/resourceManager.html">
-                <item name="Usage" href="/plaf/resourceManagerUsing.html"/>
             </item>
         </menu>
 

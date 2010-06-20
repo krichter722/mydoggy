@@ -38,6 +38,7 @@ contentManager.addContent("Tools"   // Content Key
             </table>
         </section>
 
+        <a name="Content"/>
         <section name="Content">
             <p>
                 A content is a wrapper of a component decorated with some properties like a title, an icon, etc.
@@ -57,7 +58,7 @@ Content content = contentManager.getContent("Tools");
         </section>
 
         <section name="Using the ContentManager">
-            <subsection name="To add a content">
+            <subsection name="Add a content">
                 Use the following :
                 <source>
 ContentManager contentManager = toolWindowManager.getContentManager();
@@ -74,7 +75,7 @@ Content tools = ContentcontentManager.addContent("Tools"   // Content Key
                 </p>
             </subsection>
 
-            <subsection name="To remove a content">
+            <subsection name="Remove a content">
                 Use the following :
                 <source>
 ContentManager contentManager = toolWindowManager.getContentManager();
@@ -85,7 +86,7 @@ contentManager.removeContent(tools);
                 </p>
             </subsection>
 
-            <subsection name="To get the selected content">
+            <subsection name="Get the selected content">
                 Use the following :
                 <source>
 ContentManager contentManager = toolWindowManager.getContentManager();
@@ -96,7 +97,7 @@ Content content = contentManager.getSelectedContent();
                 </p>
             </subsection>
 
-            <subsection name="To change the ContentManagerUI">
+            <subsection name="Change the ContentManagerUI">
                 Use the following :
                 <source>
 ContentManager contentManager = toolWindowManager.getContentManager();
@@ -107,7 +108,7 @@ contentManager.setContentManagerUI(contentManagerUI);</source>
                 </p>
             </subsection>
 
-            <subsection name="To enable/disable the ContentManager">
+            <subsection name="Enable/Disable the ContentManager">
                 Use the following :
                 <source>
 ContentManager contentManager = toolWindowManager.getContentManager();

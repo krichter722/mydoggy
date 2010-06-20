@@ -17,30 +17,28 @@
                         </td>
                         <td>
                             <p>
-                                Using the <code>TransparencyManager</code> interface in the package
-                                <code>org.noos.xing.mydoggy.plaf.ui.transparency</code>
-                                mydoggy can manage the transparency of windows.
+                                Using the <code>org.noos.xing.mydoggy.plaf.ui.transparency.TransparencyManager</code> interface
+                                MyDoggy can manage the transparency of any detached window.
                                 <br/>
-                                In fact, when a toolwindow (of type FLOATING of FLOATING_FREE) or a detached content losts
+                                Specifically, when a toolwindow (with FLOATING of FLOATING_FREE type) or a detached content losts
                                 the focus, it becomes transparent in a few milliseconds.
                                 <br/>
-                                There are many ways to obtain this useful (at least for me) effect. Following tow examples... 
                             </p>
                         </td>
                     </tr>
                 </tbody>
             </table>
-        </section>
 
-        <section name="Custom TransparencyManager">
-
-            <subsection name="JNA">
+            <subsection name="Use JNA">
                 <p>
                     JNA provides Java programs easy access to native shared libraries (e.g. DLLs on Windows) without
                     writing anything but Java code, no JNI or native code is required. This functionality is
                     comparable to Windows' Platform/Invoke and Python's ctypes. Access is dynamic at runtime without
-                    code generation. <br/>It's a great projects. You can found it at
+                    code generation.
+                    <br/>
+                    You can found it at
                     <a href="https://jna.dev.java.net/">https://jna.dev.java.net/</a><br/>
+
                     To use JNA for transparency purpose you can use the following class...
                 </p>
 
@@ -92,7 +90,7 @@ public class JNAWindowTransparencyManager implements TransparencyManager&lt;Wind
 }</source>
 
                 <p>
-                    Now to use that custom implementation use the following...
+                    To integrate the above manager in MyDoggy use the following.
                 </p>
                 <source xml:space="preserve">
 MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager(...);
@@ -100,7 +98,7 @@ myDoggyToolWindowManager.getResourceManager().setTransparencyManager(
         new JNAWindowTransparencyManager()
 );</source>
             </subsection>
-            
         </section>
+
     </body>
 </document>
