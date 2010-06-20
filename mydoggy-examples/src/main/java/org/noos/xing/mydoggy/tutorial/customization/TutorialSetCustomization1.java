@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.tutorial;
+package org.noos.xing.mydoggy.tutorial.customization;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.ToolWindow;
@@ -97,7 +97,7 @@ public class TutorialSetCustomization1 {
         UIManager.put(MyDoggyKeySpace.TWRA_FOREGROUND_UNAVAILABLE, Color.BLUE);
 
         // Modify the UI class
-        UIManager.put("ToolWindowRepresentativeAnchorUI", "org.noos.xing.mydoggy.tutorial.TutorialSetCustomization1$CustomizedToolWindowRepresentativeAnchorUI");
+        UIManager.put("ToolWindowRepresentativeAnchorUI", "org.noos.xing.mydoggy.tutorial.customization.TutorialSetCustomization1$CustomizedToolWindowRepresentativeAnchorUI");
     }
 
 

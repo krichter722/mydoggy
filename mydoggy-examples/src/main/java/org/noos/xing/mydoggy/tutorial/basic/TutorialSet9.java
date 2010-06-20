@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.tutorial;
+package org.noos.xing.mydoggy.tutorial.basic;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
@@ -10,9 +10,19 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class TutorialSet10 {
+public class TutorialSet9 {
     private JFrame frame;
     private ToolWindowManager toolWindowManager;
+
+
+    protected void run() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                setUp();
+                start();
+            }
+        });
+    }
 
     protected void setUp() {
         initComponents();
@@ -20,24 +30,15 @@ public class TutorialSet10 {
     }
 
     protected void start() {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                // Activate "Debug" Tool
-                ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
-                debugTool.setActive(true);
+        // Activate "Debug" Tool
+        ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
+        debugTool.setActive(true);
 
-                // Aggregate "Run" tool
-                ToolWindow runTool = toolWindowManager.getToolWindow("Run");
-                runTool.aggregate();
+        // Aggregate "Run" tool
+        ToolWindow runTool = toolWindowManager.getToolWindow("Run");
+        runTool.aggregate();
 
-                // Aggregate "Properties" tool
-                ToolWindow propertiesTool = toolWindowManager.getToolWindow("Properties");
-                propertiesTool.aggregate(AggregationPosition.LEFT);
-
-
-                frame.setVisible(true);
-            }
-        });
+        frame.setVisible(true);
     }
 
     protected void initComponents() {
@@ -78,21 +79,13 @@ public class TutorialSet10 {
                                              ToolWindowAnchor.LEFT);       // Anchor
 
         setupDebugTool();
+
         // Register another Tool.
         toolWindowManager.registerToolWindow("Run",                      // Id
                                              "Run Tool",                 // Title
                                              null,                       // Icon
                                              new JButton("Run Tool"),    // Component
                                              ToolWindowAnchor.LEFT);     // Anchor
-
-
-        // Register another Tool.
-        toolWindowManager.registerToolWindow("Properties",                      // Id
-                                             "Properties Tool",                 // Title
-                                             null,                              // Icon
-                                             new JButton("Properties Tool"),    // Component
-                                             ToolWindowAnchor.LEFT);            // Anchor
-
 
         // Made all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows())
@@ -175,9 +168,11 @@ public class TutorialSet10 {
     }
 
     protected void setupContentManagerUI() {
+
         ContentManager contentManager = toolWindowManager.getContentManager();
         MultiSplitContentManagerUI contentManagerUI = new MyDoggyMultiSplitContentManagerUI();
         contentManager.setContentManagerUI(contentManagerUI);
+
 
         contentManagerUI.setShowAlwaysTab(true);
         contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
@@ -205,13 +200,13 @@ public class TutorialSet10 {
 
         contentManager.addContent("Tree Key 3", "Tree Title 3", null, new JTree(), null,
                                  new MultiSplitConstraint(AggregationPosition.RIGHT));
+
     }
 
     public static void main(String[] args) {
-        TutorialSet10 test = new TutorialSet10();
+        TutorialSet9 test = new TutorialSet9();
         try {
-            test.setUp();
-            test.start();
+            test.run();
         } catch (Exception e) {
             e.printStackTrace();
         }

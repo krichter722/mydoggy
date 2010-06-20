@@ -136,7 +136,9 @@ public class ScenarioSet {
                             @Override
                             public void windowClosing(WindowEvent e) {
                                 scenarioWindow.removeWindowListener(this);
+
                                 frame.setState(Frame.NORMAL);
+                                frame.toFront();
                             }
                         });
                 }

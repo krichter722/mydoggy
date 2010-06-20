@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.tutorial;
+package org.noos.xing.mydoggy.tutorial.basic;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class TutorialSet4 {
+public class TutorialSet3 {
     private JFrame frame;
     private ToolWindowManager toolWindowManager;
 
@@ -78,15 +78,14 @@ public class TutorialSet4 {
         for (ToolWindow window : toolWindowManager.getToolWindows())
             window.setAvailable(true);
 
-        initContentManager();
-
         // Add myDoggyToolWindowManager to the frame. MyDoggyToolWindowManager is an extension of a JPanel
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
     }
 
-    
+
     protected void setupDebugTool() {
         ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
+        debugTool.setVisible(true);
 
         // RepresentativeAnchorDescriptor
         RepresentativeAnchorDescriptor representativeAnchorDescriptor = debugTool.getRepresentativeAnchorDescriptor();
@@ -96,6 +95,8 @@ public class TutorialSet4 {
 
         // DockedTypeDescriptor
         DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.DOCKED);
+        dockedTypeDescriptor.setAnimating(true);
+        dockedTypeDescriptor.setHideRepresentativeButtonOnVisible(true);
         dockedTypeDescriptor.setDockLength(300);
         dockedTypeDescriptor.setPopupMenuEnabled(true);
         JMenu toolsMenu = dockedTypeDescriptor.getToolsMenu();
@@ -111,7 +112,7 @@ public class TutorialSet4 {
             }
         });
         dockedTypeDescriptor.setAnimating(true);
-       
+
         // SlidingTypeDescriptor
         SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
         slidingTypeDescriptor.setEnabled(false);
@@ -130,24 +131,11 @@ public class TutorialSet4 {
         floatingTypeDescriptor.setTransparentRatio(0.2f);
         floatingTypeDescriptor.setTransparentDelay(1000);
         floatingTypeDescriptor.setAnimating(true);
-
     }
 
 
-    protected void initContentManager() {
-         JTree treeContent = new JTree();
-
-        ContentManager contentManager = toolWindowManager.getContentManager();
-        Content content = contentManager.addContent("Tree Key",
-                                                    "Tree Title",
-                                                    null,           // An icon
-                                                    treeContent);
-        content.setToolTipText("Tree tip");
-     }
-
-
     public static void main(String[] args) {
-        TutorialSet4 test = new TutorialSet4();
+        TutorialSet3 test = new TutorialSet3();
         try {
             test.run();
         } catch (Exception e) {

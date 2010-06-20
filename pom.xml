@@ -49,6 +49,7 @@
         <module>mydoggy-api</module>
         <module>mydoggy-res</module>
         <module>mydoggy-plaf</module>
+        <module>mydoggy-itest</module>
         <module>mydoggy-examples</module>
     </modules>
 
