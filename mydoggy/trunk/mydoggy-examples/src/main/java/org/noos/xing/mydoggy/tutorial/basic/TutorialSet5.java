@@ -1,16 +1,15 @@
-package org.noos.xing.mydoggy.tutorial;
+package org.noos.xing.mydoggy.tutorial.basic;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class TutorialSet12 {
+public class TutorialSet5 {
     private JFrame frame;
     private ToolWindowManager toolWindowManager;
 
@@ -33,14 +32,6 @@ public class TutorialSet12 {
         // Activate "Debug" Tool
         ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
         debugTool.setActive(true);
-
-        // Aggregate "Run" tool
-        ToolWindow runTool = toolWindowManager.getToolWindow("Run");
-        runTool.aggregate(AggregationPosition.TOP);
-
-        // Aggregate "Properties" tool
-        ToolWindow propertiesTool = toolWindowManager.getToolWindow("Properties");
-        propertiesTool.aggregate(AggregationPosition.RIGHT);
 
         frame.setVisible(true);
     }
@@ -83,19 +74,6 @@ public class TutorialSet12 {
                                              ToolWindowAnchor.LEFT);       // Anchor
 
         setupDebugTool();
-        // Register another Tool.
-        toolWindowManager.registerToolWindow("Run",                      // Id
-                                             "Run Tool",                 // Title
-                                             null,                       // Icon
-                                             new JButton("Run Tool"),    // Component
-                                             ToolWindowAnchor.LEFT);     // Anchor
-
-        // Register another Tool.
-        toolWindowManager.registerToolWindow("Properties",                      // Id
-                                             "Properties Tool",                 // Title
-                                             null,                              // Icon
-                                             new JButton("Properties Tool"),    // Component
-                                             ToolWindowAnchor.LEFT);            // Anchor
 
         // Made all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows())
@@ -153,16 +131,8 @@ public class TutorialSet12 {
         floatingTypeDescriptor.setTransparentRatio(0.2f);
         floatingTypeDescriptor.setTransparentDelay(1000);
         floatingTypeDescriptor.setAnimating(true);
-
-        // Setup Tabs
-        initTabs();
     }
 
-    protected void initTabs() {
-        ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
-        ToolWindowTab profilingTab = debugTool.addToolWindowTab("Profiling", new JButton("Profiling"));
-        profilingTab.setCloseable(true);
-    }
 
     protected void initContentManager() {
          JTree treeContent = new JTree();
@@ -175,16 +145,12 @@ public class TutorialSet12 {
         content.setToolTipText("Tree tip");
 
         setupContentManagerUI();
+     }
 
-        contentManager.setEnabled(false);
-
-    }
 
     protected void setupContentManagerUI() {
-        ContentManager contentManager = toolWindowManager.getContentManager();
-        MultiSplitContentManagerUI contentManagerUI = new MyDoggyMultiSplitContentManagerUI();
-        contentManager.setContentManagerUI(contentManagerUI);
-
+        // By default a TabbedContentManagerUI is installed.
+        TabbedContentManagerUI contentManagerUI = (TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
         contentManagerUI.setShowAlwaysTab(true);
         contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
         contentManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
@@ -197,24 +163,21 @@ public class TutorialSet12 {
             }
         });
 
-        TabbedContentUI contentUI = contentManagerUI.getContentUI(toolWindowManager.getContentManager().getContent(0));
+        TabbedContentUI contentUI = (TabbedContentUI) toolWindowManager.getContentManager().getContent(0).getContentUI();
+        // Or you can use :
+        // TabbedContentUI contentUI = contentManagerUI.getContentUI(toolWindowManager.getContentManager().getContent(0));
+        // without the need of the cast
 
         contentUI.setCloseable(true);
         contentUI.setDetachable(true);
         contentUI.setTransparentMode(true);
         contentUI.setTransparentRatio(0.7f);
         contentUI.setTransparentDelay(1000);
-
-        // Now Register two other contents...
-        contentManager.addContent("Tree Key 2", "Tree Title 2", null, new JTree(), null,
-                                 new MultiSplitConstraint(contentManager.getContent(0), 0));
-
-        contentManager.addContent("Tree Key 3", "Tree Title 3", null, new JTree(), null,
-                                 new MultiSplitConstraint(AggregationPosition.RIGHT));
     }
 
+
     public static void main(String[] args) {
-        TutorialSet12 test = new TutorialSet12();
+        TutorialSet5 test = new TutorialSet5();
         try {
             test.run();
         } catch (Exception e) {

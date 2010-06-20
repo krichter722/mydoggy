@@ -1,20 +1,16 @@
-package org.noos.xing.mydoggy.tutorial;
+package org.noos.xing.mydoggy.tutorial.basic;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 
-public class TutorialSet6 {
+public class TutorialSet12 {
     private JFrame frame;
     private ToolWindowManager toolWindowManager;
 
@@ -37,6 +33,14 @@ public class TutorialSet6 {
         // Activate "Debug" Tool
         ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
         debugTool.setActive(true);
+
+        // Aggregate "Run" tool
+        ToolWindow runTool = toolWindowManager.getToolWindow("Run");
+        runTool.aggregate(AggregationPosition.TOP);
+
+        // Aggregate "Properties" tool
+        ToolWindow propertiesTool = toolWindowManager.getToolWindow("Properties");
+        propertiesTool.aggregate(AggregationPosition.RIGHT);
 
         frame.setVisible(true);
     }
@@ -64,32 +68,6 @@ public class TutorialSet6 {
 
         // Set a layout manager. I love TableLayout. It's powerful.
         this.frame.getContentPane().setLayout(new TableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
-
-        // Store (on close) and load (on start) the toolwindow manager workspace.
-        this.frame.addWindowListener(new WindowAdapter() {
-            public void windowOpened(WindowEvent e) {
-                try {
-                    File workspaceFile = new File("workspace.xml");
-                    if (workspaceFile.exists()) {
-                        FileInputStream inputStream = new FileInputStream("workspace.xml");
-                        toolWindowManager.getPersistenceDelegate().apply(inputStream);
-                        inputStream.close();
-                    }
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-            }
-
-            public void windowClosing(WindowEvent e) {
-                try {
-                    FileOutputStream output = new FileOutputStream("workspace.xml");
-                    toolWindowManager.getPersistenceDelegate().save(output);
-                    output.close();
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-            }
-        });
     }
 
     protected void initToolWindowManager() {
@@ -105,6 +83,19 @@ public class TutorialSet6 {
                                              ToolWindowAnchor.LEFT);       // Anchor
 
         setupDebugTool();
+        // Register another Tool.
+        toolWindowManager.registerToolWindow("Run",                      // Id
+                                             "Run Tool",                 // Title
+                                             null,                       // Icon
+                                             new JButton("Run Tool"),    // Component
+                                             ToolWindowAnchor.LEFT);     // Anchor
+
+        // Register another Tool.
+        toolWindowManager.registerToolWindow("Properties",                      // Id
+                                             "Properties Tool",                 // Title
+                                             null,                              // Icon
+                                             new JButton("Properties Tool"),    // Component
+                                             ToolWindowAnchor.LEFT);            // Anchor
 
         // Made all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows())
@@ -162,6 +153,15 @@ public class TutorialSet6 {
         floatingTypeDescriptor.setTransparentRatio(0.2f);
         floatingTypeDescriptor.setTransparentDelay(1000);
         floatingTypeDescriptor.setAnimating(true);
+
+        // Setup Tabs
+        initTabs();
+    }
+
+    protected void initTabs() {
+        ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
+        ToolWindowTab profilingTab = debugTool.addToolWindowTab("Profiling", new JButton("Profiling"));
+        profilingTab.setCloseable(true);
     }
 
     protected void initContentManager() {
@@ -175,11 +175,16 @@ public class TutorialSet6 {
         content.setToolTipText("Tree tip");
 
         setupContentManagerUI();
+
+        contentManager.setEnabled(false);
+
     }
 
     protected void setupContentManagerUI() {
-        // By default the content manager ui is a TabbedContentManagerUI<TabbedContentUI> instance. 
-        TabbedContentManagerUI<TabbedContentUI> contentManagerUI = (TabbedContentManagerUI<TabbedContentUI>) toolWindowManager.getContentManager().getContentManagerUI();
+        ContentManager contentManager = toolWindowManager.getContentManager();
+        MultiSplitContentManagerUI contentManagerUI = new MyDoggyMultiSplitContentManagerUI();
+        contentManager.setContentManagerUI(contentManagerUI);
+
         contentManagerUI.setShowAlwaysTab(true);
         contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
         contentManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
@@ -199,10 +204,17 @@ public class TutorialSet6 {
         contentUI.setTransparentMode(true);
         contentUI.setTransparentRatio(0.7f);
         contentUI.setTransparentDelay(1000);
+
+        // Now Register two other contents...
+        contentManager.addContent("Tree Key 2", "Tree Title 2", null, new JTree(), null,
+                                 new MultiSplitConstraint(contentManager.getContent(0), 0));
+
+        contentManager.addContent("Tree Key 3", "Tree Title 3", null, new JTree(), null,
+                                 new MultiSplitConstraint(AggregationPosition.RIGHT));
     }
 
     public static void main(String[] args) {
-        TutorialSet6 test = new TutorialSet6();
+        TutorialSet12 test = new TutorialSet12();
         try {
             test.run();
         } catch (Exception e) {

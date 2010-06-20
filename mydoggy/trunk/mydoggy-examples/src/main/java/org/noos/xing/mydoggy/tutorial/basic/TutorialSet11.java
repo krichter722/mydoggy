@@ -1,15 +1,16 @@
-package org.noos.xing.mydoggy.tutorial;
+package org.noos.xing.mydoggy.tutorial.basic;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class TutorialSet8 {
+public class TutorialSet11 {
     private JFrame frame;
     private ToolWindowManager toolWindowManager;
 
@@ -33,10 +34,16 @@ public class TutorialSet8 {
         ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
         debugTool.setActive(true);
 
-
         // Aggregate "Run" tool
         ToolWindow runTool = toolWindowManager.getToolWindow("Run");
-        runTool.aggregate();
+        runTool.setFlashing(true);
+
+        // Aggregate "Properties" tool
+        ToolWindow propertiesTool = toolWindowManager.getToolWindow("Properties");
+        propertiesTool.aggregate(AggregationPosition.LEFT);
+
+        propertiesTool.setFlashing(true);
+
 
         frame.setVisible(true);
     }
@@ -79,13 +86,20 @@ public class TutorialSet8 {
                                              ToolWindowAnchor.LEFT);       // Anchor
 
         setupDebugTool();
-
         // Register another Tool.
         toolWindowManager.registerToolWindow("Run",                      // Id
                                              "Run Tool",                 // Title
                                              null,                       // Icon
                                              new JButton("Run Tool"),    // Component
                                              ToolWindowAnchor.LEFT);     // Anchor
+
+
+        // Register another Tool.
+        toolWindowManager.registerToolWindow("Properties",                      // Id
+                                             "Properties Tool",                 // Title
+                                             null,                              // Icon
+                                             new JButton("Properties Tool"),    // Component
+                                             ToolWindowAnchor.LEFT);            // Anchor
 
 
         // Made all tools available
@@ -169,8 +183,10 @@ public class TutorialSet8 {
     }
 
     protected void setupContentManagerUI() {
-        // By default the content manager ui is a TabbedContentManagerUI<TabbedContentUI> instance.
-        TabbedContentManagerUI<TabbedContentUI> contentManagerUI = (TabbedContentManagerUI<TabbedContentUI>) toolWindowManager.getContentManager().getContentManagerUI();
+        ContentManager contentManager = toolWindowManager.getContentManager();
+        MultiSplitContentManagerUI contentManagerUI = new MyDoggyMultiSplitContentManagerUI();
+        contentManager.setContentManagerUI(contentManagerUI);
+
         contentManagerUI.setShowAlwaysTab(true);
         contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
         contentManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
@@ -190,10 +206,17 @@ public class TutorialSet8 {
         contentUI.setTransparentMode(true);
         contentUI.setTransparentRatio(0.7f);
         contentUI.setTransparentDelay(1000);
+
+        // Now Register two other contents...
+        contentManager.addContent("Tree Key 2", "Tree Title 2", null, new JTree(), null,
+                                 new MultiSplitConstraint(contentManager.getContent(0), 0));
+
+        contentManager.addContent("Tree Key 3", "Tree Title 3", null, new JTree(), null,
+                                 new MultiSplitConstraint(AggregationPosition.RIGHT));
     }
 
     public static void main(String[] args) {
-        TutorialSet8 test = new TutorialSet8();
+        TutorialSet11 test = new TutorialSet11();
         try {
             test.run();
         } catch (Exception e) {

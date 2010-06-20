@@ -1,15 +1,14 @@
-package org.noos.xing.mydoggy.tutorial;
+package org.noos.xing.mydoggy.tutorial.basic;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
-import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class TutorialSet7 {
+public class TutorialSet4 {
     private JFrame frame;
     private ToolWindowManager toolWindowManager;
 
@@ -85,7 +84,7 @@ public class TutorialSet7 {
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
     }
 
-
+    
     protected void setupDebugTool() {
         ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
 
@@ -112,7 +111,7 @@ public class TutorialSet7 {
             }
         });
         dockedTypeDescriptor.setAnimating(true);
-
+       
         // SlidingTypeDescriptor
         SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
         slidingTypeDescriptor.setEnabled(false);
@@ -132,14 +131,6 @@ public class TutorialSet7 {
         floatingTypeDescriptor.setTransparentDelay(1000);
         floatingTypeDescriptor.setAnimating(true);
 
-        // Setup Tabs
-        initTabs();
-    }
-
-    protected void initTabs() {
-        ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
-        ToolWindowTab profilingTab = debugTool.addToolWindowTab("Profiling", new JButton("Profiling"));
-        profilingTab.setCloseable(true);
     }
 
 
@@ -149,39 +140,14 @@ public class TutorialSet7 {
         ContentManager contentManager = toolWindowManager.getContentManager();
         Content content = contentManager.addContent("Tree Key",
                                                     "Tree Title",
-                                                    null,      // An icon
+                                                    null,           // An icon
                                                     treeContent);
         content.setToolTipText("Tree tip");
+     }
 
-        setupContentManagerUI();
-    }
-
-    protected void setupContentManagerUI() {
-        // By default the content manager ui is a TabbedContentManagerUI<TabbedContentUI> instance.
-        TabbedContentManagerUI<TabbedContentUI> contentManagerUI = (TabbedContentManagerUI<TabbedContentUI>) toolWindowManager.getContentManager().getContentManagerUI();
-        contentManagerUI.setShowAlwaysTab(true);
-        contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
-        contentManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
-            public boolean contentUIRemoving(ContentManagerUIEvent event) {
-                return JOptionPane.showConfirmDialog(frame, "Are you sure?") == JOptionPane.OK_OPTION;
-            }
-
-            public void contentUIDetached(ContentManagerUIEvent event) {
-                JOptionPane.showMessageDialog(frame, "Hello World!!!");
-            }
-        });
-
-        TabbedContentUI contentUI = contentManagerUI.getContentUI(toolWindowManager.getContentManager().getContent(0));
-
-        contentUI.setCloseable(true);
-        contentUI.setDetachable(true);
-        contentUI.setTransparentMode(true);
-        contentUI.setTransparentRatio(0.7f);
-        contentUI.setTransparentDelay(1000);
-    }
 
     public static void main(String[] args) {
-        TutorialSet7 test = new TutorialSet7();
+        TutorialSet4 test = new TutorialSet4();
         try {
             test.run();
         } catch (Exception e) {

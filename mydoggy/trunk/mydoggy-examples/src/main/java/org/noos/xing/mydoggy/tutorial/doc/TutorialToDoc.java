@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.tutorial;
+package org.noos.xing.mydoggy.tutorial.doc;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
