@@ -10,7 +10,7 @@
     <body>
         <div id="downloadbox">
             <h5>Get MyDoggy 1.5.0 Now!!!</h5>
-            <span style="display: block; text-align: right; font-size: smaller">Released: February 28, 2009</span>
+            <span style="display: block; text-align: right; font-size: smaller">Released: July, 2010</span>
             <p>
                 <a href="download.html">MyDoggy 1.5.0</a>
                 <small>(distro 5.0 Mb - core 775 Kb)</small>
@@ -25,26 +25,22 @@
                 <li>
                     <a href="./examples/mydoggyset.html">MyDoggySet</a>
                     <small>
-                        <a href="./examples/jnlp/mydoggyset.jnlp">WebStart</a>,
-                        <a href="./examples/mydoggysetScreenshots.html">Screenshots</a>,
+                        <a href="./examples/jnlp/mydoggyset.jnlp">(WebStart)</a>,
                     </small>
                 </li>
                 <li>
-                    <img src="./images/new.png" alt=""/>
                     <a href="tutorial/tutorial.html">Tutorial</a>
                     <small>
-                        <a href="./examples/jnlp/tutorialset.jnlp">WebStart</a>
+                        <a href="./examples/jnlp/tutorialset.jnlp">(WebStart)</a>
                     </small>
                 </li>
                 <li>
-                    <img src="./images/new.png" alt=""/>
                     <a href="changes-report.html">Changes Report</a>
                 </li>
                 <li>
                     <a href="license.html">License (LGPL)</a>
                 </li>
                 <li>
-                    <img src="./images/new.png" alt=""/>
                     <a href="contact.html">Contact. Chat with me.</a>
                 </li>
 

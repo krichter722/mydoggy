@@ -320,7 +320,7 @@
 </div>
 <div id="leftColumn">
     <div id="navcolumn">
-       #publishDate( "navigation-top" $decoration.publishDate $decoration.version )
+        #publishDate( "navigation-top" $decoration.publishDate $decoration.version )
        #mainMenu( $decoration.body.menus )
        #poweredByLogo( $decoration.poweredBy )
        #publishDate( "navigation-bottom" $decoration.publishDate $decoration.version )
@@ -337,9 +337,8 @@
 <div id="footer">
     <div class="license">
         <a rel="license" href="http://creativecommons.org/licenses/by-nc/2.5/">
-            <img
-                    alt="Creative Commons License" src="http://creativecommons.org/images/public/somerights20.gif"
-                    id="license_image"/>
+            <img alt="Creative Commons License" src="http://creativecommons.org/images/public/somerights20.gif"
+                 id="license_image"/>
         </a>
         Except where otherwise noted, content on this site is
         licensed under a

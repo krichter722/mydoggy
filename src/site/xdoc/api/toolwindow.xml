@@ -33,7 +33,7 @@ ToolWindow toolwindow = toolWindowManager.
                       )
                             </source>
                             <p>
-                                When you register a toolwindow you obtain an instance of ToolWindow interface.
+                                When you register a toolwindow you obtain an instance of the ToolWindow interface.
                                 This interface is the main entry point to modify toolwindow's properties.
                                 Moreover there are methods to make the tool available, visible and active.
                             </p>
@@ -41,40 +41,48 @@ ToolWindow toolwindow = toolWindowManager.
                     </tr>
                 </tbody>
             </table>
-            <a name="ToolWindowTab"/>
-            <subsection name="ToolWindowTab">
-                <p>
-                    Every toolwindow can be considered as a special JTabbedPane and so it can contain more than one component.
-                    Every tab is described by a title, an icon and a component. A tab can be selected or not.
-                    <br/>
-                    The above image shows two tabs for the debut toolswindow. The first is declared when the tool
-                    is registered, for the second use the following:
-                </p>
-                <source>ToolWindowTab profilingTab = toolwindow.addToolWindowTab(
-                    "Profiling",    // Tab Title
-                    profilingCmp,   // Tab Component
-)
-                </source>
-                <p>
-                    Also, the user can add a toolwindow to another tool as a tab. Use the following
-                </p>
-                <source>ToolWindowTab profilingTab = toolwindow.addToolWindowTab(profilingToolWindow)</source>
-            </subsection>
+
         </section>
 
-        <section name="ToolWindow Types">
+        <a name="ToolWindowTab"/>
+        <section name="ToolWindowTab">
             <p>
-                A tool window can be shown in several ways. A
-                <code>ToolWindowType</code>
-                is used to choose between different
-                viewing modes. Now we describe the types provided.
+                Every toolwindow can be considered as a special JTabbedPane and so it can contain more than one component.
+                Every tab is described by a title, an icon and a component. A tab can be selected or not.
+                <br/>
+                The above image shows two tabs for the same toolwindow. The first one is declared when the tool
+                is registered, for the second one use the following:
+            </p>
+            <source>ToolWindowTab profilingTab = toolwindow.addToolWindowTab(
+                "Profiling",    // Tab Title
+                profilingCmp,   // Tab Component
+)
+            </source>
+            <p>
+                Also, the user can add a toolwindow to another tool as a tab. Use the following
+            </p>
+            <source>ToolWindowTab profilingTab = toolwindow.addToolWindowTab(profilingToolWindow)</source>
+        </section>
+
+        <a name="ToolWindowTypes"/>
+        <section name="ToolWindow Types and Type Descriptors">
+            <p>
+                A toolwindow can be shown in several ways
+                depending on the toolwindow type set. 
+                Furthermore, using the <code>ToolWindowTypeDescriptor</code> interfaces it is possible to modify
+                the behaviours of a specific toolwindow type.
+
+                Let's describe the types provided by mydoggy.
+            </p>
+
+            <p>
             </p>
 
             <table>
                 <tbody>
                     <tr>
                         <td>
-                            <img src="../images/api/types/docked.png" alt="docked" border="0" hspace="18"/>
+                            <img src="../images/api/types/docked.png" alt="docked" border="0" hspace="18" align="middle"/>
                         </td>
                         <td>
                             <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
@@ -89,6 +97,18 @@ ToolWindow toolwindow = toolWindowManager.
                             type use the following:
                             <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
 toolWindow.setType(ToolWindowType.DOCKED);</source>
+
+                            <a href="./apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">
+                                <code>DockedTypeDescriptor</code>
+                            </a>
+                            This interface is used to modify the behaviours of <code>DOCKED</code> type.
+
+                            <br/>To get a <code>DockedTypeDescriptor</code> instance use the following:
+                            <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
+    DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+    // or
+    DockedTypeDescriptor dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
+                            </source>
                         </td>
                     </tr>
                     <tr>
@@ -105,6 +125,14 @@ toolWindow.setType(ToolWindowType.DOCKED);</source>
                             <br/>To set ToolWindowType.SLIDING type use the following:
                             <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
 toolWindow.setType(ToolWindowType.SLIDING);</source>
+                            <a href="./apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">
+                                <code>SlidingTypeDescriptor</code>
+                            </a>
+                            This interface is used to modify the behaviours of <code>SLIDING</code> type.
+
+                            <br/>To get a <code>SlidingTypeDescriptor</code> instance use the following:
+                            <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
+    SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);</source>
                         </td>
                     </tr>
                     <tr>
@@ -126,6 +154,14 @@ toolWindow.setType(ToolWindowType.SLIDING);</source>
                             <br/>To set <code>ToolWindowType.FLOATING</code> type use the following:
                             <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
 toolWindow.setType(ToolWindowType.FLOATING);</source>
+                            <a href="./apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">
+                                <code>FloatingTypeDescriptor</code>
+                            </a>
+                            This interface is used to modify the behaviours of <code>FLOATING</code> and <code>FLOATING_FREE</code> type.
+
+                            <br/>To get a <code>FloatingTypeDescriptor</code> instance use the following:
+                            <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
+    FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);</source>
                         </td>
                     </tr>
                     <tr>
@@ -159,6 +195,14 @@ toolWindow.setType(ToolWindowType.FLOATING_FREE);</source>
                             <br/>To set <code>ToolWindowType.FLOATING_LIVE</code> type use the following:
                             <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
 toolWindow.setType(ToolWindowType.FLOATING_LIVE);</source>
+                            <a href="./apidocs/org/noos/xing/mydoggy/FloatingLiveTypeDescriptor.html">
+                                <code>FloatingLiveTypeDescriptor</code>
+                            </a>
+                            This interface is used to modify the behaviours of <code>FLOATING_LIVE</code> type.
+
+                            <br/>To get a <code>FloatingLiveTypeDescriptor</code> instance use the following:
+                            <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
+        FloatingLiveTypeDescriptor typeDescriptor = (FloatingLiveTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);</source>
                         </td>
                     </tr>
 
@@ -166,63 +210,9 @@ toolWindow.setType(ToolWindowType.FLOATING_LIVE);</source>
             </table>
         </section>
 
-        <section name="ToolWindow Type Descriptors">
-            <p>
-                A <code>ToolWindowTypeDescriptor</code> is an interface to modify the behaviours of a specific tool window type.
-                Go to the
-                <a href="./toolwindowUsing.html">Using</a>
-                page to see how to use these interfaces.
-            </p>
-
-            <ul>
-                    <li>
-                        <a href="./apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">
-                            <code>DockedTypeDescriptor</code>
-                        </a>
-                        This interface is used to modify the behaviours of <code>DOCKED</code> type.
-
-                        <br/>To get a <code>DockedTypeDescriptor</code> instance use the following:
-                        <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
-DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-// or
-DockedTypeDescriptor dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
-                        </source>
-                    </li>
-                    <li>
-                        <a href="./apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">
-                            <code>SlidingTypeDescriptor</code>
-                        </a>
-                        This interface is used to modify the behaviours of <code>SLIDING</code> type.
-
-                        <br/>To get a <code>SlidingTypeDescriptor</code> instance use the following:
-                        <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
-SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);</source>
-                    </li>
-                    <li>
-                        <a href="./apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">
-                            <code>FloatingTypeDescriptor</code>
-                        </a>
-                        This interface is used to modify the behaviours of <code>FLOATING</code> and <code>FLOATING_FREE</code> type.
-
-                        <br/>To get a <code>FloatingTypeDescriptor</code> instance use the following:
-                        <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
-FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);</source>
-                    </li>
-                <li>
-                    <a href="./apidocs/org/noos/xing/mydoggy/FloatingLiveTypeDescriptor.html">
-                        <code>FloatingLiveTypeDescriptor</code>
-                    </a>
-                    This interface is used to modify the behaviours of <code>FLOATING_LIVE</code> type.
-
-                    <br/>To get a <code>FloatingLiveTypeDescriptor</code> instance use the following:
-                    <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
-FloatingLiveTypeDescriptor typeDescriptor = (FloatingLiveTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);</source>
-                </li>
-                </ul>
-        </section>
-
+        <a name="UsingToolWindow"/>
         <section name="Using ToolWindow">
-            <subsection name="To Show or Hide">
+            <subsection name="Show or Hide">
                 Use the following :
                 <source>
 ToolWindow tool = toolWindowManager.getToolWindow(0);
@@ -244,7 +234,7 @@ tool.aggregate();
                     with the same anchor than these two tools will be aggregate to be visible both.
                 </p>
             </subsection>
-            <subsection name="To Activate">
+            <subsection name="Activate">
                 Use the following :
                 <source>
 ToolWindow tool = toolWindowManager.getToolWindow(0);
@@ -252,7 +242,7 @@ tool.setActive(true); // false to deactivate
 </source>
                 <p>The tool grabs the focus from focus owner and becomes active.</p>
             </subsection>
-            <subsection name="To Move">
+            <subsection name="Move">
                 Use the following :
                 <source>
 ToolWindow tool = toolWindowManager.getToolWindow(0);
@@ -301,9 +291,9 @@ tool.setAnchor(ToolWindowAnchor.TOP);
 
         </section>
 
-        <a name="ToolWindowTab"/>
+        <a name="UsingToolWindowTab"/>
         <section name="Using ToolWindowTab">
-            <subsection name="To add">
+            <subsection name="Add">
                 Use the following :
                 <source>
 ToolWindow tool = toolWindowManager.getToolWindow(0);
@@ -315,6 +305,7 @@ tool.addToolWindowTab("Title", component);
             </subsection>
         </section>
 
+        <a name="UsingDocked"/>
         <section name="Using DockedTypeDescriptor">
             <subsection name="Enable/Disable PopupMenu">
                 Use the following :
@@ -376,7 +367,7 @@ desc.setPreviewEnabled(true); // false to disable
             </subsection>
         </section>
 
-        <a name="Slidying"/>
+        <a name="UsingSlidying"/>
         <section name="Using SlidingTypeDescriptor">
             <subsection name="Enable Transparent Mode">
                 Use the following :
@@ -406,7 +397,7 @@ desc.setEnabled(true); // false to disable
             </subsection>
         </section>
 
-        <a name="Floating"/>
+        <a name="UsingFloating"/>
         <section name="Using FloatingTypeDescriptor">
             <subsection name="Enable Transparent Mode">
                 Use the following :
