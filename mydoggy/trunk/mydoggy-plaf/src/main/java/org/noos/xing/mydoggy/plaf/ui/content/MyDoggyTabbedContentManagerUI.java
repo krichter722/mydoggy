@@ -41,7 +41,7 @@ import java.util.Map;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<TabbedContentUI> implements TabbedContentManagerUI,
-                                                                                                       PlafContentManagerUI {
+        PlafContentManagerUI {
     protected TabbedContentPane tabbedContentPane;
     protected boolean showAlwaysTab;
 
@@ -241,11 +241,16 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                 content.setSelected(true);
             } else if (content.isDetached()) {
                 // If the content is detached request the focus for owner window
-                Window window = SwingUtilities.windowForComponent(content.getComponent());
-                window.toFront();
+                final Window window = SwingUtilities.windowForComponent(content.getComponent());
+                // Inovke later to avoid flickering!!
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        window.toFront();
+                        Component focusRequester = SwingUtil.findFocusable(window);
+                        SwingUtil.requestFocus(focusRequester != null ? focusRequester : window);
+                    }
+                });
 
-                Component focusRequester = SwingUtil.findFocusable(window);
-                SwingUtil.requestFocus(focusRequester != null ? focusRequester : window);
             } else {
                 // Choose the owner tab or check if the content is the main content
                 int index = tabbedContentPane.indexOfContent(content);
@@ -291,7 +296,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
             previousLastSelected.setSelected(true);
             return;
         }
-                
+
         // Choose next content to be selected...
         if (tabbedContentPane.getTabCount() == 0) {
             toolWindowManager.resetMainContent();
@@ -404,7 +409,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
 
             toolWindowManager.addRemoveNotifyListener(
                     removeNotifyDragListener = new RemoveNotifyDragListener(tabbedContentPane,
-                                                                            new TabbedContentManagerDragListener())
+                            new TabbedContentManagerDragListener())
             );
         }
 
@@ -502,11 +507,11 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
     protected void setupActions() {
         // Setup actions
         SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, tabbedContentPane,
-                                      KeyStroke.getKeyStroke(39, InputEvent.ALT_MASK),
-                                      "nextContent", new NextContentAction(toolWindowManager));
+                KeyStroke.getKeyStroke(39, InputEvent.ALT_MASK),
+                "nextContent", new NextContentAction(toolWindowManager));
         SwingUtil.addKeyActionMapping(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, tabbedContentPane,
-                                      KeyStroke.getKeyStroke(37, InputEvent.ALT_MASK),
-                                      "previousContent", new PreviousContentAction(toolWindowManager));
+                KeyStroke.getKeyStroke(37, InputEvent.ALT_MASK),
+                "previousContent", new PreviousContentAction(toolWindowManager));
     }
 
 
@@ -677,8 +682,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                         valudAdj = true;
                         try {
                             toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
-                                                                             resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
-                                                                                                       PersistenceDelegate.MergePolicy.UNION));
+                                    resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
+                                            PersistenceDelegate.MergePolicy.UNION));
                         } finally {
                             valudAdj = false;
                         }
@@ -698,8 +703,8 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                         valudAdj = true;
                         try {
                             toolWindowManager.getPersistenceDelegate().merge(new ByteArrayInputStream(tmpWorkspace.toByteArray()),
-                                                                             resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
-                                                                                                       PersistenceDelegate.MergePolicy.UNION));
+                                    resourceManager.getObject(PersistenceDelegate.MergePolicy.class,
+                                            PersistenceDelegate.MergePolicy.UNION));
                             tmpWorkspace = null;
                         } finally {
                             valudAdj = false;
@@ -756,9 +761,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                                                 removeContent(content);
 
                                                 contentWindow.addDockable(content,
-                                                                          content.getComponent(),
-                                                                          null,
-                                                                          constraint.getOnPosition());
+                                                        content.getComponent(),
+                                                        null,
+                                                        constraint.getOnPosition());
                                                 break;
                                             }
                                         }
@@ -774,9 +779,9 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                                                 removeContent(content);
 
                                                 contentWindow.addDockable(content,
-                                                                          content.getComponent(),
-                                                                          constraint.getOnContent(),
-                                                                          constraint.getOnPosition());
+                                                        content.getComponent(),
+                                                        constraint.getOnContent(),
+                                                        constraint.getOnPosition());
                                                 break;
                                             }
                                         }
@@ -786,7 +791,7 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                             ContentUI contentUI = getContentUI(content);
 
                             Rectangle inBounds = toolWindowManager.getBoundsToScreen(content.getComponent().getBounds(),
-                                                                                     content.getComponent().getParent());
+                                    content.getComponent().getParent());
 
                             // remove content
                             removeContent(content);
@@ -961,22 +966,22 @@ public class MyDoggyTabbedContentManagerUI extends MyDoggyContentManagerUI<Tabbe
                 Content content = tabbedContentPane.getContentAt(index);
                 if (content.getDockableDelegator() != null) {
                     dge.startDrag(DragSource.DefaultMoveDrop,
-                                  new MyDoggyTransferable(manager, MyDoggyTransferable.CONTENT_ID_DF, content.getId()),
-                                  this);
+                            new MyDoggyTransferable(manager, MyDoggyTransferable.CONTENT_ID_DF, content.getId()),
+                            this);
 
                     // Setup ghostImage
 
                     if (SwingUtil.getBoolean("drag.icon.useDefault", false)) {
                         setGhostImage(dge.getDragOrigin(),
-                                      SwingUtil.getImage(MyDoggyKeySpace.DRAG));
+                                SwingUtil.getImage(MyDoggyKeySpace.DRAG));
                     } else {
                         Component component = tabbedContentPane.getComponentAt(index);
                         BufferedImage ghostImage = new BufferedImage(component.getWidth(),
-                                                                     component.getHeight(), BufferedImage.TYPE_INT_RGB);
+                                component.getHeight(), BufferedImage.TYPE_INT_RGB);
                         component.print(ghostImage.getGraphics());
                         ghostImage = GraphicsUtil.scale(ghostImage,
-                                                        component.getWidth() / 4,
-                                                        component.getHeight() / 4);
+                                component.getWidth() / 4,
+                                component.getHeight() / 4);
 
                         setGhostImage(dge.getDragOrigin(), ghostImage);
                     }
