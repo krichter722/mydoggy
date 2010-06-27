@@ -414,8 +414,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         return dividerLocation;
     }
 
-    protected void setSplitDividerLocation(int divederLocation) {
-        if (divederLocation == -1) {
+    protected void setSplitDividerLocation(int dividerLocation) {
+        if (dividerLocation == -1) {
             switch (anchor) {
                 case LEFT:
                     splitPane.setDividerLocation(splitPane.getWidth());
@@ -434,13 +434,13 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
             switch (anchor) {
                 case LEFT:
                 case TOP:
-                    splitPane.setDividerLocation(divederLocation);
+                    splitPane.setDividerLocation(dividerLocation);
                     break;
                 case RIGHT:
-                    splitPane.setDividerLocation(Math.abs(splitPane.getWidth() - divederLocation));
+                    splitPane.setDividerLocation(Math.abs(splitPane.getWidth() - dividerLocation));
                     break;
                 case BOTTOM:
-                    splitPane.setDividerLocation(Math.abs(splitPane.getHeight() - divederLocation));
+                    splitPane.setDividerLocation(Math.abs(splitPane.getHeight() - dividerLocation));
                     break;
             }
     }
@@ -985,7 +985,8 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
                         break;
                     }
                 }
-                updateToolDividerLocation(dividerLocation);
+                // TODO: is this necessary?
+//                updateToolDividerLocation(dividerLocation);
             }
 
 //            if (getSplitDividerLocation() != 0)
