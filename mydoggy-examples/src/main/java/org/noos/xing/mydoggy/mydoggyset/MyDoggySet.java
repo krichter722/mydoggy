@@ -35,10 +35,9 @@ public class MyDoggySet {
     protected JFrame frame;
 
     protected ToolWindowManager toolWindowManager;
-
     protected ViewContext myDoggySetContext;
     protected DockableDescriptor memoryMonitorDescriptor;
-
+                                      
 
     public void setUp() {
         initComponents();
