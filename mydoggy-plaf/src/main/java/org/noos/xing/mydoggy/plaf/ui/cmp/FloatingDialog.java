@@ -242,7 +242,7 @@ public class FloatingDialog extends JDialog implements FloatingWindow,
     }
 
     public int getDockableCount() {
-        return multiSplitDockableContainer.getDockableCount();
+        return (multiSplitDockableContainer != null) ? multiSplitDockableContainer.getDockableCount() : 0;
     }
 
     public ToolWindow getDockable() {
@@ -278,7 +278,7 @@ public class FloatingDialog extends JDialog implements FloatingWindow,
         toolWindowManager = null;
 
         dockableDropPanel = null;
-        multiSplitDockableContainer = null;
+//        multiSplitDockableContainer = null;   It's not necessary to do this..
 
         // Transparency support
         if (transparencyTimer != null) {
