@@ -206,6 +206,9 @@ public class ToolWindowBarDropTarget extends DropTarget {
         public boolean checkEvent(DropTargetDragEvent dtde) {
             Transferable transferable = dtde.getTransferable();
             try {
+                if (transferable == null)
+                    return false;
+                
                 if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_MANAGER)) {
                     if (transferable.getTransferData(MyDoggyTransferable.TOOL_WINDOW_MANAGER).equals(System.identityHashCode(manager))) {
                         if (transferable.isDataFlavorSupported(MyDoggyTransferable.TOOL_WINDOW_ID_DF) ||
@@ -214,7 +217,7 @@ public class ToolWindowBarDropTarget extends DropTarget {
                             return true;
                     }
                 }
-            } catch (Exception ignoreIt) {
+            } catch (Throwable ignoreIt) {
             }
             return false;
         }

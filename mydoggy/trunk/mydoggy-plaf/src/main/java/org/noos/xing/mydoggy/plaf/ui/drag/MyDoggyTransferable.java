@@ -10,6 +10,7 @@ import java.util.*;
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
 public class MyDoggyTransferable implements Transferable, ClipboardOwner {
+    // TODO: verify this data flavor!
     public static final DataFlavor TOOL_WINDOW_MANAGER = new MyDoggyDataFlavor(Integer.class, "toolWindowManager");
     public static final DataFlavor TOOL_WINDOW_ID_DF = new MyDoggyDataFlavor(String.class, "toolWindowId");
     public static final DataFlavor TOOL_WINDOW_TAB_ID_DF = new MyDoggyDataFlavor(String.class, "toolWindowTabId");

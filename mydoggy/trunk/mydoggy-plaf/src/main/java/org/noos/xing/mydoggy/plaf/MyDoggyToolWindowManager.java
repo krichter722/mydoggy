@@ -15,7 +15,6 @@ import org.noos.xing.mydoggy.plaf.persistence.xml.XMLPersistenceDelegate;
 import org.noos.xing.mydoggy.plaf.support.CleanablePropertyChangeSupport;
 import org.noos.xing.mydoggy.plaf.support.ResolvableHashtable;
 import org.noos.xing.mydoggy.plaf.support.UserPropertyChangeEvent;
-import org.noos.xing.mydoggy.plaf.ui.CustomDockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 import org.noos.xing.mydoggy.plaf.ui.ResourceManager;
 import org.noos.xing.mydoggy.plaf.ui.ToolWindowDescriptor;
@@ -507,11 +506,6 @@ public class MyDoggyToolWindowManager extends JPanel implements ToolWindowManage
             if (toolWindow.getType() == ToolWindowType.FLOATING && toolWindow.isVisible()) {
                 toolWindow.setVisible(false);
             }
-        }
-
-        for (DockableDescriptor dockableDescriptor : dockableDescriptorMap.values()) {
-            if (dockableDescriptor instanceof CustomDockableDescriptor)
-                dockableDescriptor.setAvailable(false);
         }
 
         for (Content content : getContentManager().getContents()) {

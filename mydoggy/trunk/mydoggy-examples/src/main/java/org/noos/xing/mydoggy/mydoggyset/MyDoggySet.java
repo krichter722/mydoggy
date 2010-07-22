@@ -164,6 +164,7 @@ public class MyDoggySet {
             toolWindowManager.registerToolWindow("Tool " + i, "Title " + i, null, new JButton("Hello World " + i), ToolWindowAnchor.values()[random.nextInt(4)]);
         }
 
+
         toolWindowManager.registerToolWindow("Navigation Panel", "Navigation Panel", null, new NavigationPanel(), ToolWindowAnchor.values()[random.nextInt(4)]);
         toolWindowManager.registerToolWindow("Date Picker", "Date Picker", null, new DatePicker(), ToolWindowAnchor.values()[random.nextInt(4)]);
         toolWindowManager.registerToolWindow("Monitor Panel", "Monitor Panel", null, new MonitorPanel(new RuntimeMemoryMonitorSource()).start(), ToolWindowAnchor.values()[random.nextInt(4)]);
@@ -173,6 +174,8 @@ public class MyDoggySet {
         for (ToolWindow window : toolWindowManager.getToolWindows()) {
             window.setAvailable(true);
         }
+
+
     }
 
     protected void customize() {
@@ -225,7 +228,6 @@ public class MyDoggySet {
             super(manager, anchor);
         }
 
-
         public void updateRepresentativeAnchor() {
         }
 
@@ -240,15 +242,11 @@ public class MyDoggySet {
             return false;
         }
 
-
         public class MemoryMonitorPanel extends JPanel {
             int sleepTime;
-            Thread memoryThread;
-            boolean running;
 
             public MemoryMonitorPanel(ToolWindowAnchor anchor) {
                 sleepTime = 1000;
-                running = true;
 
                 final JProgressBar memoryUsage = new JProgressBar();
                 memoryUsage.setStringPainted(true);
@@ -263,9 +261,9 @@ public class MyDoggySet {
                     }
                 });
 
-                memoryThread = new Thread(new Runnable() {
+                Thread memoryThread = new Thread(new Runnable() {
                     public void run() {
-                        while (running) {
+                        while (true) {
                             String grabbed = StringUtil.bytes2MBytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
                             String total = StringUtil.bytes2MBytes(Runtime.getRuntime().totalMemory());
 
