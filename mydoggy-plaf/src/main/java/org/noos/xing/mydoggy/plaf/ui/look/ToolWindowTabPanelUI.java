@@ -178,6 +178,7 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
         descriptor.removePopupUpdater(popupUpdater);
 
         // toolwindow
+        descriptor.getCleaner().removeCleaner((Cleaner) toolWindowListener);
         toolWindow.removeToolWindowListener(toolWindowListener);
 
         // viewport
@@ -321,13 +322,15 @@ public class ToolWindowTabPanelUI extends BasicPanelUI implements Cleaner {
         public TabPanelToolWindowListener() {
             this.minimizedTabs = new HashMap<ToolWindowTab, Component>();
 
-            descriptor.getCleaner().addBefore(toolWindowTabPanel,
-                                              this);
+            descriptor.getCleaner().addBefore(toolWindowTabPanel, this);
         }
 
 
         public void cleanup() {
             descriptor.getToolWindow().removeToolWindowListener(this);
+
+            // Remove this cleaner
+            descriptor.getCleaner().removeCleaner(this);
         }
 
 
