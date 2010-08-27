@@ -39,8 +39,9 @@ public class AddContentAction implements ActionListener, ViewContextChangeListen
 
     public void actionPerformed(ActionEvent e) {
         ContentManager contentManager = toolWindowManager.getContentManager();
-        if (contentManager.getContent(contentId) == null) {
-            Content content = contentManager.addContent(contentId,
+        Content content = contentManager.getContent(contentId);
+        if (content == null) {
+            content = contentManager.addContent(contentId,
                                                         title,
                                                         icon,
                                                         component,
@@ -49,7 +50,8 @@ public class AddContentAction implements ActionListener, ViewContextChangeListen
             if (mnemonic != -1)
                 content.setMnemonic(mnemonic);
             content.setSelected(true);
-        }
+        } else
+            content.setSelected(true);
     }
 
 }
