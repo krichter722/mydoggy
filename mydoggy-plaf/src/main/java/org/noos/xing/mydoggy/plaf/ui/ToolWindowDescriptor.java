@@ -881,7 +881,7 @@ public class ToolWindowDescriptor implements PropertyChangeListener,
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            if (!toolWindow.isVisible() || internalFocusValueAdjusting || externalFocusValueAdjusting || fullExternalFocusValueAdjusting)
+            if (toolWindow == null || !toolWindow.isVisible() || internalFocusValueAdjusting || externalFocusValueAdjusting || fullExternalFocusValueAdjusting)
                 return;
 
 //            System.out.println(toolWindow.getId() + " internalFocusValueAdjusting = " + internalFocusValueAdjusting);

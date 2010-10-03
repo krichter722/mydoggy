@@ -3,34 +3,61 @@
         "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
     <properties>
-        <title>MyDoggy - My Java Docking Framework (API) : ToolWindow</title>
+        <title>MyDoggy - My Java Docking Framework : ToolWindow</title>
         <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
     </properties>
 
     <body>
-        <section name="ToolWindow">
+        <section name="Table of Contents">
+            <ol type="1">
+                <li>
+                    <a href="#ToolWindow">What is a ToolWindow?
+                    </a>
+                </li>
+                <li>
+                    <a href="#ToolWindowTab">What is a ToolWindowTab?
+                    </a>
+                </li>
+                <li>
+                    <a href="#ToolWindowTypes">What is a ToolWindowType?
+                    </a>
+                </li>
+                <li>
+                    <a href="#ToolWindowGroup">What is a ToolWindowGroup?
+                    </a>
+                </li>
+                <li>
+                    <a href="#ToolWindowAction">What is a ToolWindowAction?
+                    </a>
+                </li>
+            </ol>
+
+        </section>
+
+        <a name="ToolWindow"/>
+        <section name="What is a ToolWindow?">
             <p>
-                A Tool Window is a secondary window used to provide one or more particular functionalities.
+                A Tool Window is a secondary window used to organize the user interface.
             </p>
 
             <table>
                 <tbody>
                     <tr>
                         <td>
-                            <img src="../images/toolwindow.png" alt="ToolWindow" border="0" />
+                            <img src="../images/toolwindow.png" alt="ToolWindow" border="0"/>
                         </td>
                         <td>
                             <p align="center">
                                 To register a tool window use the following:
                             </p>
-                            <source>ToolWindowManager toolWindowManager = new <a href="./../mydoggy-plaf/index.html">...</a>;
-ToolWindow toolwindow = toolWindowManager.
-    registerToolWindow("Debug",      // Tool Window identifier
-                       "Debugging",  // Tool Window Title
-                       icon,         // Tool Window Icon
-                       component,    // Tool Window Component
-                       ToolWindowAnchor.LEFT  // Tool Window Anchor
-                      )
+                            <source>ToolWindowManager toolWindowManager = new<a href="./../mydoggy-plaf/index.html">...</a>;
+ToolWindow toolwindow = toolWindowManager.registerToolWindow(
+    "Debug",        // Tool Window identifier
+    "Debugging",    // Tool Window Title
+    icon,           // Tool Window Icon
+    component,      // Tool Window Component
+    ToolWindowAnchor.LEFT // Tool Window Anchor
+)
                             </source>
                             <p>
                                 When you register a toolwindow you obtain an instance of the ToolWindow interface.
@@ -45,18 +72,19 @@ ToolWindow toolwindow = toolWindowManager.
         </section>
 
         <a name="ToolWindowTab"/>
-        <section name="ToolWindowTab">
+        <section name="What is a ToolWindowTab?">
             <p>
-                Every toolwindow can be considered as a special JTabbedPane and so it can contain more than one component.
+                Every toolwindow can be considered as a special JTabbedPane and so it can contain more than one
+                component.
                 Every tab is described by a title, an icon and a component. A tab can be selected or not.
                 <br/>
                 The above image shows two tabs for the same toolwindow. The first one is declared when the tool
                 is registered, for the second one use the following:
             </p>
             <source>ToolWindowTab profilingTab = toolwindow.addToolWindowTab(
-                "Profiling",    // Tab Title
-                profilingCmp,   // Tab Component
-)
+                "Profiling", // Tab Title
+                profilingCmp, // Tab Component
+                )
             </source>
             <p>
                 Also, the user can add a toolwindow to another tool as a tab. Use the following
@@ -65,11 +93,13 @@ ToolWindow toolwindow = toolWindowManager.
         </section>
 
         <a name="ToolWindowTypes"/>
-        <section name="ToolWindow Types and Type Descriptors">
+        <section name="What is a ToolWindowType?">
             <p>
                 A toolwindow can be shown in several ways
-                depending on the toolwindow type set. 
-                Furthermore, using the <code>ToolWindowTypeDescriptor</code> interfaces it is possible to modify
+                depending on the toolwindow type set.
+                Furthermore, using the
+                <code>ToolWindowTypeDescriptor</code>
+                interfaces it is possible to modify
                 the behaviours of a specific toolwindow type.
 
                 Let's describe the types provided by mydoggy.
@@ -78,378 +108,194 @@ ToolWindow toolwindow = toolWindowManager.
             <p>
             </p>
 
+            <subsection name="Docked">
+                <img src="../images/api/types/docked.png" alt="docked" border="0" hspace="18" align="left"/>
+
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
+                    <code>ToolWindowType.DOCKED</code>
+                </a>
+                <p>
+                    When DOCKED type is used, the toolwindow shares frame space and fixes to a docking
+                    area along one of the tool window bars (the one containing the corresponding representative
+                    button).
+                    <br/>To set
+                    <code>ToolWindowType.DOCKED</code>
+                    type use the following:
+                </p>
+                <source>toolWindow.setType(ToolWindowType.DOCKED);</source>
+                <p>
+                    To get a
+                    <a href="./apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">
+                        <code>DockedTypeDescriptor</code>
+                    </a>
+                    instance use the following:
+                </p>
+                <source>DockedTypeDescriptor descriptor =
+    toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);</source>
+            </subsection>
+
+            <subsection name="Sliding">
+                <img src="../images/api/types/sliding.png" alt="docked" border="0" hspace="18" align="left"/>
+
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
+                    <code>ToolWindowType.SLIDING</code>
+                </a>
+                <p>
+                    When SLIDING type is used, the tool window overlaps the main frame and/or other tool
+                    windows.
+                    When it loses focus, the tool window hides itself.
+                    <br/>To set
+                    <code>ToolWindowType.SLIDING</code>
+                    type use the following:
+                </p>
+                <source>toolWindow.setType(ToolWindowType.SLIDING);</source>
+                <p>
+                    To get a
+                    <a href="./apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">
+                        <code>SlidingTypeDescriptor</code>
+                    </a>
+                    instance use the following:
+                </p>
+                <source>SlidingTypeDescriptor descriptor =
+    toolWindow.getTypeDescriptor(SlidingTypeDescriptor.class);</source>
+            </subsection>
+
+            <subsection name="Floating">
+                <img src="../images/api/types/floating.png" alt="docked" border="0" hspace="18" align="left"/>
+
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
+                    <code>ToolWindowType.FLOATING</code>
+                </a>
+                <p>
+                This type enables a tool window to be detached from the main window frame.
+                When Floating type is used, the tool window detaches to the position where it was last
+                floated
+                (or screen center or location used in toolwindow's
+                <a href="./apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">
+                    <code>FloatingTypeDescriptor</code>
+                </a>
+                , if never before floated)
+
+                <br/>To set
+                <code>ToolWindowType.FLOATING</code>
+                type use the following:
+                </p>
+                <source>toolWindow.setType(ToolWindowType.FLOATING);</source>
+                <p>
+                    To get a
+                    <a href="./apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">
+                        <code>FloatingTypeDescriptor</code>
+                    </a>
+                    instance use the following:
+                </p>
+                <source>
+FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor)
+    toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);
+                </source>
+            </subsection>
+
+            <subsection name="Floating Free">
+                <img src="../images/api/types/floatingFree.png" alt="docked" border="0" hspace="18" align="left"/>
+
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
+                    <code>ToolWindowType.FLOATING_FREE</code>
+                </a>
+                - This type differs from
+                <code>FLOATING</code>
+                type for the absence of the representative button
+                on the tool window bar.
+
+                <br/>To set
+                <code>ToolWindowType.FLOATING_FREE</code>
+                type use the following:
+                <source>toolWindow.setType(ToolWindowType.FLOATING_FREE);</source>
+
+                <p>
+                </p>
+            </subsection>
+
+            <subsection name="Flaoting Live">
+                <img src="../images/api/types/floatingLive.png" alt="docked" border="0" hspace="18" align="left"/>
+
+                <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
+                    <code>ToolWindowType.FLOATING_LIVE</code>
+                </a>
+                - This type enables a tool to be floating in the frame rather than having
+                floating windows "out of the frame".
+
+                <br/>To set
+                <code>ToolWindowType.FLOATING_LIVE</code>
+                type use the following:
+                <source>toolWindow.setType(ToolWindowType.FLOATING_LIVE);</source>
+                <a href="./apidocs/org/noos/xing/mydoggy/FloatingLiveTypeDescriptor.html">
+                    <code>FloatingLiveTypeDescriptor</code>
+                </a>
+                - This interface is used to modify the behaviours of
+                <code>FLOATING_LIVE</code>
+                type.
+
+                <br/>To get a
+                <code>FloatingLiveTypeDescriptor</code>
+                instance use the following:
+                <source>
+FloatingLiveTypeDescriptor typeDescriptor = (FloatingLiveTypeDescriptor)
+toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
+                </source>
+            </subsection>
+
+        </section>
+
+        <a name="ToolWindowGroup"/>
+        <section name="What is a ToolWindowGroup">
+            <p>
+                The idea is to provide the same mechanism of the prospectives from eclipse ide for toolwindows.
+                The typical usage is to retrieve a group from the tool window manager and to add any toolwindows
+                one wants.
+                After that we can show or hide all tools registered in that group.
+            </p>
+
             <table>
                 <tbody>
                     <tr>
                         <td>
-                            <img src="../images/api/types/docked.png" alt="docked" border="0" hspace="18" align="middle"/>
+                            <img src="../images/api/toolWindowGroup_1.png" alt="ToolWindowGroup" border="0" hspace="18"/>
                         </td>
                         <td>
-                            <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
-                                <code>ToolWindowType.DOCKED</code>
-                            </a>
-                            - When DOCKED type is used, the tool window shares frame space and fixes to a docking
-                            area along one of the tool window bars (the one containing the corresponding representative
-                            button).
-
-                            <br/>To set
-                            <code>ToolWindowType.DOCKED</code>
-                            type use the following:
-                            <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
-toolWindow.setType(ToolWindowType.DOCKED);</source>
-
-                            <a href="./apidocs/org/noos/xing/mydoggy/DockedTypeDescriptor.html">
-                                <code>DockedTypeDescriptor</code>
-                            </a>
-                            This interface is used to modify the behaviours of <code>DOCKED</code> type.
-
-                            <br/>To get a <code>DockedTypeDescriptor</code> instance use the following:
-                            <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
-    DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-    // or
-    DockedTypeDescriptor dockedTypeDescriptor = toolWindow.getTypeDescriptor(DockedTypeDescriptor.class);
-                            </source>
+                            <p>
+                                To obtain an instance of <code>ToolWindowGroup</code> interface use the following:
+                            </p>
+                            <source>ToolWindowManager toolWindowManager = new <a href="./../mydoggy-plaf/index.html">...</a>;
+ToolWindowGroup group = toolWindowManager
+             .getToolWindowGroup(
+                 "main"  // ToolWindowGroup name
+              );</source>
+                            <p>
+                                If the manager contains no mapping for name passed to the
+                                <code>getToolWindowGroup</code>
+                                method then
+                                the manager create a new instance of ToolWindowGroup and associate the group created
+                                with the specified name in the manager.
+                                <br/>
+                                After that, you can populate the group.
+                            </p>
+                            <source>mainGroup.addToolWindow(
+             toolWindowManager.getToolWindow(0)
+          );</source>
+                            <p>
+                                To show or hide a group use the following:
+                            </p>
+                            <source>mainGroup.setVisible(
+             true   // true to show, false to hide
+          );</source>
                         </td>
                     </tr>
-                    <tr>
-                        <td>
-                            <img src="../images/api/types/sliding.png" alt="sliding" border="0" hspace="18"/>
-                        </td>
-                        <td>
-                            <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
-                                <code>ToolWindowType.SLIDING</code>
-                            </a>
-                            - When SLIDING type is used, the tool window overlaps the main frame and/or other tool windows.
-                            When it loses focus, the tool window hides itself.
-
-                            <br/>To set ToolWindowType.SLIDING type use the following:
-                            <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
-toolWindow.setType(ToolWindowType.SLIDING);</source>
-                            <a href="./apidocs/org/noos/xing/mydoggy/SlidingTypeDescriptor.html">
-                                <code>SlidingTypeDescriptor</code>
-                            </a>
-                            This interface is used to modify the behaviours of <code>SLIDING</code> type.
-
-                            <br/>To get a <code>SlidingTypeDescriptor</code> instance use the following:
-                            <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
-    SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.SLIDING);</source>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <img src="../images/api/types/floating.png" alt="floating" border="0" hspace="18"/>
-                        </td>
-                        <td>
-                            <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
-                                <code>ToolWindowType.FLOATING</code>
-                            </a>
-                            - This type enables a tool window to be detached from the main window frame.
-                            When Floating type is used, the tool window detaches to the position where it was last floated
-                            (or screen center or location used in toolwindow's
-                            <a href="./apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">
-                                <code>FloatingTypeDescriptor</code>
-                            </a>
-                            , if never before floated)
-
-                            <br/>To set <code>ToolWindowType.FLOATING</code> type use the following:
-                            <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
-toolWindow.setType(ToolWindowType.FLOATING);</source>
-                            <a href="./apidocs/org/noos/xing/mydoggy/FloatingTypeDescriptor.html">
-                                <code>FloatingTypeDescriptor</code>
-                            </a>
-                            This interface is used to modify the behaviours of <code>FLOATING</code> and <code>FLOATING_FREE</code> type.
-
-                            <br/>To get a <code>FloatingTypeDescriptor</code> instance use the following:
-                            <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
-    FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING);</source>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <img src="../images/api/types/floatingFree.png" alt="floating free" border="0" hspace="18"/>
-                        </td>
-                        <td>
-                            <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
-                                <code>ToolWindowType.FLOATING_FREE</code>
-                            </a>
-                            - This type differs from <code>FLOATING</code> type for the absence of the representative button
-                            on the tool window bar.
-
-                            <br/>To set <code>ToolWindowType.FLOATING_FREE</code> type use the following:
-                            <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
-toolWindow.setType(ToolWindowType.FLOATING_FREE);</source>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <img src="../images/api/types/floatingLive.png" alt="floating live" border="0" hspace="18"/>
-                        </td>
-                        <td>
-                            <a name="floatingLive"/>
-                            <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
-                                <code>ToolWindowType.FLOATING_LIVE</code>
-                            </a>
-                            - This type enables a tool to be floating in the frame rather than having
-                            floating windows "out of the frame".
-
-                            <br/>To set <code>ToolWindowType.FLOATING_LIVE</code> type use the following:
-                            <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
-toolWindow.setType(ToolWindowType.FLOATING_LIVE);</source>
-                            <a href="./apidocs/org/noos/xing/mydoggy/FloatingLiveTypeDescriptor.html">
-                                <code>FloatingLiveTypeDescriptor</code>
-                            </a>
-                            This interface is used to modify the behaviours of <code>FLOATING_LIVE</code> type.
-
-                            <br/>To get a <code>FloatingLiveTypeDescriptor</code> instance use the following:
-                            <source>ToolWindow toolWindow = toolWindowManager.getToolWindow("Debug");
-        FloatingLiveTypeDescriptor typeDescriptor = (FloatingLiveTypeDescriptor) toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);</source>
-                        </td>
-                    </tr>
-
                 </tbody>
             </table>
         </section>
 
-        <a name="UsingToolWindow"/>
-        <section name="Using ToolWindow">
-            <subsection name="Show or Hide">
-                Use the following :
-                <source>
-ToolWindow tool = toolWindowManager.getToolWindow(0);
-tool.setVisibile(true); // false to hide
-</source>
-                <p>
-                    The tool shows or hides the component in a way that depends on tool window type.
-                    <br/>
-                    There is an another way to show a tool. You can use the aggregate methedo
-                </p>
-                <a name="aggregate"/>
-                <source>
-ToolWindow tool = toolWindowManager.getToolWindow(0);
-tool.aggregate();
-</source>
-                <p>
-                    The method is used to set to the true value the visible property of the tool.
-                    The tool becomes visible in a special way. In fact, if there is another tool visible
-                    with the same anchor than these two tools will be aggregate to be visible both.
-                </p>
-            </subsection>
-            <subsection name="Activate">
-                Use the following :
-                <source>
-ToolWindow tool = toolWindowManager.getToolWindow(0);
-tool.setActive(true); // false to deactivate
-</source>
-                <p>The tool grabs the focus from focus owner and becomes active.</p>
-            </subsection>
-            <subsection name="Move">
-                Use the following :
-                <source>
-ToolWindow tool = toolWindowManager.getToolWindow(0);
-tool.setAnchor(ToolWindowAnchor.TOP);
-</source>
-                <p>The anchor specifies the position of the tool when it is anchored to the docking system.</p>
-            </subsection>
-            <a name="Flasing"/>
-            <subsection name="Flashing">
-                Use the following :
-                <source>
-ToolWindow tool = toolWindowManager.getToolWindow(0);
-tool.setFlashing(true); // false to disable
-</source>
-                <p>
-                    Sets the flashing mode. If the flashing mode is enabled then the toolwindow representative button
-                    will be flashing until the tool will be made visible. If the tool is visible but not active then
-                    the toolwindow title bar will be flashing until the tool will be made visible.
-                    <br/>
-                    You can use <code>setFlashing(int)</code> to enable flashing for a specific duration.
-                </p>
-            </subsection>
-            <subsection name="Add PropertyChangeListener">
-                Use the following :
-                <source>
-ToolWindow tool = toolWindowManager.getToolWindow(0);
-tool.setAnchor(ToolWindowAnchor.TOP);
-</source>
-                <p>
-                     Adds a PropertyChangeListener to the listener list. The listener is
-                     registered for all bound properties of this class, including the
-                     following:
-                     <ul>
-                         <li>this tool's index ("index")</li>
-                         <li>this tool's aailable status ("available")</li>
-                         <li>this tool's visible status ("visible")</li>
-                         <li>this tool's active status ("active")</li>
-                         <li>this tool's anchor ("anchor")</li>
-                         <li>this tool's autoHide ("autoHide")</li>
-                         <li>this tool's type ("type")</li>
-                         <li>this tool's icon ("icon")</li>
-                         <li>this tool's title ("title")</li>
-                     </ul>
-                </p>
-            </subsection>
+        <a name="ToolWindowAction"/>
+        <section name="What is a ToolWindowAction?">
 
         </section>
-
-        <a name="UsingToolWindowTab"/>
-        <section name="Using ToolWindowTab">
-            <subsection name="Add">
-                Use the following :
-                <source>
-ToolWindow tool = toolWindowManager.getToolWindow(0);
-tool.addToolWindowTab("Title", component);
-</source>
-                <p>
-                    Adds a <code>component</code> represented by a <code>title</code> and no icon.
-                </p>
-            </subsection>
-        </section>
-
-        <a name="UsingDocked"/>
-        <section name="Using DockedTypeDescriptor">
-            <subsection name="Enable/Disable PopupMenu">
-                Use the following :
-                <source>
-DockedTypeDescriptor desc = (DockedTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.DOCKED);
-desc.setPopupMenuEnabled(true); // false to denie.
-</source>
-                <p>
-                    So you can Specifies whether the popup menu of the representative anchor button of the tool should be enabled.
-                </p>
-            </subsection>
-            <subsection name="Tools Menu">
-                Use the following to retrieve the tools menu:
-                <source>
-DockedTypeDescriptor desc = (DockedTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.DOCKED);
-JMenu menu = desc.getToolsMenu();
-menu.addJMenuItem(new JMenuItem("Hello World!!!");
-</source>
-                <p>
-                    The user can add specific menu items to the popup menu of the representative anchor button of the tool using
-                    the result of this method invocation.
-                </p>
-            </subsection>
-            <subsection name="Dock Panel Length">
-                Use the following:
-                <source>
-DockedTypeDescriptor desc = (DockedTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.DOCKED);
-desc.setDockLength(150);
-</source>
-                <p>
-                    Sets the width or heigth, based on anchor of tool window, of the dock panel.
-                    This value is used by DOCKED and SLIDING tool window type.
-                </p>
-            </subsection>
-            <subsection name="ToolWindowActionHandler">
-                Use the following:
-                <source>
-DockedTypeDescriptor desc = (DockedTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.DOCKED);
-desc.setToolWindowActionHandler(new ToolWindowActionHandler(){...});
-</source>
-                <p>
-                </p>
-            </subsection>
-
-            <a name="PreviewMode"/>
-            <subsection name="Enable Preview Mode">
-                Use the following :
-                <source>
-DockedTypeDescriptor desc = (DockedTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.DOCKED);
-desc.setPreviewEnabled(true); // false to disable
-</source>
-                <p>
-                    Sets the preview mode. If the preview mode is enabled then when the mouse waits
-                    on the toolwindow representative button after a delay time the preview will become visible.
-                    <br/>
-                    You can use <code>setPreviewTransparentRatio</code> and <code>setPreviewDelay</code> methods
-                    to set transparency paramenters and delay.
-                </p>
-            </subsection>
-        </section>
-
-        <a name="UsingSlidying"/>
-        <section name="Using SlidingTypeDescriptor">
-            <subsection name="Enable Transparent Mode">
-                Use the following :
-                <source>
-SlidingTypeDescriptor desc = (SlidingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
-desc.setTransparentMode(true); // false to disable
-</source>
-                <p>
-                    Sets the transparent mode. If the transparent mode is enabled then when the toolwindow's content
-                    losts the focus it becomes transparent. This facility is os-independent.
-                    <br/>
-                    You can use <code>setTransparentRatio</code> and <code>setTransparentDelay</code> methods
-                    to set transparency paramenters and delay.
-                </p>
-            </subsection>
-            <subsection name="Enable/Disable">
-                Use the following :
-                <source>
-SlidingTypeDescriptor desc = (SlidingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
-desc.setEnabled(true); // false to disable
-</source>
-                <p>
-                    Enables or disables this mode, depending on the value of the
-                    parameter <code>enabled</code>. An enabled mode can used by user.
-                    This Mode is enabled initially by default.
-                </p>
-            </subsection>
-        </section>
-
-        <a name="UsingFloating"/>
-        <section name="Using FloatingTypeDescriptor">
-            <subsection name="Enable Transparent Mode">
-                Use the following :
-                <source>
-FloatingTypeDescriptor desc = (FloatingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
-desc.setTransparentMode(true); // false to disable
-</source>
-                <p>
-                    Sets the transparent mode. If the transparent mode is enabled then when
-                    the window used by <code>FLOATING</code> and <code>FLOATING_FREE</code> type losts
-                    the focus it becomes transparent. This facility is os-dependent.
-                    <br/>
-                    You can use <code>setTransparentRatio</code> and <code>setTransparentDelay</code> methods
-                    to set transparency paramenters and delay.
-                </p>
-            </subsection>
-            <subsection name="Enable/Disable">
-                Use the following :
-                <source>
-FloatingTypeDescriptor desc = (FloatingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
-desc.setEnabled(true); // false to disable
-</source>
-                <p>
-                    Enables or disables this mode, depending on the value of the
-                    parameter <code>enabled</code>. An enabled mode can used by user.
-                    This Mode is enabled initially by default.
-                </p>
-            </subsection>
-            <subsection name="Change Window Position">
-                Use the following :
-                <source>
-FloatingTypeDescriptor desc = (FloatingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
-desc.setPosition(150, 220);
-</source>
-                <p>
-                    Sets the window location. This location is also used the first time the window becomes visible.
-                    The top-left corner of the new location
-                    is specified by the <code>x</code> and <code>y</code>
-                    parameters in the system coordinate space.
-                </p>
-            </subsection>
-            <subsection name="Change Window Size">
-                Use the following :
-                <source>
-FloatingTypeDescriptor desc = (FloatingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
-desc.setSize(320, 200);
-</source>
-                <p>
-                    Sets the window size. This size is also used the first time the window becomes visible.
-                </p>
-            </subsection>
-        </section>
-
     </body>
 </document>

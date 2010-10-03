@@ -3,21 +3,20 @@
         "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
     <properties>
-        <title>MyDoggy - My Java Docking Framework : MyDoggySet</title>
+        <title>MyDoggy - My Java Docking Framework : TutorialSet</title>
         <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
     </properties>
 
     <body>
-        <section name="MyDoggySet">
+        <section name="TutorialSet">
             <img src="./../images/examples/mydoggyset.png" alt="MyDoggySet" border="0" hspace="18" align="left"/>
             <p>
-                MyDoggySet is a sample application to see MyDoggy in action.
-                You can modify toolwindow properties, show or hide groups and manage the content area
+                Using this application you can learn how to use the api provided by MyDoggy.
+                <br/>
+                In every step, pay attention to the code in green that highlights the new code introduced in that step.
             </p>
             <p>
-                Launch
-                <a href="./jnlp/mydoggyset.jnlp">MyDoggySet</a>
-                by using Java Web Start.
+                Launch <a href="./examples/jnlp/tutorialset.jnlp">TutorialSet</a> using Java Web Start.
             </p>
         </section>
     </body>

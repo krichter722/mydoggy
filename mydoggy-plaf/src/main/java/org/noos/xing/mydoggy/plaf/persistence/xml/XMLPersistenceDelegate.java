@@ -126,6 +126,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
     }
 
     protected void saveInternal(OutputStream outputStream, PersistenceDelegateFilter filter, boolean standalone) {
+        // change context classloader
+        ClassLoader bundleClassLoader = this.getClass().getClassLoader();
+        ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(bundleClassLoader);
+
         try {
             XMLWriter writer = new XMLWriter(new OutputStreamWriter(outputStream));
 
@@ -133,16 +138,19 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             context.put(MyDoggyToolWindowManager.class, toolWindowManager);
             context.put(PersistenceDelegateFilter.class, (filter != null) ? filter : dummyFilter);
             context.put(InternalPersistenceDelegateFilter.class,
-                        (filter != null)
-                        ? (filter instanceof InternalPersistenceDelegateFilter ? filter : new InternalPersistenceDelegateFilterWrapper(filter))
-                        : dummyFilter);
+                    (filter != null)
+                            ? (filter instanceof InternalPersistenceDelegateFilter ? filter : new InternalPersistenceDelegateFilterWrapper(filter))
+                            : dummyFilter);
             context.put("standalone", standalone);
 
             masterElementWriter.write(writer, context);
-            
+
             writer.flush();
         } catch (Exception e) {
             throw new RuntimeException(e);
+        } finally {
+            // Restore
+            Thread.currentThread().setContextClassLoader(originalClassLoader);
         }
     }
 
@@ -151,6 +159,11 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             // Setup a dummy callback
             callback = dummyCallback;
         }
+
+        // change context classloader
+        ClassLoader bundleClassLoader = this.getClass().getClassLoader();
+        ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(bundleClassLoader);
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
@@ -165,7 +178,15 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
             masterElementParser.parse(document.getDocumentElement(), context);
         } catch (Exception e) {
+            // Restore
             e.printStackTrace();
+        } finally {
+            // Restore
+            Thread.currentThread().setContextClassLoader(originalClassLoader);
+        }
+        if (callback == null) {
+            // Setup a dummy callback
+            callback = dummyCallback;
         }
     }
 
@@ -228,7 +249,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 AttributesImpl mydoggyAttributes = new AttributesImpl();
                 mydoggyAttributes.addAttribute(null, "version", null, null, "1.5.0");
                 mydoggyAttributes.addAttribute(null, "contentManagerEnabled", null, null,
-                                               String.valueOf(manager.getContentManager().isEnabled()));
+                        String.valueOf(manager.getContentManager().isEnabled()));
                 writer.startElement("mydoggy", mydoggyAttributes);
 
                 // Write ToolWindows
@@ -323,14 +344,24 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
         }
 
         protected void populateWriterMap() {
-            elementWriterMap.put(ToolWindow.class, new ToolWindowEntityWriter());
-            elementWriterMap.put(ToolWindowManagerDescriptor.class, new ToolWindowManagerDescriptorEntityWriter());
-            elementWriterMap.put(ContentManager.class, new ContentManagerEntityWriter());
+            // change context classloader
+            ClassLoader bundleClassLoader = this.getClass().getClassLoader();
+            ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+            Thread.currentThread().setContextClassLoader(bundleClassLoader);
 
-            elementWriterMap.put(TabbedContentManagerUI.class, new TabbedContentManagerUIEntityWriter());
-            elementWriterMap.put(MultiSplitContentManagerUI.class, new MultiSplitContentManagerUIEntityWriter());
-            elementWriterMap.put(DesktopContentManagerUI.class, new DesktopContentManagerUIEntityWriter());
-            elementWriterMap.put(ToolWindowAnchor.class, new ToolWindowAnchorEntityWriter());
+            try {
+                elementWriterMap.put(ToolWindow.class, new ToolWindowEntityWriter());
+                elementWriterMap.put(ToolWindowManagerDescriptor.class, new ToolWindowManagerDescriptorEntityWriter());
+                elementWriterMap.put(ContentManager.class, new ContentManagerEntityWriter());
+
+                elementWriterMap.put(TabbedContentManagerUI.class, new TabbedContentManagerUIEntityWriter());
+                elementWriterMap.put(MultiSplitContentManagerUI.class, new MultiSplitContentManagerUIEntityWriter());
+                elementWriterMap.put(DesktopContentManagerUI.class, new DesktopContentManagerUIEntityWriter());
+                elementWriterMap.put(ToolWindowAnchor.class, new ToolWindowAnchorEntityWriter());
+            } finally {
+                // Restore
+                Thread.currentThread().setContextClassLoader(originalClassLoader);
+            }
         }
 
     }
@@ -553,7 +584,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 // Start pushAway
                 attributes = new AttributesImpl();
                 attributes.addAttribute(null, "pushAwayMode", null, null,
-                                        descriptor.getPushAwayMode().toString());
+                        descriptor.getPushAwayMode().toString());
                 writer.startElement("pushAway", attributes);
 
                 // start MOST_RECENT policy
@@ -1070,7 +1101,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
 
             Element sharedWindowsElem = getElement(element, "sharedWindows");
             SharedWindows sharedWindows = new SharedWindows(context.get(ToolWindowManager.class),
-                                                            context.get(PersistenceDelegateCallback.class));
+                    context.get(PersistenceDelegateCallback.class));
 
             if (sharedWindowsElem != null) {
                 NodeList sharedWindowsList = sharedWindowsElem.getElementsByTagName("sharedWindow");
@@ -1358,7 +1389,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     toolWindow.setAnchor(toolWindowAnchor);
                 else
                     toolWindow.setAnchor(toolWindowAnchor,
-                                         anchorIndex);
+                            anchorIndex);
 
                 mergePolicyApplier.applyToolWindow(toolWindow, node.setElement(tool), sharedWindows);
 
@@ -1393,7 +1424,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
             // Load shared windows...
             Element sharedWindowsElem = getElement(element, "sharedWindows");
             SharedWindows sharedWindows = new SharedWindows(context.get(ToolWindowManager.class).getContentManager(),
-                                                            context.get(PersistenceDelegateCallback.class));
+                    context.get(PersistenceDelegateCallback.class));
 
             if (sharedWindowsElem != null) {
                 NodeList sharedWindowsList = sharedWindowsElem.getElementsByTagName("sharedWindow");
@@ -1438,8 +1469,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 Content content = context.get(ToolWindowManager.class).getContentManager().getContent(contentId);
                 if (content == null)
                     content = context.get(PersistenceDelegateCallback.class).contentNotFound(context.get(ToolWindowManager.class),
-                                                                                             contentId,
-                                                                                             node.setElement(contentElement));
+                            contentId,
+                            node.setElement(contentElement));
 
                 if (content != null) {
                     if (getBoolean(context, contentElement, "selected", false))
@@ -1458,7 +1489,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     if (minimizedStateElem != null && content.isMinimized()) {
                         ContentDescriptor contentDescriptor = (ContentDescriptor) toolWindowManager.getDockableDescriptor(content.getId());
                         contentDescriptor.setAnchor(getToolWindowAnchor(context, minimizedStateElem, "anchor", ToolWindowAnchor.LEFT),
-                                                    getInteger(context, minimizedStateElem, "anchorIndex", -1)
+                                getInteger(context, minimizedStateElem, "anchorIndex", -1)
                         );
                     }
 
@@ -1480,9 +1511,9 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     if (list.getLength() > 0) {
                         Element detachedBoundsElm = (Element) list.item(0);
                         contentUI.setDetachedBounds(new Rectangle(getInteger(context, detachedBoundsElm, "x", 100),
-                                                                  getInteger(context, detachedBoundsElm, "y", 100),
-                                                                  getInteger(context, detachedBoundsElm, "width", 320),
-                                                                  getInteger(context, detachedBoundsElm, "height", 200)));
+                                getInteger(context, detachedBoundsElm, "y", 100),
+                                getInteger(context, detachedBoundsElm, "width", 320),
+                                getInteger(context, detachedBoundsElm, "height", 200)));
                     }
 
                     if (detached) {
@@ -1569,7 +1600,7 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 byte[] workspace = Base64.decode(workspaceElement.getTextContent());
                 toolWindowBar.setToolWorkspace(workspace, getBoolean(context, element, "toolsVisible", false));
             }
-            
+
             return false;
         }
 
@@ -1672,8 +1703,8 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                     Content content = contentManager.getContent(contentId);
                     if (content == null)
                         content = context.get(PersistenceDelegateCallback.class).contentNotFound(context.get(ToolWindowManager.class),
-                                                                                                 contentId,
-                                                                                                 node.setElement(contentUIElm));
+                                contentId,
+                                node.setElement(contentUIElm));
 
                     if (content != null) {
                         DesktopContentUI desktopContentUI = (DesktopContentUI) content.getContentUI();
