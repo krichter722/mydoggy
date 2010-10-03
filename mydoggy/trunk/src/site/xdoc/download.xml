@@ -22,16 +22,16 @@
                     <tbody>
                         <tr>
                             <td>
-                                <strong>Package</strong>
+                                <font>Package</font>
                             </td>
                             <td>
-                                <strong>Version</strong>
+                                <font>Version</font>
                             </td>
                             <td>
-                                <strong>Release date</strong>
+                                <font>Release date</font>
                             </td>
                             <td>
-                                <strong>Category</strong>
+                                <font>Category</font>
                             </td>
                             <td/>
                         </tr>
@@ -92,24 +92,24 @@
             <subsection name="Usage">
                 <ol type="1">
                     <li>Unzip
-                        <tt><strong style="color:green">mydoggy-1.5.0.zip</strong></tt>
+                        <tt><font style="color:green">mydoggy-1.5.0.zip</font></tt>
                         to the directory you wish to unzip MyDoggy 1.5.0.
                     </li>
                     <li>To use MyDoggy add to your classpath
                         <ol type="1">
                             <li>
-                                <strong style="color:red"><tt>mydoggy_1.5.0-api.jar</tt></strong>,
+                                <font style="color:red"><tt>mydoggy_1.5.0-api.jar</tt></font>,
                             </li>
 
                             <li>
-                                <strong style="color:red"><tt>mydoggy_1.5.0-plaf.jar</tt></strong>,
+                                <font style="color:red"><tt>mydoggy_1.5.0-plaf.jar</tt></font>,
                             </li>
                             <li>
-                                <strong style="color:red"><tt>mydoggy_1.5.0-red.jar</tt></strong>
+                                <font style="color:red"><tt>mydoggy_1.5.0-red.jar</tt></font>
                                 and
                             </li>
                             <li>
-                                <strong style="color:red"><tt>TableLayout-20020517.jar</tt></strong>.
+                                <font style="color:red"><tt>TableLayout-20020517.jar</tt></font>.
                             </li>
                         </ol>
                     </li>
@@ -170,16 +170,16 @@
 					<tbody>
 						<tr>
 							<td>
-								<strong>Package</strong>
+								<font>Package</font>
 							</td>
 							<td>
-								<strong>Version</strong>
+								<font>Version</font>
 							</td>
 							<td>
-								<strong>Release date</strong>
+								<font>Release date</font>
 							</td>
 							<td>
-								<strong>Category</strong>
+								<font>Category</font>
 							</td>
 							<td/>
 						</tr>
@@ -292,11 +292,11 @@
 				</table>
 
 				<br/>
-				<strong>
+				<font>
 					<a href="http://prdownloads.sourceforge.net/mydoggy/?sort_by=date&amp;sort=desc">Browse all MyDoggy
 						downloads
 					</a>
-				</strong>
+				</font>
 			</subsection>
         </section>
     </body>

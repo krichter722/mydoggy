@@ -3,26 +3,44 @@
         "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
     <properties>
-        <title>MyDoggy - My Java Docking Framework (API) : ContentManager</title>
+        <title>MyDoggy - My Java Docking Framework : ContentManager</title>
         <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
     </properties>
 
     <body>
+        <section name="Table of Contents">
+            <ol type="1">
+                <li>
+                    <a href="#ContentManager">What is a ContentManager?
+                    </a>
+                </li>
+                <li>
+                    <a href="#Content">What is a Content?
+                    </a>
+                </li>
+                <li>
+                    <a href="#ContentManagerUI">What is a ContentManagerUI?
+                    </a>
+                </li>
+                <li>
+                    <a href="#ContentUI">What is a ContentUI?
+                    </a>
+                </li>
+                <li>
+                    <a href="#CustomContentManagerUI">How to create a new ContentManagerUI?
+                    </a>
+                </li>
+            </ol>
+
+        </section>
+
+        <a name="ContentManager"/>
         <section name="ContentManager">
             <p>
                 The Content Manager manages the main window contents. You can add several contents to be displayed
                 in the main window. The user can switch between displayed contents.
+                <br/>To add a new content use the following:
             </p>
-            <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            <img src="../images/api/contentManager.png" alt="ContentManager" border="0" hspace="18"/>
-                        </td>
-                        <td>
-                            <p>
-                                To add a new content use the following:
-                            </p>
                             <source>ToolWindowManager toolWindowManager = new <a href="./../mydoggy-plaf/index.html">...</a>;
 ContentManager contentManager = toolWindowManager.getContentManager();
 contentManager.addContent("Tools"   // Content Key
@@ -30,12 +48,7 @@ contentManager.addContent("Tools"   // Content Key
                           null,     // Content Item
                           toolsContent, // Content component
                           "ToolWindows" // Content tooltip text
-);
-                            </source>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+);</source>
         </section>
 
         <a name="Content"/>
@@ -57,68 +70,94 @@ Content content = contentManager.getContent("Tools");
             </source>
         </section>
 
-        <section name="Using the ContentManager">
-            <subsection name="Add a content">
-                Use the following :
-                <source>
-ContentManager contentManager = toolWindowManager.getContentManager();
-Content tools = ContentcontentManager.addContent("Tools"   // Content Key
-                                                 "Tools",  // Content title
-                                                 null,     // Content Item
-                                                 toolsContent, // Content component
-                                                 "ToolWindows" // Content tooltip text
-);
-</source>
+        <a name="ContentManagerUI"/>
+        <section name="ContentManagerUI">
+            <p>
+                A ContentManagerUI is an interface to modify the ui behaviours of
+                a content manager. For example this is used to modify the way a content
+                is shown.
+            </p>
+            <a name="MultiSplitContentManagerUI"/>
+            <subsection name="MultiSplitContentManagerUI">
+                <img src="./../images/plaf/multisplitContentManagerUI.png" alt="MultisplitContentManagerUI"
+                     border="0" hspace="18" align="left"/>
                 <p>
-                    Adds a <code>component</code> represented by a unique identifier <code>key</code>
-                    with a <code>title</code> and/or <code>icon</code>, either of which can be <code>null</code>.
+                    This interface represents a ui that use a component that lets the user switch
+                    between
+                    a group of components by clicking on a tab with a given title and/or icon. The
+                    position of each tab can be customized from the ui or by code.
+                    <br/>To obtain and set a specific instance use the following (for example):
                 </p>
+                <source>import org.noos.xing.mydoggy.plaf.ui.content;
+...
+contentManager.setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
+                </source>
             </subsection>
-
-            <subsection name="Remove a content">
-                Use the following :
-                <source>
-ContentManager contentManager = toolWindowManager.getContentManager();
-contentManager.removeContent(tools);
-</source>
+            <a name="TabbedContentManagerUI"/>
+            <subsection name="TabbedContentManagerUI">
+                <img src="./../images/plaf/tabbedContentManagerUI.png" alt="TabbedContentManagerUI" border="0"
+                     hspace="18" align="left"/>
                 <p>
-                    Removes the content from the manager.
+                    This interface represents a ui that use a component that lets the user switch
+                    between
+                    a group of components by clicking on a tab with a given title and/or icon (i.e.
+                    JTabbedPane).
+                    <br/>To obtain and set a specific instance use the following (for example):
                 </p>
+                <source>import org.noos.xing.mydoggy.plaf.ui.content;
+...
+contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
+                </source>
             </subsection>
-
-            <subsection name="Get the selected content">
-                Use the following :
-                <source>
-ContentManager contentManager = toolWindowManager.getContentManager();
-Content content = contentManager.getSelectedContent();
-</source>
+            <a name="DesktopContentManagerUI"/>
+            <subsection name="DesktopContentManagerUI">
+                <img src="./../images/plaf/desktopContentManagerUI.png" alt="DesktopContentManagerUI" border="0"
+                     hspace="18" align="left"/>
                 <p>
-                    Returns the selected content, or <code>null</code> if the selection is empty.
+                    This interface represents a ui that use a container to create a multiple-document
+                    interface
+                    or a virtual desktop.
+                    <br/>To obtain and set a specific instance use the following (for example):
                 </p>
-            </subsection>
-
-            <subsection name="Change the ContentManagerUI">
-                Use the following :
-                <source>
-ContentManager contentManager = toolWindowManager.getContentManager();
-ContentManagerUI contentManagerUI = new <a href="./../mydoggy-plaf/index.html#ContentManageUI">... TODO</a>
-contentManager.setContentManagerUI(contentManagerUI);</source>
-                <p>
-                    Sets the content manager ui to <code>contentManagerUI</code>.
-                </p>
-            </subsection>
-
-            <subsection name="Enable/Disable the ContentManager">
-                Use the following :
-                <source>
-ContentManager contentManager = toolWindowManager.getContentManager();
-contentManager.setEnabled(false); // or true to enable
-</source>
-                <p>
-                    Enables or disables the content manager. If the content manager is disable the whole space
-                    will be available for toolwindows.
-                </p>
+                <source>import org.noos.xing.mydoggy.plaf.ui.content;
+...
+contentManager.setContentManagerUI(new MyDoggyDesktopContentManagerUI());
+                </source>
             </subsection>
         </section>
+
+        <a name="ContentUI"/>
+        <section name="ContentUI">
+            <p>
+                This interface is used to modify the ui behaviours of a single content. When you define a new
+                ContentManagerUI you can also extend the ContentUI interface. In fact relative to
+                <a href="./apidocs/org/noos/xing/mydoggy/TabbedContentManagerUI.html">TabbedContentManagerUI</a>,
+                <a href="./apidocs/org/noos/xing/mydoggy/DesktopContentManagerUI.html">DesktopContentManagerUI</a> and
+                <a href="./apidocs/org/noos/xing/mydoggy/MultiSplitContentManagerUI.html">MultiSplitContentManagerUI</a>
+                you can found
+                <a href="./apidocs/org/noos/xing/mydoggy/TabbedContentUI.html">TabbedContentUI</a>,
+                <a href="./apidocs/org/noos/xing/mydoggy/DesktopContentUI.html">DesktopContentUI</a> and
+                <a href="./apidocs/org/noos/xing/mydoggy/MultiSplitContentUI.html">MultiSplitContentUI </a>interfaces.
+                Using the default ContentUI interface you can manage transparent support and decide if a content is
+                closeable and/or detachable using the ui.
+            </p>
+        </section>
+
+        <a name="CustomContentManagerUI"/>
+        <section name="Your own implementation">
+            <p>
+                If you want to implement your own
+                <code>ContentManageUI,</code>
+                your class must implement not only the
+                <code>ContentManageUI</code>
+                interface but also the
+                <code>PlafContentManagerUI</code>
+                interface in the
+                package<code>org.noos.xing.mydoggy.plaf.ui.content</code>.
+                <br/>
+                This is to provide all the necessary methods to use the manager.
+            </p>
+        </section>
+
     </body>
 </document>

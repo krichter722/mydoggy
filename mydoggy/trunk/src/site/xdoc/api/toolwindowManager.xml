@@ -3,11 +3,30 @@
         "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
     <properties>
-        <title>MyDoggy - My Java Docking Framework (API) : ToolWindowManager</title>
+        <title>MyDoggy - My Java Docking Framework : ToolWindowManager</title>
         <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
     </properties>
 
     <body>
+        <section name="Table of Contents">
+            <ol type="1">
+                <li>
+                    <a href="#ToolWindowManager">What is a ToolWindowManager?
+                    </a>
+                </li>
+                <li>
+                    <a href="#ToolWindowManagerDescriptor">What is a ToolWindowManagerDescriptor?
+                    </a>
+                </li>
+                <li>
+                    <a href="#PersistenceDelegate">What is a PersistenceDelegate?
+                    </a>
+                </li>
+            </ol>
+
+        </section>
+
+        <a name="ToolWindowManager"/>
         <section name="ToolWindowManager">
             <p>
                 This interface is the main entry point to manage MyDoggy. Using this interface
@@ -16,123 +35,45 @@
                 <br/>
             </p>
 
-        </section>
 
-        <a name="UsingToolWindowManager"/>
-        <section name="Using ToolWindowManager">
-            <subsection name="Init a ToolWindowManager">
-                <p>
-                    To obtain an instance of the <code>ToolWindowManager</code> interface
-                    you have to instantiate the
-                    <code>MyDoggyToolWindowManager</code> class which provides the default implementation.
-                    <br/>
-                    Use the following:
-                </p>
-                <source>ToolWindowManager twManager = new <a href="./../mydoggy-plaf/index.html">MyDoggyToolWindowManager(...)</a>;</source>
-                <p>or</p>
-                <source>ToolWindowManager toolWindowManager = new MyDoggyToolWindowManager(
-                  Locale.getDefault() // A Locale instance
-    );
-                </source>
-                <p>
-                    MyDoggyToolWindowManager is implemented like a JPanel so you can use it like any other component.
-                    <br/>
-                    For example:
-                </p>
-                <source>JFrame frame = new JFrame("MyDoggy-Set...");
-...
-MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager();
-...
-frame.getContentPane().add(myDoggyToolWindowManager);</source>
-                <p>
-                    Warning: to be able to use all the toolwindow types (Sliding, Floating Live, etc.),
-                    ensure that the toolwindow manager
-                    has as window ancestor an object implementing the <code>RootPaneContainer</code> interface
-                    (i.e. JFrame, JWindow, JApplet, ...).
-                </p>
-
-            </subsection>
-
-            <subsection name="Register a ToolWindow">
-                Use the following :
-                <source>ToolWindowManager twManager = new <a href="./../mydoggy-plaf/index.html">MyDoggyToolWindowManager(...)</a>;
-ToolWindow debugTool = twManager.registerToolWindow(
-       "Debug",               // Tool Window identifier
-       "Debug Tool",          // Tool Window Title
-       debugIcon,             // Tool Window Icon
-       debugComponent,        // Tool Window component
-       ToolWindowAnchor.LEFT  // Tool Window anchor
-);
-</source>
-            </subsection>
-            <subsection name="Unregister a ToolWindow">
-                Use the following :
-                <source>ToolWindowManager twManager = new <a href="./../mydoggy-plaf/index.html">MyDoggyToolWindowManager(...)</a>;
-twManager.unregisterToolWindow("Debug");
-</source>
-            </subsection>
-
-            <a name="aliasing"/>
-            <subsection name="Add a ToolWindow Alias">
-                Use the following :
-                <source>ToolWindowManager twManager = new <a href="./../mydoggy-plaf/index.html">MyDoggyToolWindowManager(...)</a>;
-Object debugToolAlias = new DebugToolAlias();
-twManager.addAlias(debugTool, debugToolAlias);
-</source>
-            </subsection>
-        </section>
-
-        <a name="UsingToolWindowManagerDescriptor"/>
-        <section name="Using ToolWindowManagerDescriptor">
-            <p>
+            <p> ToolWindowManagerDescriptor
                 This interface is used to modify the behaviours of the ToolWindowManager.
                 <br/>
                 You can now change the push-away mode of toolwindows and set corner components.
                 See Using page for how to.
             </p>
-
-            <subsection name="ToolWindowManagerDescriptor">
-                <p>
-                    To obtain the instance of the ToolWindowManagerDescriptor for a specific ToolWindowManager use the following:
-                </p>
-                <source>
-
-ToolWindowManagerDescriptor descriptor = twManager.getToolWindowManagerDescriptor();
-
-</source>
-            </subsection>
-            <a name="PushAwayMode"/>
-            <subsection name="ToolWindowManagerDescriptor - PushAwayMode">
-                <p>
-                    After you have obtained an instance of the ToolWindowManagerDescriptor for a specific ToolWindowManager use
-                    the following to change to PushAwayMode:
-                </p>
-                <source>
-
-ToolWindowManagerDescriptor descriptor = twManager.getToolWindowManagerDescriptor();
-descriptor.setPushAwayMode(PushAwayMode.MOST_RECENT);
-
-</source>
-                <p>
-                    To retrieve the current PushAwayMode use the following:
-                </p>
-                <source>
-ToolWindowManagerDescriptor descriptor = twManager.getToolWindowManagerDescriptor();
-PushAwayMode pushAwayMode = descriptor.getPushAwayMode();</source>
-            </subsection>
-            <a name="CornerComponent"/>
-            <subsection name="ToolWindowManagerDescriptor - Corner Component">
-                <p>
-                    After you have obtained an instance of the ToolWindowManagerDescriptor for a specific ToolWindowManager use
-                    the following to set a corner component:
-                </p>
-                <source>
-ToolWindowManagerDescriptor descriptor = twManager.getToolWindowManagerDescriptor();
-descriptor.setCornerComponent(
-                    ToolWindowManagerDescriptor.Corner.NORD_WEST,
-                    new JLabel("NW"));</source>
-            </subsection>
         </section>
+
+        <a name="PersistenceDelegate"/>
+        <section name="PersistenceDelegate">
+            <p>
+                This interface provides useful methods to save and load the tool window manager's workspace.
+                When you request to save the workspace, all settings of ToolWindows with relative descriptors are saved.
+                To obtain an instance of PersistenceDelegate you have to invoke the method
+                <code>getPersistenceDelegate</code>
+                of
+                <code>ToolWindowManager</code>
+                interface. So you can obtain a persistence delegate specific to a
+                particular tool window manager.
+            </p>
+            <p>
+                When you request to save the workspace, all settings of toolwindows, and not only, with relative descriptors are saved.
+                See the specific DTD, relative to the version of mydoggy that you are using, to know all information saved.
+                <br/>
+
+                To obtain the instance of the PersistenceDelegate for a specific ToolWindowManager use the following:
+            </p>
+            <source>PersistenceDelegate pstDelegate = twManager.getPersistenceDelegate();</source>
+
+            <p>
+                MyDoggy arrives with a default implementation provided by
+                <br/>
+                <code>org.noos.xing.mydoggy.plaf.persistence.xml.XMLPersistenceDelegate</code>
+                <br/>
+                This implementation use the xml format to store all necessary data.
+            </p>
+        </section>
+
 
     </body>
 </document>
