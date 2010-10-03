@@ -331,14 +331,14 @@ public class ContentRepresentativeAnchorUI extends MetalLabelUI implements Clean
         }
 
         public void mouseClicked(MouseEvent e) {
+            contentRepresentativeAnchor.setBorder(labelBorder);
+            labelBorder.setLineColor(UIManager.getColor(MyDoggyKeySpace.TWRA_MOUSE_IN_BORDER));
+            SwingUtil.repaint(contentRepresentativeAnchor);
+
             if (SwingUtilities.isLeftMouseButton(e)) {
                 dockable.setMinimized(false);
             } else if (SwingUtilities.isRightMouseButton(e)) {
             }
-
-            contentRepresentativeAnchor.setBorder(labelBorder);
-            labelBorder.setLineColor(UIManager.getColor(MyDoggyKeySpace.TWRA_MOUSE_IN_BORDER));
-            SwingUtil.repaint(contentRepresentativeAnchor);
         }
 
         public void mouseEntered(MouseEvent e) {

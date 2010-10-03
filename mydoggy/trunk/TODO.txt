@@ -15,3 +15,4 @@ TODO: showMessage this correctly ... <html>Hello<br>World!!!<br>Hello<br>World!!
 BY EMAIL:
 
 TODO: unregisterAllToolWindow-toolWindowUnregistere
+TODO: exceptions when switching between contentmanagers...
