@@ -307,7 +307,7 @@ public class MyDoggyToolWindow extends PropertyChangeEventSource implements Tool
     }
 
     public void setFlashing(int duration) {
-        if (isVisible())
+        if (isVisible() && isActive())
             return;
 
         if (this.flash)
