@@ -751,7 +751,7 @@ public class MultiSplitDockableContainer<D extends Dockable> extends JPanel {
                     // Change constaints for component to the new leaf order.
                     Map<String, Component> childMap = multiSplitPane.getMultiSplitLayout().getChildMap();
                     String[] keys = childMap.keySet().toArray(new String[childMap.keySet().size()]);
-                    Arrays.sort(keys);
+                    //Arrays.sort(keys);
                     for (String key : keys) {
                         Integer keyValue = Integer.parseInt(key);
                         if (keyValue > leafValue) {
@@ -935,7 +935,7 @@ public class MultiSplitDockableContainer<D extends Dockable> extends JPanel {
             }
 
             // Step Two: apply model 2...Isomorphing
-            Map<String, Component> newChildMap = new HashMap<String, Component>();
+            Map<String, Component> newChildMap = new LinkedHashMap<String, Component>();
             stack = new Stack<Split>();
             stack.push((Split) root);
             while (!stack.isEmpty()) {
