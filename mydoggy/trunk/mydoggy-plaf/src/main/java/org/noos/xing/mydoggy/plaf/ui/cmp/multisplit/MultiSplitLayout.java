@@ -58,7 +58,7 @@ import java.util.List;
  */
 
 public class MultiSplitLayout implements LayoutManager {
-    protected Map<String, Component> childMap = new HashMap<String, Component>();
+    protected Map<String, Component> childMap = new LinkedHashMap<String, Component>();
     protected PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     protected Node model;
     protected int dividerSize;
