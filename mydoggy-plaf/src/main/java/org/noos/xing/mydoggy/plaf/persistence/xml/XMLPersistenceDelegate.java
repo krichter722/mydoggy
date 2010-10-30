@@ -269,7 +269,6 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 writer.endElement("sharedWindows");
 
                 // Write tools
-
                 for (ToolWindow toolWindow : manager.getToolWindows()) {
                     if (!context.get(PersistenceDelegateFilter.class).storeToolWindow(toolWindow))
                         continue;
@@ -316,7 +315,6 @@ public class XMLPersistenceDelegate implements PersistenceDelegate {
                 throw new RuntimeException(e);
             }
         }
-
 
         protected ElementWriter<XMLWriter> getElementWriter(Class clazz) {
             ElementWriter<XMLWriter> elementWriter = elementWriterMap.get(clazz);
