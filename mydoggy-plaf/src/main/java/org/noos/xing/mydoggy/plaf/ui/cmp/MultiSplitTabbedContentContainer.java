@@ -90,20 +90,20 @@ public class MultiSplitTabbedContentContainer<D extends Dockable> extends MultiS
         if (wrapper instanceof TabbedContentPane) {
             TabbedContentPane tabbedContentPane = (TabbedContentPane) wrapper;
             tabbedContentPane.addTab((Content) dockable,
-                                     new DockablePanel(dockable, content),
-                                     aggregationIndexLocation);
+                    new DockablePanel(dockable, content),
+                    aggregationIndexLocation);
             tabbedContentPane.setSelectedIndex((aggregationIndexLocation < 0 || aggregationIndexLocation >= tabbedContentPane.getTabCount()) ? tabbedContentPane.getTabCount() - 1 : aggregationIndexLocation);
         } else if (wrapper instanceof DockablePanel) {
             DockablePanel wrapperContainer = (DockablePanel) wrapper;
 
             // Create a new tabbedContentPane with the old dockable
             TabbedContentPane tabbedContentPane = (TabbedContentPane) forceWrapperForComponent(wrapperContainer.getDockable(),
-                                                                                               wrapperContainer.getComponent());
+                    wrapperContainer.getComponent());
 
             // add the new dockable
             tabbedContentPane.addTab((Content) dockable,
-                                     new DockablePanel(dockable, content),
-                                     aggregationIndexLocation);
+                    new DockablePanel(dockable, content),
+                    aggregationIndexLocation);
             tabbedContentPane.setSelectedIndex((aggregationIndexLocation < 0 || aggregationIndexLocation >= tabbedContentPane.getTabCount()) ? tabbedContentPane.getTabCount() - 1 : aggregationIndexLocation);
 
             // update multiSplitPane
@@ -128,9 +128,9 @@ public class MultiSplitTabbedContentContainer<D extends Dockable> extends MultiS
                     String leafName = getLeafName(lastDockable);
                     multiSplitPane.remove(multiSplitPane.getMultiSplitLayout().getChildMap().get(leafName));
                     multiSplitPane.add(leafName,
-                                       getWrapperForComponent(lastDockable,
-                                                              ((DockablePanel) tabbedPane.getComponentAt(0)).getComponent(),
-                                                              Action.REMOVE_DOCK));
+                            getWrapperForComponent(lastDockable,
+                                    ((DockablePanel) tabbedPane.getComponentAt(0)).getComponent(),
+                                    Action.REMOVE_DOCK));
                 }
             }
             return index;
@@ -189,24 +189,34 @@ public class MultiSplitTabbedContentContainer<D extends Dockable> extends MultiS
 
                 if (dockable != null) {
                     dge.startDrag(DragSource.DefaultMoveDrop,
-                                  new MyDoggyTransferable(manager, MyDoggyTransferable.CONTENT_ID_DF, dockable.getId()),
-                                  this);
+                            new MyDoggyTransferable(manager, MyDoggyTransferable.CONTENT_ID_DF, dockable.getId()),
+                            this);
 
                     // Setup ghostImage
                     if (SwingUtil.getBoolean("drag.icon.useDefault", false)) {
                         setGhostImage(dge.getDragOrigin(),
-                                      SwingUtil.getImage(MyDoggyKeySpace.DRAG));
+                                SwingUtil.getImage(MyDoggyKeySpace.DRAG));
                     } else {
                         Component c = dge.getComponent();
 
                         // Build ghost image
                         Rectangle rect = tabbedContentPane.getBoundsAt(dragTabIndex);
-                        BufferedImage image = new BufferedImage(c.getWidth(), c.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                        Graphics g = image.getGraphics();
-                        c.paint(g);
-                        image = image.getSubimage(rect.x, rect.y, rect.width, rect.height);
 
-                        setGhostImage(dge.getDragOrigin(), image);
+                        // Ensure the image is large enough for partially visible tabs
+                        // Ensure exception is somehow handled
+                        try {
+                            BufferedImage image = new BufferedImage(c.getWidth() + rect.width,
+                                                                    c.getHeight() + rect.height,
+                                                                    BufferedImage.TYPE_INT_ARGB);
+                            Graphics g = image.getGraphics();
+                            c.paint(g);
+                            image = image.getSubimage(rect.x, rect.y, rect.width, rect.height);
+
+                            setGhostImage(dge.getDragOrigin(), image);
+                        } catch (Throwable t) {
+                            // TODO: use a default imager
+                            t.printStackTrace();
+                        }
                     }
                 } else
                     releaseLocks();
@@ -251,7 +261,7 @@ public class MultiSplitTabbedContentContainer<D extends Dockable> extends MultiS
                         bounds = new Rectangle();
                         bounds.setLocation(dsde.getLocation());
                         bounds.setSize(toolWindowManager.getBoundsToScreen(content.getComponent().getBounds(),
-                                                                           content.getComponent().getParent()).getSize());
+                                content.getComponent().getParent()).getSize());
                     }
 
                     contentUI.setDetachedBounds(bounds);
@@ -340,16 +350,16 @@ public class MultiSplitTabbedContentContainer<D extends Dockable> extends MultiS
                                 // Reattach...
                                 content.reattach(
                                         new MultiSplitConstraint(onDockable,
-                                                                 onIndex,
-                                                                 (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString()))
+                                                onIndex,
+                                                (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString()))
                                 );
                             } else {
                                 // Move the content using the new position...
                                 setConstraints(content,
-                                               content.getComponent(),
-                                               onDockable,
-                                               onIndex,
-                                               (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString()));
+                                        content.getComponent(),
+                                        onDockable,
+                                        onIndex,
+                                        (onAnchor == null) ? null : AggregationPosition.valueOf(onAnchor.toString()));
                             }
 
                             return true;
