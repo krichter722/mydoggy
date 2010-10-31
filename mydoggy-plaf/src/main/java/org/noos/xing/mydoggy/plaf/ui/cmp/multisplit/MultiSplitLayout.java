@@ -45,7 +45,7 @@ import java.util.List;
  * <p/>
  * <p/>
  * Although MultiSplitLayout can be used with any Container, it's
- * the default layout manager for MultiSplitPane.  MultiSplitPane
+ * the default layout manager for MultiSplitPanel.  MultiSplitPanel
  * supports interactively dragging the Dividers, accessibility,
  * and other features associated with split panes.
  * <p/>
@@ -54,7 +54,7 @@ import java.util.List;
  * is changed, all PropertyChangeListeners are fired.
  *
  * @author Hans Muller
- * @see MultiSplitPane
+ * @see MultiSplitPanel
  */
 
 public class MultiSplitLayout implements LayoutManager {
@@ -182,7 +182,7 @@ public class MultiSplitLayout implements LayoutManager {
      * preferred size and Splits/Dividers are resized accordingly.
      * If false then the Dividers define the bounds of the adjacent
      * Split and Leaf nodes.  Typically this property is set to false
-     * after the (MultiSplitPane) user has dragged a Divider.
+     * after the (MultiSplitPanel) user has dragged a Divider.
      *
      * @see #getFloatingDividers
      */
