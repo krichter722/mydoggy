@@ -23,6 +23,8 @@ package org.noos.xing.mydoggy.plaf.ui.cmp.multisplit;
 
 import org.noos.xing.mydoggy.plaf.ui.cmp.multisplit.MultiSplitLayout.Divider;
 import org.noos.xing.mydoggy.plaf.ui.cmp.multisplit.MultiSplitLayout.Node;
+import org.noos.xing.mydoggy.plaf.ui.look.MultiSplitPanelUI;
+import org.noos.xing.mydoggy.plaf.ui.look.ToolWindowTabButtonUI;
 
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
@@ -40,29 +42,54 @@ import java.awt.event.MouseEvent;
  *
  * @author Hans Muller
  */
-public class MultiSplitPane extends JPanel {
+public class MultiSplitPanel extends JPanel {
+    /**
+     * @see #getUIClassID
+     * @see #readObject
+     */
+    private static final String uiClassID = "MultiSplitPanelUI";
+
+
     private AccessibleContext accessibleContext = null;
     private boolean continuousLayout = true;
     private DividerPainter dividerPainter = new DefaultDividerPainter();
 
     /**
-     * Creates a MultiSplitPane with it's LayoutManager set to
+     * Creates a MultiSplitPanel with it's LayoutManager set to
      * to an empty MultiSplitLayout.
      */
-    public MultiSplitPane() {
+    public MultiSplitPanel() {
         super(new MultiSplitLayout());
+
         InputHandler inputHandler = new InputHandler();
+
         addMouseListener(inputHandler);
         addMouseMotionListener(inputHandler);
         addKeyListener(inputHandler);
+
         setFocusable(true);
+
+        updateUI();
+    }
+
+
+    public void updateUI() {
+        setUI((MultiSplitPanelUI) UIManager.getUI(this));
+    }
+
+    public ToolWindowTabButtonUI getUI() {
+        return (ToolWindowTabButtonUI) super.getUI();
+    }
+
+    public String getUIClassID() {
+        return uiClassID;
     }
 
     /**
      * A convenience method that returns the layout manager cast
      * to MutliSplitLayout.
      *
-     * @return this MultiSplitPane's layout manager
+     * @return this MultiSplitPanel's layout manager
      * @see java.awt.Container#getLayout
      * @see #setModel
      */
@@ -160,7 +187,7 @@ public class MultiSplitPane extends JPanel {
     }
 
     /**
-     * The DividerPainter that's used to paint Dividers on this MultiSplitPane.
+     * The DividerPainter that's used to paint Dividers on this MultiSplitPanel.
      * This property may be null.
      *
      * @return the value of the dividerPainter Property
@@ -172,11 +199,11 @@ public class MultiSplitPane extends JPanel {
 
     /**
      * Sets the DividerPainter that's used to paint Dividers on this
-     * MultiSplitPane.  The default DividerPainter only draws
+     * MultiSplitPanel.  The default DividerPainter only draws
      * the activeDivider (if there is one) and then, only if
      * continuousLayout is false.  The value of this property is
      * used by the paintChildren method: Dividers are painted after
-     * the MultiSplitPane's children have been rendered so that
+     * the MultiSplitPanel's children have been rendered so that
      * the activeDivider can appear "on top of" the children.
      *
      * @param dividerPainter the value of the dividerPainter property, can be null

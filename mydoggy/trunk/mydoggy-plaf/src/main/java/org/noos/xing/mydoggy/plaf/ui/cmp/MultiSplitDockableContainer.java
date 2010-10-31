@@ -9,7 +9,7 @@ import org.noos.xing.mydoggy.plaf.ui.cmp.multisplit.MultiSplitLayout.Divider;
 import org.noos.xing.mydoggy.plaf.ui.cmp.multisplit.MultiSplitLayout.Leaf;
 import org.noos.xing.mydoggy.plaf.ui.cmp.multisplit.MultiSplitLayout.Node;
 import org.noos.xing.mydoggy.plaf.ui.cmp.multisplit.MultiSplitLayout.Split;
-import org.noos.xing.mydoggy.plaf.ui.cmp.multisplit.MultiSplitPane;
+import org.noos.xing.mydoggy.plaf.ui.cmp.multisplit.MultiSplitPanel;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
 
 import javax.swing.*;
@@ -37,7 +37,7 @@ public class MultiSplitDockableContainer<D extends Dockable> extends JPanel {
     protected int orientation;
     protected AggregationPosition defaultAggregationPosition;
 
-    protected MultiSplitPane multiSplitPane;
+    protected MultiSplitPanel multiSplitPane;
     protected Node multiSplitPaneModelRoot;
 
     protected boolean storeLayout;
@@ -55,7 +55,7 @@ public class MultiSplitDockableContainer<D extends Dockable> extends JPanel {
         this.toolWindowManager = toolWindowManager;
         this.entries = new LinkedHashMap<Dockable, DockableEntry>();
 
-        this.multiSplitPane = new MultiSplitPane();
+        this.multiSplitPane = new MultiSplitPanel();
         this.multiSplitPane.setDividerSize(5);
         this.multiSplitPane.setFocusable(false);
         this.storeLayout = true;

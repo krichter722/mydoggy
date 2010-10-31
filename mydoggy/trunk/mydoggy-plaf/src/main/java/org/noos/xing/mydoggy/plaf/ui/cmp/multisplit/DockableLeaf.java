@@ -9,6 +9,7 @@ import java.util.List;
 public class DockableLeaf extends MultiSplitLayout.Leaf {
     private List<String> dockables;
 
+
     public DockableLeaf() {
     }
 
