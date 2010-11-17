@@ -27,6 +27,7 @@
     <orderEntry type="library" name="Maven: org.swinglabs:swingx:0.9.1" level="project" />
     <orderEntry type="library" name="Maven: com.jhlabs:filters:2.0.235" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:3.8.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.java.net.substance:substance:5.3" level="project" />
   </component>
 </module>
 

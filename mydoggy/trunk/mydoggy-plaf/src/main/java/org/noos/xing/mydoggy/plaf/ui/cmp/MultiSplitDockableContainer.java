@@ -1382,7 +1382,7 @@ public class MultiSplitDockableContainer<D extends Dockable> extends JPanel {
                         return true;
 
                     if (child instanceof Split)
-                        stack.push(split);
+                        stack.push((Split) child);
                 }
             }
         }
