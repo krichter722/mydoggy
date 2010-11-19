@@ -31,7 +31,6 @@
             <item name="ToolWindowManager" href="/api/toolwindowManager.html"/>
             <item name="ToolWindow" href="/api/toolwindow.html"/>
             <item name="ContentManager" href="/api/contentManager.html"/>
-
             <item name="TransparencyManager" href="/plaf/transparency.html"/>
             <item name="ResourceManager" href="/plaf/resourceManager.html">
             </item>

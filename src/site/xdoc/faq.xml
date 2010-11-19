@@ -13,7 +13,14 @@
             <subsection name="ToolWindowManager">
                 <ol type="1">
                     <li>
-                        <a href="#TW_ShowHide">How to show or hide a ToolWindow?</a>
+                        <a href="#TWM_Init">How to init a ToolWindowManager?</a>
+                        <a href="#TWM_Register">How to register a ToolWindow?</a>
+                        <a href="#TWM_Unregister">How to unregister a ToolWindow?</a>
+                        <a href="#TWM_Alias">How to add a ToolWindow Alias?</a>
+                        <a href="#TWM_Descriptor">How to get a ToolWindowManagerDescriptor instance?</a>
+                        <a href="#TWM_PushAway">How to set the PushAwayMode?</a>
+                        <a href="#TWM_Corner">How to set a Corner Component?</a>
+                        <a href="#TWM_Register">How to register a ToolWindow?</a>
                     </li>
                 </ol>
             </subsection>
@@ -35,21 +42,95 @@
                     <li>
                         <a href="#TW_PCL">How to add a PropertyChangeListener?</a>
                     </li>
+                    <li>
+                        <a href="#TW_PopupMenu">How to enable/disable the PopupMenu?</a>
+                    </li>
+                    <li>
+                        <a href="#TW_Tools">How to manage the Tools Menu?</a>
+                    </li>
+                    <li>
+                        <a href="#TW_DockPanelLength">How to set the Dock Panel Length?</a>
+                    </li>
+                    <li>
+                        <a href="#TW_ToolWindowActionHandler">How to set a ToolWindowActionHandler?</a>
+                    </li>
+                    <li>
+                        <a href="#TW_PreviewMode">How to enable the Preview Mode?</a>
+                    </li>
+                    <li>
+                        <a href="#TW_STD_TransparentMode">How to enable the Transparent Mode on SlidingType?</a>
+                    </li>
+                    <li>
+                        <a href="#TW_STD_TransparentMode">How to enable the Transparent Mode on SlidingType?</a>
+                    </li>
+                    <li>
+                        <a href="#TW_STD_TransparentMode">How to enable the Transparent Mode on SlidingType?</a>
+                    </li>
+                    <li>
+                        <a href="#TW_STD_TransparentMode">How to enable the Transparent Mode on SlidingType?</a>
+                    </li>
+                    <li>
+                        <a href="#TW_STD_TransparentMode">How to enable the Transparent Mode on SlidingType?</a>
+                    </li>
+                    <li>
+                        <a href="#TW_STD_TransparentMode">How to enable the Transparent Mode on SlidingType?</a>
+                    </li>
                 </ol>
             </subsection>
 
             <subsection name="ToolWindowTab">
-
+                <ol type="1">
+                    <li>
+                        <a href="#TWT_Add">How to add a ToolWindowTab?</a>
+                    </li>
+                </ol>
             </subsection>
 
             <subsection name="ToolWindowGroup">
+                <ol type="1">
+                    <li>
+                        <a href="#TWT_Add">How to add a ToolWindowTab?</a>
+                    </li>
+                </ol>
+            </subsection>
 
+            <subsection name="ContentManager">
+                <ol type="1">
+                    <li>
+                        <a href="#TWT_Add">How to add a ToolWindowTab?</a>
+                    </li>
+                </ol>
+            </subsection>
+
+            <subsection name="ContentManagerUI">
+                <ol type="1">
+                    <li>
+                        <a href="#TWT_Add">How to add a ToolWindowTab?</a>
+                    </li>
+                </ol>
+            </subsection>
+
+            <subsection name="ContentUI">
+                <ol type="1">
+                    <li>
+                        <a href="#TWT_Add">How to add a ToolWindowTab?</a>
+                    </li>
+                </ol>
+            </subsection>
+
+            <subsection name="PersistenceDelegate">
+                <ol type="1">
+                    <li>
+                        <a href="#TWT_Add">How to add a ToolWindowTab?</a>
+                    </li>
+                </ol>
             </subsection>
 
         </section>
 
         <section name="ToolWindowManager">
-            <subsection name="Init a ToolWindowManager">
+            <a name="TWM_Init"/>
+            <subsection name="How to init a ToolWindowManager?">
                 <p>
                     To obtain an instance of the <code>ToolWindowManager</code> interface
                     you have to instantiate the
@@ -81,8 +162,8 @@ frame.getContentPane().add(myDoggyToolWindowManager);</source>
                 </p>
 
             </subsection>
-
-            <subsection name="Register a ToolWindow">
+            <a name="TWM_Register"/>
+            <subsection name="How to register a ToolWindow?">
                 Use the following :
                 <source>ToolWindowManager twManager = new <a href="./../mydoggy-plaf/index.html">MyDoggyToolWindowManager(...)</a>;
 ToolWindow debugTool = twManager.registerToolWindow(
@@ -94,23 +175,23 @@ ToolWindow debugTool = twManager.registerToolWindow(
 );
 </source>
             </subsection>
-            <subsection name="Unregister a ToolWindow">
+            <a name="TWM_Unregister"/>
+            <subsection name="How to unregister a ToolWindow?">
                 Use the following :
                 <source>ToolWindowManager twManager = new <a href="./../mydoggy-plaf/index.html">MyDoggyToolWindowManager(...)</a>;
 twManager.unregisterToolWindow("Debug");
 </source>
             </subsection>
-
-            <a name="aliasing"/>
-            <subsection name="Add a ToolWindow Alias">
+            <a name="TWM_Alias"/>
+            <subsection name="How to add a ToolWindow Alias?">
                 Use the following :
                 <source>ToolWindowManager twManager = new <a href="./../mydoggy-plaf/index.html">MyDoggyToolWindowManager(...)</a>;
 Object debugToolAlias = new DebugToolAlias();
 twManager.addAlias(debugTool, debugToolAlias);
 </source>
             </subsection>
-
-            <subsection name="ToolWindowManagerDescriptor">
+            <a name="TWM_Descriptor"/>
+            <subsection name="How to get a ToolWindowManagerDescriptor instance?">
                 <p>
                     To obtain the instance of the ToolWindowManagerDescriptor for a specific ToolWindowManager use the following:
                 </p>
@@ -120,8 +201,8 @@ ToolWindowManagerDescriptor descriptor = twManager.getToolWindowManagerDescripto
 
 </source>
             </subsection>
-            <a name="PushAwayMode"/>
-            <subsection name="ToolWindowManagerDescriptor - PushAwayMode">
+            <a name="TWM_PushAway"/>
+            <subsection name="How to set the PushAwayMode?">
                 <p>
                     After you have obtained an instance of the ToolWindowManagerDescriptor for a specific ToolWindowManager use
                     the following to change to PushAwayMode:
@@ -139,8 +220,8 @@ descriptor.setPushAwayMode(PushAwayMode.MOST_RECENT);
 ToolWindowManagerDescriptor descriptor = twManager.getToolWindowManagerDescriptor();
 PushAwayMode pushAwayMode = descriptor.getPushAwayMode();</source>
             </subsection>
-            <a name="CornerComponent"/>
-            <subsection name="ToolWindowManagerDescriptor - Corner Component">
+            <a name="TWM_Corner"/>
+            <subsection name="How to set a Corner Component?">
                 <p>
                     After you have obtained an instance of the ToolWindowManagerDescriptor for a specific ToolWindowManager use
                     the following to set a corner component:
@@ -155,7 +236,7 @@ descriptor.setCornerComponent(
 
         <section name="ToolWindow">
             <a name="TW_ShowHide"/>
-            <subsection name="Show or Hide">
+            <subsection name="How to show or hide a ToolWindow?">
                 Use the following :
                 <source>
                     ToolWindow tool = toolWindowManager.getToolWindow(0);
@@ -179,7 +260,7 @@ descriptor.setCornerComponent(
             </subsection>
 
             <a name="TW_Activate"/>
-            <subsection name="Activate">
+            <subsection name="How to activate a ToolWindow?">
                 Use the following :
                 <source>
                     ToolWindow tool = toolWindowManager.getToolWindow(0);
@@ -189,7 +270,7 @@ descriptor.setCornerComponent(
             </subsection>
 
             <a name="TW_Move"/>
-            <subsection name="Move">
+            <subsection name="How to Move a ToolWindow?">
                 Use the following :
                 <source>
                     ToolWindow tool = toolWindowManager.getToolWindow(0);
@@ -199,7 +280,7 @@ descriptor.setCornerComponent(
             </subsection>
 
             <a name="TW_Flashing"/>
-            <subsection name="Flashing">
+            <subsection name="How to request attention using Flashing?">
                 Use the following :
                 <source>
                     ToolWindow tool = toolWindowManager.getToolWindow(0);
@@ -217,7 +298,7 @@ descriptor.setCornerComponent(
             </subsection>
 
             <a name="TW_PCL"/>
-            <subsection name="Add PropertyChangeListener">
+            <subsection name="How to add a PropertyChangeListener?">
                 Use the following :
                 <source>
                     ToolWindow tool = toolWindowManager.getToolWindow(0);
@@ -242,7 +323,7 @@ descriptor.setCornerComponent(
             </subsection>
 
             <a name="TW_PopupMenu"/>
-            <subsection name="Enable/Disable PopupMenu">
+            <subsection name="How to enable/disable the PopupMenu?">
                 Use the following :
                 <source>
                     DockedTypeDescriptor desc = (DockedTypeDescriptor)
@@ -256,7 +337,7 @@ descriptor.setCornerComponent(
             </subsection>
 
             <a name="TW_Tools"/>
-            <subsection name="Tools Menu">
+            <subsection name="How to manage the Tools Menu?">
                 Use the following to retrieve the tools menu:
                 <source>
                     DockedTypeDescriptor desc = (DockedTypeDescriptor)
@@ -272,7 +353,7 @@ descriptor.setCornerComponent(
             </subsection>
 
             <a name="TW_DockPanelLength"/>
-            <subsection name="Dock Panel Length">
+            <subsection name="How to set the Dock Panel Length?">
                 Use the following:
                 <source>
                     DockedTypeDescriptor desc = (DockedTypeDescriptor)
@@ -286,7 +367,7 @@ descriptor.setCornerComponent(
             </subsection>
 
             <a name="TW_ToolWindowActionHandler"/>
-            <subsection name="ToolWindowActionHandler">
+            <subsection name="How to set a ToolWindowActionHandler?">
                 Use the following:
                 <source>
                     DockedTypeDescriptor desc = (DockedTypeDescriptor)
@@ -298,7 +379,7 @@ descriptor.setCornerComponent(
             </subsection>
 
             <a name="TW_PreviewMode"/>
-            <subsection name="Enable Preview Mode">
+            <subsection name="How to enable the Preview Mode?">
                 Use the following :
                 <source>
                     DockedTypeDescriptor desc = (DockedTypeDescriptor)
@@ -319,7 +400,7 @@ descriptor.setCornerComponent(
             </subsection>
 
             <a name="TW_STD_TransparentMode"/>
-            <subsection name="Enable Transparent Mode on SlidingType">
+            <subsection name="How to enable the Transparent Mode on SlidingType?">
                 Use the following :
                 <source>
                     SlidingTypeDescriptor desc = (SlidingTypeDescriptor)
@@ -432,7 +513,7 @@ descriptor.setCornerComponent(
         <section name="ToolWindowTab">
 
             <a name="TWT_Add"/>
-            <subsection name="Add">
+            <subsection name="How to add a ToolWindowTab?">
                 Use the following :
                 <source>
                     ToolWindow tool = toolWindowManager.getToolWindow(0);
@@ -446,10 +527,11 @@ descriptor.setCornerComponent(
                     and no icon.
                 </p>
             </subsection>
+
         </section>
 
         <section name="ToolWindowGroup">
-            <subsection name="Get a group">
+            <subsection name="How to get a group?">
                 Use the following :
                 <source>
 ToolWindowGroup group = toolWindowManager.getToolWindowGroup("group_name");
@@ -460,7 +542,8 @@ ToolWindowGroup group = toolWindowManager.getToolWindowGroup("group_name");
                     of ToolWindowGroup and associates the group created with the specified name in this manager.
                 </p>
             </subsection>
-            <subsection name="Remove a group">
+
+            <subsection name="How to remove a group?">
                 Use the following :
                 <source>
 toolWindowManager.removeToolWindowGroup("group_name");
@@ -469,7 +552,8 @@ toolWindowManager.removeToolWindowGroup("group_name");
                     Removes the tool window group for this name from this manager if it is present.
                 </p>
             </subsection>
-            <subsection name="Check if a group exists">
+
+            <subsection name="How to check if a group exists?">
                 Use the following :
                 <source>
 boolean contains = toolWindowManager.containsGroup("group_name");
@@ -478,7 +562,8 @@ boolean contains = toolWindowManager.containsGroup("group_name");
                     Returns <tt>true</tt> if this manager contains a group for the specified name.
                 </p>
             </subsection>
-            <subsection name="Add a toolwindow">
+
+            <subsection name="How to add a toolwindow to a group?">
                 Use the following :
                 <source>
 ToolWindowGroup group = toolWindowManager.getToolWindowGroup("group_name");
@@ -489,7 +574,8 @@ group.addToolWindow(debugTool);
                     Appends the specified tool window to the end of this group.
                 </p>
             </subsection>
-            <subsection name="Remove a toolwindow">
+
+            <subsection name="How to Remove a toolwindow from a group?">
                 Use the following :
                 <source>
 ToolWindowGroup group = toolWindowManager.getToolWindowGroup("group_name");
@@ -500,7 +586,8 @@ group.removeToolWindow(debugTool);
                     Removes the occurrence in this group of the specified tool window.
                 </p>
             </subsection>
-            <subsection name="Show or hide a group">
+
+            <subsection name="How to show or hide a group?">
                 Use the following :
                 <source>
 ToolWindowGroup group = toolWindowManager.getToolWindowGroup("group_name");
@@ -511,7 +598,8 @@ group.setVisible(true);
                     in proper sequence.
                 </p>
             </subsection>
-            <subsection name="Add a ToolWindowGroupListener">
+
+            <subsection name="How to add a ToolWindowGroupListener?">
                 Use the following :
                 <source>
 ToolWindowGroup group = toolWindowManager.getToolWindowGroup("group_name");
@@ -527,7 +615,7 @@ group.addToolWindowGroupListener(listener);
         </section>
 
         <section name="ContentManager">
-            <subsection name="Add a content">
+            <subsection name="How to add a content?">
                 Use the following :
                 <source>
 ContentManager contentManager = toolWindowManager.getContentManager();
@@ -544,7 +632,7 @@ Content tools = ContentcontentManager.addContent("Tools"   // Content Key
                 </p>
             </subsection>
 
-            <subsection name="Remove a content">
+            <subsection name="How to remove a content?">
                 Use the following :
                 <source>
 ContentManager contentManager = toolWindowManager.getContentManager();
@@ -555,7 +643,7 @@ contentManager.removeContent(tools);
                 </p>
             </subsection>
 
-            <subsection name="Get the selected content">
+            <subsection name="How to get the selected content?">
                 Use the following :
                 <source>
 ContentManager contentManager = toolWindowManager.getContentManager();
@@ -566,7 +654,7 @@ Content content = contentManager.getSelectedContent();
                 </p>
             </subsection>
 
-            <subsection name="Change the ContentManagerUI">
+            <subsection name="How to change the ContentManagerUI?">
                 Use the following :
                 <source>
 ContentManager contentManager = toolWindowManager.getContentManager();
@@ -577,7 +665,7 @@ contentManager.setContentManagerUI(contentManagerUI);</source>
                 </p>
             </subsection>
 
-            <subsection name="Enable/Disable the ContentManager">
+            <subsection name="How to enable/disable the ContentManager?">
                 Use the following :
                 <source>
 ContentManager contentManager = toolWindowManager.getContentManager();
@@ -591,7 +679,7 @@ contentManager.setEnabled(false); // or true to enable
         </section>
 
         <section name="ContentManagerUI">
-            <subsection name="To obtain the instance of ContentManagerUI">
+            <subsection name="How to obtain the instance of the ContentManagerUI interface?">
                 Use the following :
                 <source>
 ContentManagerUI contentManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
@@ -600,7 +688,8 @@ ContentManagerUI contentManagerUI = toolWindowManager.getContentManager().getCon
                     Returns the content manager ui.
                 </p>
             </subsection>
-            <subsection name="To change ContentManagerUI">
+
+            <subsection name="How to change the ContentManagerUI?">
                 Use the following :
                 <source>
 toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyDesktopContentManagerUI());
@@ -609,7 +698,8 @@ toolWindowManager.getContentManager().setContentManagerUI(new MyDoggyDesktopCont
                     Sets the content manager ui.
                 </p>
             </subsection>
-            <subsection name="To set 'Closeable' and 'Detachable' property">
+
+            <subsection name="How to set 'Closeable' and 'Detachable' property?">
                 Use the following :
                 <source>
 ContentManagerUI contentManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
@@ -620,7 +710,8 @@ contentManagerUI.setsetDetachable(true);
                     Sets the 'Closeable' and/or 'Detachable' property of all contents registered to content manager.
                 </p>
             </subsection>
-            <subsection name="To add a ContentManagerUIListener">
+
+            <subsection name="How to add a ContentManagerUIListener?">
                 Use the following :
                 <source>
 ContentManagerUI contentManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
@@ -636,7 +727,8 @@ contentManagerUI.addContentManagerUIListener(listener);
         </section>
 
         <section name="ContentUI">
-            <subsection name="To retrieve the ContentUI for a Content">
+            <a name="CUI_GET1"/>
+            <subsection name="How to retrieve the ContentUI given a Content?">
                 Use the following :
                 <source>
 ContentManagerUI contentManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
@@ -648,7 +740,8 @@ ContentUI contentUi = contentManagerUI.getContentUI(content);
                 </p>
             </subsection>
 
-            <subsection name="To retrieve the Content from a ContentUI">
+            <a name="CUI_GET2"/>
+            <subsection name="How to retrieve the Content from a ContentUI?">
                 Use the following :
                 <source>
 ContentManagerUI contentManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
@@ -660,7 +753,9 @@ assert contentUi.getContent() == content;
                     Returns the Content contropart of a ContentUI instance.
                 </p>
             </subsection>
-            <subsection name="To set 'Closeable' and 'Detachable' property">
+
+            <a name="CUI_SET_CD"/>
+            <subsection name="How to set the 'Closeable' and 'Detachable' property?">
                 Use the following :
                 <source>
 ContentManagerUI contentManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
@@ -673,7 +768,9 @@ contentUi.setDetachable(true);
                     Sets the 'Closeable' and/or 'Detachable' property of a specific ContentUI.
                 </p>
             </subsection>
-            <subsection name="To customize transparency support.">
+
+            <a name="CUI_Transparency"/>
+            <subsection name="How to customize transparency support?">
                 Use the following :
                 <source>
 ContentManagerUI contentManagerUI = toolWindowManager.getContentManager().getContentManagerUI();
@@ -693,13 +790,16 @@ contentUi.setTransparentDelay(1000);
         </section>
 
         <section name="PersistenceDelegate">
-            <subsection name="PersistenceDelegate">
+            <a name="PD_GET"/>
+            <subsection name="How to get an instance of the PersistenceDelegate interface?">
                 <p>
                     To obtain the instance of the PersistenceDelegate for a specific ToolWindowManager use the following:
                 </p>
                 <source>PersistenceDelegate pstDelegate = twManager.getPersistenceDelegate();</source>
             </subsection>
-            <subsection name="PersistenceDelegate - Store Workspace">
+
+            <a name="PD_STORE"/>
+            <subsection name="How to store a workspace?">
                 <p>
                     After you have obtained an instance of the PersistenceDelegate for a specific ToolWindowManager use
                     the following to store the workspace:
@@ -713,7 +813,9 @@ try {
     e.printStackTrace();
 }</source>
             </subsection>
-            <subsection name="PersistenceDelegate - Apply stored Workspace">
+
+            <a name="PD_RESTORE"/>
+            <subsection name="How to restore a saved workspace?">
                 <p>
                     After you have obtained an instance of the PersistenceDelegate for a specific ToolWindowManager use
                     the following to apply a saved workspace to the current workspace:

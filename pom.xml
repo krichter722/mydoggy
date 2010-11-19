@@ -194,6 +194,7 @@
                 </reportSets>
             </plugin>
 
+<!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-changes-plugin</artifactId>
@@ -205,6 +206,7 @@
                     </reportSet>
                 </reportSets>
             </plugin>
+-->
         </plugins>
     </reporting>
 </project>
