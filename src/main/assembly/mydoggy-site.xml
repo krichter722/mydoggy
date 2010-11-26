@@ -28,13 +28,13 @@
 
         <fileSet>
             <directory>mydoggy-examples/src/jnlp</directory>
-            <outputDirectory>site/examples/jnlp</outputDirectory>
+            <outputDirectory>site/jnlp</outputDirectory>
             <includes/>
         </fileSet>
 
         <fileSet>
             <directory>target/site/apidocs</directory>
-            <outputDirectory>site/api</outputDirectory>
+            <outputDirectory>site/apidocs</outputDirectory>
             <includes/>
         </fileSet>
     </fileSets>
@@ -42,47 +42,19 @@
     <files>
         <file>
             <source>mydoggy-api/target/mydoggy-api-1.5.0.jar</source>
-            <outputDirectory>site/examples/jnlp</outputDirectory>
+            <outputDirectory>site/jnlp</outputDirectory>
         </file>
         <file>
             <source>mydoggy-plaf/target/mydoggy-plaf-1.5.0.jar</source>
-            <outputDirectory>site/examples/jnlp</outputDirectory>
+            <outputDirectory>site/jnlp</outputDirectory>
         </file>
         <file>
             <source>mydoggy-res/target/mydoggy-res-1.5.0.jar</source>
-            <outputDirectory>site/examples/jnlp</outputDirectory>
+            <outputDirectory>site/jnlp</outputDirectory>
         </file>
         <file>
             <source>mydoggy-examples/target/mydoggy-examples-1.5.0.jar</source>
-            <outputDirectory>site/examples/jnlp</outputDirectory>
-        </file>
-        <file>
-            <source>mydoggy-plaf/src/main/resources/persistence.dtd</source>
-            <outputDirectory>site/plaf/resources/dtd</outputDirectory>
-        </file>
-        <file>
-            <source>mydoggy-plaf/src/main/resources/persistence_1_2_0.dtd</source>
-            <outputDirectory>site/plaf/resources/dtd</outputDirectory>
-        </file>
-        <file>
-            <source>mydoggy-plaf/src/main/resources/persistence_1_3_0.dtd</source>
-            <outputDirectory>site/plaf/resources/dtd</outputDirectory>
-        </file>
-        <file>
-            <source>mydoggy-plaf/src/main/resources/persistence_1_3_1.dtd</source>
-            <outputDirectory>site/plaf/resources/dtd</outputDirectory>
-        </file>
-        <file>
-            <source>mydoggy-plaf/src/main/resources/persistence_1_4_0.dtd</source>
-            <outputDirectory>site/plaf/resources/dtd</outputDirectory>
-        </file>
-        <file>
-            <source>mydoggy-plaf/src/main/resources/persistence_1_4_1.dtd</source>
-            <outputDirectory>site/plaf/resources/dtd</outputDirectory>
-        </file>
-        <file>
-            <source>mydoggy-plaf/src/main/resources/persistence_1_4_2.dtd</source>
-            <outputDirectory>site/plaf/resources/dtd</outputDirectory>
+            <outputDirectory>site/jnlp</outputDirectory>
         </file>
     </files>
 

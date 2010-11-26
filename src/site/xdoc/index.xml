@@ -16,15 +16,15 @@
             </p>
             <ul>
                 <li>
-                    <a href="./examples/mydoggyset.html">MyDoggySet</a>
+                    <a href="./docs/mydoggyset.html">MyDoggySet</a>
                     <small>
-                        <a href="./examples/jnlp/mydoggyset.jnlp">(WebStart)</a>,
+                        <a href="./jnlp/mydoggyset.jnlp">(WebStart)</a>,
                     </small>
                 </li>
                 <li>
-                    <a href="tutorial/tutorial.html">TutorialSet</a>
+                    <a href="./docs/tutorial.html">TutorialSet</a>
                     <small>
-                        <a href="./examples/jnlp/tutorialset.jnlp">(WebStart)</a>
+                        <a href="./jnlp/tutorialset.jnlp">(WebStart)</a>
                     </small>
                 </li>
                 <li>
@@ -76,17 +76,24 @@
                 <li>
                     <font style="color:green;font-weight:bold">mydoggy-res</font> :
                     contains all the resources (icons, messages and so on...). Look
-                    <a href="./plaf/resourceManager.html">here</a>
+                    <a href="./docs/resourceManager.html">here</a>
                     to see how to customize mydoggy.
                 </li>
                 <li>
-                    <font style="color:green;font-weight:bold">mydoggy-examples</font> :
-                    contains some examples to see mydoggy in action.
+                    <font style="color:green;font-weight:bold">mydoggy-docs</font> :
+                    contains some docs to see mydoggy in action.
                 </li>
             </ul>
             <p>
                 Each module correspond to a directory where you can find the sources of the module and other stuff.
             </p>
+        </section>
+
+        <section name="Work in progress...">
+            Dear user,
+            the site is not complete. So you will probably find some
+            inconsistency during the navigation.
+            Please be patient, I'm updating the site day by day.
         </section>
     </body>
 </document>

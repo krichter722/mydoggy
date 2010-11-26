@@ -16,7 +16,7 @@
             </p>
             <p>
                 Launch
-                <a href="./jnlp/mydoggyset.jnlp">MyDoggySet</a>
+                <a href="../jnlp/mydoggyset.jnlp">MyDoggySet</a>
                 by using Java Web Start.
             </p>
         </section>
