@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.tutorial.doc;
+package org.noos.xing.mydoggy.tutorialset.doc;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -57,7 +57,7 @@ public class TutorialToDoc {
 
     public static void main(String[] args) {
         TutorialToDoc tutorialToDoc = new TutorialToDoc();
-        System.out.println(tutorialToDoc.parse("/home/angelo/Projects/java/sourceforge/mydoggy/mydoggy/mydoggy-examples/src/main/java/org/noos/xing/mydoggy/tutorial/TutorialSet5.java"));
+        System.out.println(tutorialToDoc.parse("/home/angelo/Projects/java/sourceforge/mydoggy/mydoggy/mydoggy-examples/src/main/java/org/noos/xing/mydoggy/tutorialset/TutorialSet5.java"));
     }
 
 

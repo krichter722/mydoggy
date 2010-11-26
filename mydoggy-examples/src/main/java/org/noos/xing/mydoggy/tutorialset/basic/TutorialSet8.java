@@ -1,16 +1,15 @@
-package org.noos.xing.mydoggy.tutorial.basic;
+package org.noos.xing.mydoggy.tutorialset.basic;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class TutorialSet9 {
+public class TutorialSet8 {
     private JFrame frame;
     private ToolWindowManager toolWindowManager;
 
@@ -33,6 +32,7 @@ public class TutorialSet9 {
         // Activate "Debug" Tool
         ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
         debugTool.setActive(true);
+
 
         // Aggregate "Run" tool
         ToolWindow runTool = toolWindowManager.getToolWindow("Run");
@@ -86,6 +86,7 @@ public class TutorialSet9 {
                                              null,                       // Icon
                                              new JButton("Run Tool"),    // Component
                                              ToolWindowAnchor.LEFT);     // Anchor
+
 
         // Made all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows())
@@ -168,12 +169,8 @@ public class TutorialSet9 {
     }
 
     protected void setupContentManagerUI() {
-
-        ContentManager contentManager = toolWindowManager.getContentManager();
-        MultiSplitContentManagerUI contentManagerUI = new MyDoggyMultiSplitContentManagerUI();
-        contentManager.setContentManagerUI(contentManagerUI);
-
-
+        // By default the content manager ui is a TabbedContentManagerUI<TabbedContentUI> instance.
+        TabbedContentManagerUI<TabbedContentUI> contentManagerUI = (TabbedContentManagerUI<TabbedContentUI>) toolWindowManager.getContentManager().getContentManagerUI();
         contentManagerUI.setShowAlwaysTab(true);
         contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
         contentManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
@@ -193,18 +190,10 @@ public class TutorialSet9 {
         contentUI.setTransparentMode(true);
         contentUI.setTransparentRatio(0.7f);
         contentUI.setTransparentDelay(1000);
-
-        // Now Register two other contents...
-        contentManager.addContent("Tree Key 2", "Tree Title 2", null, new JTree(), null,
-                                 new MultiSplitConstraint(contentManager.getContent(0), 0));
-
-        contentManager.addContent("Tree Key 3", "Tree Title 3", null, new JTree(), null,
-                                 new MultiSplitConstraint(AggregationPosition.RIGHT));
-
     }
 
     public static void main(String[] args) {
-        TutorialSet9 test = new TutorialSet9();
+        TutorialSet8 test = new TutorialSet8();
         try {
             test.run();
         } catch (Exception e) {

@@ -20,7 +20,7 @@ MYDOGGY_BIN_HOME=`dirname "$0"`
 export JAVA_HOME
 export MYDOGGY_HOME
 
-MYDOGGY_MCN="org.noos.xing.mydoggy.tutorial.TutorialSet"
+MYDOGGY_MCN="org.noos.xing.mydoggy.tutorialset.TutorialSet"
 
 CLASSPATH=../lib/mydoggy-api-1.5.0.jar
 CLASSPATH=$CLASSPATH:../lib/mydoggy-plaf-1.5.0.jar

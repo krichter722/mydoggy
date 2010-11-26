@@ -1,14 +1,16 @@
-package org.noos.xing.mydoggy.tutorial.basic;
+package org.noos.xing.mydoggy.tutorialset.basic;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
+import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class TutorialSet4 {
+public class TutorialSet12 {
     private JFrame frame;
     private ToolWindowManager toolWindowManager;
 
@@ -31,6 +33,14 @@ public class TutorialSet4 {
         // Activate "Debug" Tool
         ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
         debugTool.setActive(true);
+
+        // Aggregate "Run" tool
+        ToolWindow runTool = toolWindowManager.getToolWindow("Run");
+        runTool.aggregate(AggregationPosition.TOP);
+
+        // Aggregate "Properties" tool
+        ToolWindow propertiesTool = toolWindowManager.getToolWindow("Properties");
+        propertiesTool.aggregate(AggregationPosition.RIGHT);
 
         frame.setVisible(true);
     }
@@ -73,6 +83,19 @@ public class TutorialSet4 {
                                              ToolWindowAnchor.LEFT);       // Anchor
 
         setupDebugTool();
+        // Register another Tool.
+        toolWindowManager.registerToolWindow("Run",                      // Id
+                                             "Run Tool",                 // Title
+                                             null,                       // Icon
+                                             new JButton("Run Tool"),    // Component
+                                             ToolWindowAnchor.LEFT);     // Anchor
+
+        // Register another Tool.
+        toolWindowManager.registerToolWindow("Properties",                      // Id
+                                             "Properties Tool",                 // Title
+                                             null,                              // Icon
+                                             new JButton("Properties Tool"),    // Component
+                                             ToolWindowAnchor.LEFT);            // Anchor
 
         // Made all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows())
@@ -84,7 +107,7 @@ public class TutorialSet4 {
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
     }
 
-    
+
     protected void setupDebugTool() {
         ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
 
@@ -111,7 +134,7 @@ public class TutorialSet4 {
             }
         });
         dockedTypeDescriptor.setAnimating(true);
-       
+
         // SlidingTypeDescriptor
         SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
         slidingTypeDescriptor.setEnabled(false);
@@ -131,8 +154,15 @@ public class TutorialSet4 {
         floatingTypeDescriptor.setTransparentDelay(1000);
         floatingTypeDescriptor.setAnimating(true);
 
+        // Setup Tabs
+        initTabs();
     }
 
+    protected void initTabs() {
+        ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
+        ToolWindowTab profilingTab = debugTool.addToolWindowTab("Profiling", new JButton("Profiling"));
+        profilingTab.setCloseable(true);
+    }
 
     protected void initContentManager() {
          JTree treeContent = new JTree();
@@ -140,14 +170,51 @@ public class TutorialSet4 {
         ContentManager contentManager = toolWindowManager.getContentManager();
         Content content = contentManager.addContent("Tree Key",
                                                     "Tree Title",
-                                                    null,           // An icon
+                                                    null,      // An icon
                                                     treeContent);
         content.setToolTipText("Tree tip");
-     }
 
+        setupContentManagerUI();
+
+        contentManager.setEnabled(false);
+
+    }
+
+    protected void setupContentManagerUI() {
+        ContentManager contentManager = toolWindowManager.getContentManager();
+        MultiSplitContentManagerUI contentManagerUI = new MyDoggyMultiSplitContentManagerUI();
+        contentManager.setContentManagerUI(contentManagerUI);
+
+        contentManagerUI.setShowAlwaysTab(true);
+        contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
+        contentManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
+            public boolean contentUIRemoving(ContentManagerUIEvent event) {
+                return JOptionPane.showConfirmDialog(frame, "Are you sure?") == JOptionPane.OK_OPTION;
+            }
+
+            public void contentUIDetached(ContentManagerUIEvent event) {
+                JOptionPane.showMessageDialog(frame, "Hello World!!!");
+            }
+        });
+
+        TabbedContentUI contentUI = contentManagerUI.getContentUI(toolWindowManager.getContentManager().getContent(0));
+
+        contentUI.setCloseable(true);
+        contentUI.setDetachable(true);
+        contentUI.setTransparentMode(true);
+        contentUI.setTransparentRatio(0.7f);
+        contentUI.setTransparentDelay(1000);
+
+        // Now Register two other contents...
+        contentManager.addContent("Tree Key 2", "Tree Title 2", null, new JTree(), null,
+                                 new MultiSplitConstraint(contentManager.getContent(0), 0));
+
+        contentManager.addContent("Tree Key 3", "Tree Title 3", null, new JTree(), null,
+                                 new MultiSplitConstraint(AggregationPosition.RIGHT));
+    }
 
     public static void main(String[] args) {
-        TutorialSet4 test = new TutorialSet4();
+        TutorialSet12 test = new TutorialSet12();
         try {
             test.run();
         } catch (Exception e) {

@@ -1,20 +1,14 @@
-package org.noos.xing.mydoggy.tutorial.basic;
+package org.noos.xing.mydoggy.tutorialset.basic;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
-import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 
-public class TutorialSet6 {
+public class TutorialSet4 {
     private JFrame frame;
     private ToolWindowManager toolWindowManager;
 
@@ -64,32 +58,6 @@ public class TutorialSet6 {
 
         // Set a layout manager. I love TableLayout. It's powerful.
         this.frame.getContentPane().setLayout(new TableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
-
-        // Store (on close) and load (on start) the toolwindow manager workspace.
-        this.frame.addWindowListener(new WindowAdapter() {
-            public void windowOpened(WindowEvent e) {
-                try {
-                    File workspaceFile = new File("workspace.xml");
-                    if (workspaceFile.exists()) {
-                        FileInputStream inputStream = new FileInputStream("workspace.xml");
-                        toolWindowManager.getPersistenceDelegate().apply(inputStream);
-                        inputStream.close();
-                    }
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-            }
-
-            public void windowClosing(WindowEvent e) {
-                try {
-                    FileOutputStream output = new FileOutputStream("workspace.xml");
-                    toolWindowManager.getPersistenceDelegate().save(output);
-                    output.close();
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-            }
-        });
     }
 
     protected void initToolWindowManager() {
@@ -116,7 +84,7 @@ public class TutorialSet6 {
         this.frame.getContentPane().add(myDoggyToolWindowManager, "1,1,");
     }
 
-
+    
     protected void setupDebugTool() {
         ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
 
@@ -143,7 +111,7 @@ public class TutorialSet6 {
             }
         });
         dockedTypeDescriptor.setAnimating(true);
-
+       
         // SlidingTypeDescriptor
         SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
         slidingTypeDescriptor.setEnabled(false);
@@ -162,7 +130,9 @@ public class TutorialSet6 {
         floatingTypeDescriptor.setTransparentRatio(0.2f);
         floatingTypeDescriptor.setTransparentDelay(1000);
         floatingTypeDescriptor.setAnimating(true);
+
     }
+
 
     protected void initContentManager() {
          JTree treeContent = new JTree();
@@ -170,39 +140,14 @@ public class TutorialSet6 {
         ContentManager contentManager = toolWindowManager.getContentManager();
         Content content = contentManager.addContent("Tree Key",
                                                     "Tree Title",
-                                                    null,      // An icon
+                                                    null,           // An icon
                                                     treeContent);
         content.setToolTipText("Tree tip");
+     }
 
-        setupContentManagerUI();
-    }
-
-    protected void setupContentManagerUI() {
-        // By default the content manager ui is a TabbedContentManagerUI<TabbedContentUI> instance. 
-        TabbedContentManagerUI<TabbedContentUI> contentManagerUI = (TabbedContentManagerUI<TabbedContentUI>) toolWindowManager.getContentManager().getContentManagerUI();
-        contentManagerUI.setShowAlwaysTab(true);
-        contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
-        contentManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
-            public boolean contentUIRemoving(ContentManagerUIEvent event) {
-                return JOptionPane.showConfirmDialog(frame, "Are you sure?") == JOptionPane.OK_OPTION;
-            }
-
-            public void contentUIDetached(ContentManagerUIEvent event) {
-                JOptionPane.showMessageDialog(frame, "Hello World!!!");
-            }
-        });
-
-        TabbedContentUI contentUI = contentManagerUI.getContentUI(toolWindowManager.getContentManager().getContent(0));
-
-        contentUI.setCloseable(true);
-        contentUI.setDetachable(true);
-        contentUI.setTransparentMode(true);
-        contentUI.setTransparentRatio(0.7f);
-        contentUI.setTransparentDelay(1000);
-    }
 
     public static void main(String[] args) {
-        TutorialSet6 test = new TutorialSet6();
+        TutorialSet4 test = new TutorialSet4();
         try {
             test.run();
         } catch (Exception e) {

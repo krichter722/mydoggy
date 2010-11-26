@@ -23,6 +23,6 @@
         <jar main="true" href="mydoggy-examples-1.5.0.jar"/>
     </resources>
 
-    <application-desc main-class="org.noos.xing.mydoggy.tutorial.TutorialSet"/>
+    <application-desc main-class="org.noos.xing.mydoggy.tutorialset.TutorialSet"/>
 
 </jnlp>
