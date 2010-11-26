@@ -82,7 +82,7 @@
             <outputDirectory>.</outputDirectory>
         </file>
         <file>
-            <source>./src/main/assembly/jpbc-distro.xml</source>
+            <source>./src/main/assembly/mydoggy-distro.xml</source>
             <outputDirectory>./src/main/assembly/</outputDirectory>
         </file>
     </files>
