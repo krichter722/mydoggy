@@ -14,12 +14,26 @@
                 <ol type="1">
                     <li>
                         <a href="#TWM_Init">How to init a ToolWindowManager?</a>
+                    </li>
+                    <li>
                         <a href="#TWM_Register">How to register a ToolWindow?</a>
+                    </li>
+                    <li>
                         <a href="#TWM_Unregister">How to unregister a ToolWindow?</a>
+                    </li>
+                    <li>
                         <a href="#TWM_Alias">How to add a ToolWindow Alias?</a>
+                    </li>
+                    <li>
                         <a href="#TWM_Descriptor">How to get a ToolWindowManagerDescriptor instance?</a>
+                    </li>
+                    <li>
                         <a href="#TWM_PushAway">How to set the PushAwayMode?</a>
+                    </li>
+                    <li>
                         <a href="#TWM_Corner">How to set a Corner Component?</a>
+                    </li>
+                    <li>
                         <a href="#TWM_Register">How to register a ToolWindow?</a>
                     </li>
                 </ol>

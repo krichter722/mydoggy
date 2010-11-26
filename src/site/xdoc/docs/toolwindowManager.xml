@@ -3,13 +3,17 @@
         "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
     <properties>
-        <title>MyDoggy - My Java Docking Framework : ToolWindow</title>
+        <title>MyDoggy - My Java Docking Framework : ToolWindowManager</title>
         <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
     </properties>
 
     <body>
         <section name="Table of Contents">
             <ol type="1">
+                <li>
+                    <a href="#ToolWindowManager">What is a ToolWindowManager?
+                    </a>
+                </li>
                 <li>
                     <a href="#ToolWindow">What is a ToolWindow?
                     </a>
@@ -30,8 +34,34 @@
                     <a href="#ToolWindowAction">What is a ToolWindowAction?
                     </a>
                 </li>
+                <li>
+                    <a href="#ToolWindowManagerDescriptor">What is a ToolWindowManagerDescriptor?
+                    </a>
+                </li>
+                <li>
+                    <a href="#PersistenceDelegate">What is a PersistenceDelegate?
+                    </a>
+                </li>
             </ol>
 
+        </section>
+
+        <a name="ToolWindowManager"/>
+        <section name="ToolWindowManager">
+            <p>
+                This interface is the main entry point to manage MyDoggy. Using this interface
+                the user can register/unregister toolwindows, groups and so on.
+                Furthermore, the user can obtain the content manager and type descriptor templates.
+                <br/>
+            </p>
+
+
+            <p> ToolWindowManagerDescriptor
+                This interface is used to modify the behaviours of the ToolWindowManager.
+                <br/>
+                You can now change the push-away mode of toolwindows and set corner components.
+                See Using page for how to.
+            </p>
         </section>
 
         <a name="ToolWindow"/>
@@ -297,5 +327,38 @@ ToolWindowGroup group = toolWindowManager
         <section name="What is a ToolWindowAction?">
 
         </section>
+
+
+        <a name="PersistenceDelegate"/>
+        <section name="PersistenceDelegate">
+            <p>
+                This interface provides useful methods to save and load the tool window manager's workspace.
+                When you request to save the workspace, all settings of ToolWindows with relative descriptors are saved.
+                To obtain an instance of PersistenceDelegate you have to invoke the method
+                <code>getPersistenceDelegate</code>
+                of
+                <code>ToolWindowManager</code>
+                interface. So you can obtain a persistence delegate specific to a
+                particular tool window manager.
+            </p>
+            <p>
+                When you request to save the workspace, all settings of toolwindows, and not only, with relative descriptors are saved.
+                See the specific DTD, relative to the version of mydoggy that you are using, to know all information saved.
+                <br/>
+
+                To obtain the instance of the PersistenceDelegate for a specific ToolWindowManager use the following:
+            </p>
+            <source>PersistenceDelegate pstDelegate = twManager.getPersistenceDelegate();</source>
+
+            <p>
+                MyDoggy arrives with a default implementation provided by
+                <br/>
+                <code>org.noos.xing.mydoggy.plaf.persistence.xml.XMLPersistenceDelegate</code>
+                <br/>
+                This implementation use the xml format to store all necessary data.
+            </p>
+        </section>
+
+
     </body>
 </document>

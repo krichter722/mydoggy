@@ -9,11 +9,10 @@
 
     <body>
         <div id="downloadbox">
-            <h5>Get MyDoggy 1.5.0 Now!!!</h5>
-            <span style="display: block; text-align: right; font-size: smaller">Released: July, 2010</span>
+            <h5>Get MyDoggy 1.5.0 (Beta) Now!!!</h5>
+            <span style="display: block; text-align: right; font-size: smaller">Released: December, 2010</span>
             <p>
-                <a href="download.html">MyDoggy 1.5.0</a>
-                <small>(distro 5.0 Mb - core 775 Kb)</small>
+                <a href="download.html">MyDoggy 1.5.0 (Beta)</a>
             </p>
             <ul>
                 <li>
@@ -66,29 +65,28 @@
             </p>
             <ul>
                 <li>
-                    <font style="color:red;font-weight:bold">MyDoggy-Api</font> :
+                    <font style="color:green;font-weight:bold">mydoggy-api</font> :
                     contains the application program interface used to control
                     the framework.
                 </li>
                 <li>
-                    <font style="color:red;font-weight:bold">MyDoggy-Plaf</font> :
+                    <font style="color:green;font-weight:bold">mydoggy-plaf</font> :
                     contains the default implementation of the api.
                 </li>
                 <li>
-                    <font style="color:red;font-weight:bold">MyDoggy-Res</font> :
-                    contains all the resources (icons and messages and so on...). Look
+                    <font style="color:green;font-weight:bold">mydoggy-res</font> :
+                    contains all the resources (icons, messages and so on...). Look
                     <a href="./plaf/resourceManager.html">here</a>
-                    to know how to customize mydoggy.
+                    to see how to customize mydoggy.
                 </li>
                 <li>
-                    <font style="color:red;font-weight:bold">MyDoggy-Examples</font> :
-                    contains some examples to see MyDoggy in action.
+                    <font style="color:green;font-weight:bold">mydoggy-examples</font> :
+                    contains some examples to see mydoggy in action.
                 </li>
             </ul>
             <p>
-                Each module correspond to a directory where you will find the sources of the module and other stuff.
+                Each module correspond to a directory where you can find the sources of the module and other stuff.
             </p>
-            
         </section>
     </body>
 </document>
