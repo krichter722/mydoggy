@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.tutorial.basic;
+package org.noos.xing.mydoggy.tutorialset.basic;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;

@@ -1,8 +1,8 @@
-package org.noos.xing.mydoggy.tutorial;
+package org.noos.xing.mydoggy.tutorialset;
 
 import org.noos.xing.mydoggy.scenario.ScenarioSet;
-import org.noos.xing.mydoggy.tutorial.basic.*;
-import org.noos.xing.mydoggy.tutorial.customization.TutorialSetCustomization1;
+import org.noos.xing.mydoggy.tutorialset.basic.*;
+import org.noos.xing.mydoggy.tutorialset.customization.TutorialSetCustomization1;
 
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)

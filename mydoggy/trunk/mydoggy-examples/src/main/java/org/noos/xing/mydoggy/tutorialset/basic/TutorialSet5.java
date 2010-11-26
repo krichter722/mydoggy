@@ -1,4 +1,4 @@
-package org.noos.xing.mydoggy.tutorial.basic;
+package org.noos.xing.mydoggy.tutorialset.basic;
 
 import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
@@ -9,7 +9,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class TutorialSet7 {
+public class TutorialSet5 {
     private JFrame frame;
     private ToolWindowManager toolWindowManager;
 
@@ -131,15 +131,6 @@ public class TutorialSet7 {
         floatingTypeDescriptor.setTransparentRatio(0.2f);
         floatingTypeDescriptor.setTransparentDelay(1000);
         floatingTypeDescriptor.setAnimating(true);
-
-        // Setup Tabs
-        initTabs();
-    }
-
-    protected void initTabs() {
-        ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
-        ToolWindowTab profilingTab = debugTool.addToolWindowTab("Profiling", new JButton("Profiling"));
-        profilingTab.setCloseable(true);
     }
 
 
@@ -154,11 +145,12 @@ public class TutorialSet7 {
         content.setToolTipText("Tree tip");
 
         setupContentManagerUI();
-    }
+     }
+
 
     protected void setupContentManagerUI() {
-        // By default the content manager ui is a TabbedContentManagerUI<TabbedContentUI> instance.
-        TabbedContentManagerUI<TabbedContentUI> contentManagerUI = (TabbedContentManagerUI<TabbedContentUI>) toolWindowManager.getContentManager().getContentManagerUI();
+        // By default a TabbedContentManagerUI is installed.
+        TabbedContentManagerUI contentManagerUI = (TabbedContentManagerUI) toolWindowManager.getContentManager().getContentManagerUI();
         contentManagerUI.setShowAlwaysTab(true);
         contentManagerUI.setTabPlacement(TabbedContentManagerUI.TabPlacement.BOTTOM);
         contentManagerUI.addContentManagerUIListener(new ContentManagerUIListener() {
@@ -171,7 +163,10 @@ public class TutorialSet7 {
             }
         });
 
-        TabbedContentUI contentUI = contentManagerUI.getContentUI(toolWindowManager.getContentManager().getContent(0));
+        TabbedContentUI contentUI = (TabbedContentUI) toolWindowManager.getContentManager().getContent(0).getContentUI();
+        // Or you can use :
+        // TabbedContentUI contentUI = contentManagerUI.getContentUI(toolWindowManager.getContentManager().getContent(0));
+        // without the need of the cast
 
         contentUI.setCloseable(true);
         contentUI.setDetachable(true);
@@ -180,8 +175,9 @@ public class TutorialSet7 {
         contentUI.setTransparentDelay(1000);
     }
 
+
     public static void main(String[] args) {
-        TutorialSet7 test = new TutorialSet7();
+        TutorialSet5 test = new TutorialSet5();
         try {
             test.run();
         } catch (Exception e) {

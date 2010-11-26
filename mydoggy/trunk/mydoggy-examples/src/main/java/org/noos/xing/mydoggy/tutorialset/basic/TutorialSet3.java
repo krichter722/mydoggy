@@ -1,16 +1,14 @@
-package org.noos.xing.mydoggy.tutorial.basic;
+package org.noos.xing.mydoggy.tutorialset.basic;
 
 import info.clearthought.layout.TableLayout;
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class TutorialSet2 {
+public class TutorialSet3 {
     private JFrame frame;
     private ToolWindowManager toolWindowManager;
 
@@ -31,7 +29,6 @@ public class TutorialSet2 {
 
     protected void start() {
         // Activate "Debug" Tool
-
         ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
         debugTool.setActive(true);
 
@@ -63,19 +60,19 @@ public class TutorialSet2 {
         this.frame.getContentPane().setLayout(new TableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
     }
 
-
-
     protected void initToolWindowManager() {
         // Create a new instance of MyDoggyToolWindowManager passing the frame.
         MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager();
         this.toolWindowManager = myDoggyToolWindowManager;
 
         // Register a Tool.
-        toolWindowManager.registerToolWindow("Debug",       // Id
+        toolWindowManager.registerToolWindow("Debug",                      // Id
                                              "Debug Tool",                 // Title
                                              null,                         // Icon
                                              new JButton("Debug Tool"),    // Component
                                              ToolWindowAnchor.LEFT);       // Anchor
+
+        setupDebugTool();
 
         // Made all tools available
         for (ToolWindow window : toolWindowManager.getToolWindows())
@@ -86,8 +83,59 @@ public class TutorialSet2 {
     }
 
 
+    protected void setupDebugTool() {
+        ToolWindow debugTool = toolWindowManager.getToolWindow("Debug");
+        debugTool.setVisible(true);
+
+        // RepresentativeAnchorDescriptor
+        RepresentativeAnchorDescriptor representativeAnchorDescriptor = debugTool.getRepresentativeAnchorDescriptor();
+        representativeAnchorDescriptor.setPreviewEnabled(true);
+        representativeAnchorDescriptor.setPreviewDelay(1500);
+        representativeAnchorDescriptor.setPreviewTransparentRatio(0.4f);
+
+        // DockedTypeDescriptor
+        DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.DOCKED);
+        dockedTypeDescriptor.setAnimating(true);
+        dockedTypeDescriptor.setHideRepresentativeButtonOnVisible(true);
+        dockedTypeDescriptor.setDockLength(300);
+        dockedTypeDescriptor.setPopupMenuEnabled(true);
+        JMenu toolsMenu = dockedTypeDescriptor.getToolsMenu();
+        toolsMenu.add(new AbstractAction("Hello World!!!") {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(frame, "Hello World!!!");
+            }
+        });
+        dockedTypeDescriptor.setToolWindowActionHandler(new ToolWindowActionHandler() {
+            public void onHideButtonClick(ToolWindow toolWindow) {
+                JOptionPane.showMessageDialog(frame, "Hiding...");
+                toolWindow.setVisible(false);
+            }
+        });
+        dockedTypeDescriptor.setAnimating(true);
+
+        // SlidingTypeDescriptor
+        SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.SLIDING);
+        slidingTypeDescriptor.setEnabled(false);
+        slidingTypeDescriptor.setTransparentMode(true);
+        slidingTypeDescriptor.setTransparentRatio(0.8f);
+        slidingTypeDescriptor.setTransparentDelay(0);
+        slidingTypeDescriptor.setAnimating(true);
+
+        // FloatingTypeDescriptor
+        FloatingTypeDescriptor floatingTypeDescriptor = (FloatingTypeDescriptor) debugTool.getTypeDescriptor(ToolWindowType.FLOATING);
+        floatingTypeDescriptor.setEnabled(true);
+        floatingTypeDescriptor.setLocation(150,200);
+        floatingTypeDescriptor.setSize(320,200);
+        floatingTypeDescriptor.setModal(false);
+        floatingTypeDescriptor.setTransparentMode(true);
+        floatingTypeDescriptor.setTransparentRatio(0.2f);
+        floatingTypeDescriptor.setTransparentDelay(1000);
+        floatingTypeDescriptor.setAnimating(true);
+    }
+
+
     public static void main(String[] args) {
-        TutorialSet2 test = new TutorialSet2();
+        TutorialSet3 test = new TutorialSet3();
         try {
             test.run();
         } catch (Exception e) {
