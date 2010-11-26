@@ -74,7 +74,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <img src="../images/toolwindow.png" alt="ToolWindow" border="0"/>
+                            <img src="../images/tool/toolwindow.png" alt="ToolWindow" border="0"/>
                         </td>
                         <td>
                             <p align="center">
@@ -139,7 +139,7 @@ ToolWindow toolwindow = toolWindowManager.registerToolWindow(
             </p>
 
             <subsection name="Docked">
-                <img src="../images/api/types/docked.png" alt="docked" border="0" hspace="18" align="left"/>
+                <img src="../images/tool/docked_type.png" alt="docked" border="0" hspace="18" align="left"/>
 
                 <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
                     <code>ToolWindowType.DOCKED</code>
@@ -165,7 +165,7 @@ ToolWindow toolwindow = toolWindowManager.registerToolWindow(
             </subsection>
 
             <subsection name="Sliding">
-                <img src="../images/api/types/sliding.png" alt="docked" border="0" hspace="18" align="left"/>
+                <img src="../images/tool/sliding_type.png" alt="docked" border="0" hspace="18" align="left"/>
 
                 <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
                     <code>ToolWindowType.SLIDING</code>
@@ -191,7 +191,7 @@ ToolWindow toolwindow = toolWindowManager.registerToolWindow(
             </subsection>
 
             <subsection name="Floating">
-                <img src="../images/api/types/floating.png" alt="docked" border="0" hspace="18" align="left"/>
+                <img src="../images/tool/floating_type.png" alt="docked" border="0" hspace="18" align="left"/>
 
                 <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
                     <code>ToolWindowType.FLOATING</code>
@@ -225,7 +225,7 @@ FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor)
             </subsection>
 
             <subsection name="Floating Free">
-                <img src="../images/api/types/floatingFree.png" alt="docked" border="0" hspace="18" align="left"/>
+                <img src="../images/tool/floatingfree_type.png" alt="docked" border="0" hspace="18" align="left"/>
 
                 <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
                     <code>ToolWindowType.FLOATING_FREE</code>
@@ -245,7 +245,7 @@ FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor)
             </subsection>
 
             <subsection name="Flaoting Live">
-                <img src="../images/api/types/floatingLive.png" alt="docked" border="0" hspace="18" align="left"/>
+                <img src="../images/tool/floatinglive_type.png" alt="docked" border="0" hspace="18" align="left"/>
 
                 <a href="./apidocs/org/noos/xing/mydoggy/ToolWindowType.html">
                     <code>ToolWindowType.FLOATING_LIVE</code>
@@ -288,7 +288,7 @@ toolWindow.getTypeDescriptor(ToolWindowType.FLOATING_LIVE);
                 <tbody>
                     <tr>
                         <td>
-                            <img src="../images/api/toolWindowGroup_1.png" alt="ToolWindowGroup" border="0" hspace="18"/>
+                            <img src="../images/tool/group.png" alt="ToolWindowGroup" border="0" hspace="18"/>
                         </td>
                         <td>
                             <p>

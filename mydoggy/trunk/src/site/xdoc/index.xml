@@ -49,8 +49,11 @@
         </div>
 
         <section name="Introduction">
-            <img src="./images/mydoggy.png" alt="mydoggy" border="0"
-                 hspace="10" align="left"/>
+            <a href="./docs/mydoggyset.html">
+                <img src="./images/mydoggy.png" alt="mydoggy" border="0"
+                     hspace="10" align="left"/>
+            </a>
+
 
             <p>
                 MyDoggy is a Java docking framework to be used in cross-platform Swing applications.

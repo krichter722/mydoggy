@@ -9,7 +9,7 @@
 
     <body>
         <section name="TutorialSet">
-            <img src="./../images/examples/mydoggyset.png" alt="MyDoggySet" border="0" hspace="18" align="left"/>
+            <img src="./../images/demos/mydoggyset.png" alt="MyDoggySet" border="0" hspace="18" align="left"/>
             <p>
                 Using this application you can learn how to use the api provided by MyDoggy.
                 <br/>
