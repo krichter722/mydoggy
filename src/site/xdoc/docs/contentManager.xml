@@ -79,7 +79,7 @@ Content content = contentManager.getContent("Tools");
             </p>
             <a name="MultiSplitContentManagerUI"/>
             <subsection name="MultiSplitContentManagerUI">
-                <img src="./../images/plaf/multisplitContentManagerUI.png" alt="MultisplitContentManagerUI"
+                <img src="./../images/content/multisplit_cmui.png" alt="MultisplitContentManagerUI"
                      border="0" hspace="18" align="left"/>
                 <p>
                     This interface represents a ui that use a component that lets the user switch
@@ -95,7 +95,7 @@ contentManager.setContentManagerUI(new MyDoggyMultiSplitContentManagerUI());
             </subsection>
             <a name="TabbedContentManagerUI"/>
             <subsection name="TabbedContentManagerUI">
-                <img src="./../images/plaf/tabbedContentManagerUI.png" alt="TabbedContentManagerUI" border="0"
+                <img src="./../images/content/tabbed_cmui.png" alt="TabbedContentManagerUI" border="0"
                      hspace="18" align="left"/>
                 <p>
                     This interface represents a ui that use a component that lets the user switch
@@ -111,7 +111,7 @@ contentManager.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
             </subsection>
             <a name="DesktopContentManagerUI"/>
             <subsection name="DesktopContentManagerUI">
-                <img src="./../images/plaf/desktopContentManagerUI.png" alt="DesktopContentManagerUI" border="0"
+                <img src="./../images/content/desktop_cmui.png" alt="DesktopContentManagerUI" border="0"
                      hspace="18" align="left"/>
                 <p>
                     This interface represents a ui that use a container to create a multiple-document
