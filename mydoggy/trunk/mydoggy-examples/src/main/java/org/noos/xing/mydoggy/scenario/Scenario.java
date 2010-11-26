@@ -11,6 +11,8 @@ public interface Scenario {
 
     String getDescription();
 
+    String getSource();
+
     Window launch();
 
 }

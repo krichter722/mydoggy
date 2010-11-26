@@ -1,7 +1,7 @@
 package org.noos.xing.mydoggy.scenarioset;
 
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.scenario.Scenario;
+import org.noos.xing.mydoggy.scenario.AbstractScenario;
 import org.noos.xing.mydoggy.scenario.ScenarioSet;
 
 import javax.swing.*;
@@ -12,7 +12,7 @@ import java.awt.event.WindowEvent;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class TestScenario implements Scenario {
+public class TestScenario extends AbstractScenario {
 
     protected ScenarioSet scenarioSet;
     protected Class tutorialClass;

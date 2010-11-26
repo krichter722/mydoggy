@@ -5,7 +5,7 @@ import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentManager;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
-import org.noos.xing.mydoggy.scenario.Scenario;
+import org.noos.xing.mydoggy.scenario.AbstractScenario;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +19,7 @@ import java.io.FileOutputStream;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class LotOfContentScenario implements Scenario {
+public class LotOfContentScenario extends AbstractScenario {
 
     double p = TableLayout.PREFERRED;
     double f = TableLayout.FILL;

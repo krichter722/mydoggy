@@ -98,9 +98,10 @@ public class ScenarioSet {
     protected class ListScenarioView extends ComponentView {
         protected JList scenariosList;
         protected JTextArea descriptionArea;
+        protected JTextArea sourceArea;
 
         protected Component initComponent() {
-            JPanel mainPanel = new JPanel(new TableLayout(new double[][]{{0, -1, 0}, {0, -1, 1, -1, 0}}));
+            JPanel mainPanel = new JPanel(new TableLayout(new double[][]{{0, 250, 1, -1, 0}, {0, -1, 1, -1, 0}}));
 
             // Scenarios Panel
             JPanel scenariosPanel = new JPanel(new TableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
@@ -115,10 +116,19 @@ public class ScenarioSet {
             JPanel descriptionsPanel = new JPanel(new TableLayout(new double[][]{{0, -1, 120, 0}, {0, -1, 1, 20, 0}}));
             descriptionsPanel.setBorder(new TitledBorder("Description"));
             descriptionsPanel.add(new JScrollPane(descriptionArea = new JTextArea()), "1,1,2,1");
+            descriptionArea.setWrapStyleWord(true);
             descriptionsPanel.add(new JButton(new ViewContextAction("Execute", null, viewContext, "Execute", "Scenario")), "2,3,FULL,FULL");
+
+            // Source Panel
+            JPanel sourcePanel = new JPanel(new TableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
+            sourcePanel.setBorder(new TitledBorder("Source"));
+            sourcePanel.add(new JScrollPane(sourceArea = new JTextArea()), "1,1,FULL,FULL");
+            sourceArea.setWrapStyleWord(true);
+
 
             mainPanel.add(scenariosPanel, "1,1,FULL,FULL");
             mainPanel.add(descriptionsPanel, "1,3,FULL,FULL");
+            mainPanel.add(sourcePanel, "3,1,3,3");
 
             return mainPanel;
         }
@@ -146,6 +156,7 @@ public class ScenarioSet {
             viewContext.addViewContextChangeListener("Scenario", new ViewContextChangeListener() {
                 public void contextChange(ViewContextChangeEvent evt) {
                     descriptionArea.setText(((Scenario) viewContext.get("Scenario")).getDescription());
+                    sourceArea.setText(((Scenario) viewContext.get("Scenario")).getSource());
                 }
             });
         }
