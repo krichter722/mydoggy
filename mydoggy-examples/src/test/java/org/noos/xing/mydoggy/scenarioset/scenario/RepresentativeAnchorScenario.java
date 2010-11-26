@@ -5,7 +5,7 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.util.SwingUtil;
-import org.noos.xing.mydoggy.scenario.Scenario;
+import org.noos.xing.mydoggy.scenario.AbstractScenario;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +13,7 @@ import java.awt.*;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class RepresentativeAnchorScenario implements Scenario {
+public class RepresentativeAnchorScenario extends AbstractScenario {
 
     protected MyDoggyToolWindowManager toolWindowManager = new MyDoggyToolWindowManager();
     protected JFrame frame;

@@ -4,7 +4,7 @@ import info.clearthought.layout.TableLayout;
 import org.noos.xing.mydoggy.*;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.MyDoggyKeySpace;
-import org.noos.xing.mydoggy.scenario.Scenario;
+import org.noos.xing.mydoggy.scenario.AbstractScenario;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
 /**
  * @author Angelo De Caro (angelo.decaro@gmail.com)
  */
-public class ToolWindowActionScenario implements Scenario {
+public class ToolWindowActionScenario extends AbstractScenario {
 
     protected JFrame frame;
     protected ToolWindowManager toolWindowManager;

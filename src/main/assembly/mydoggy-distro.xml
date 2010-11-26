@@ -14,7 +14,7 @@
                 <include>org.noos.xing:mydoggy-examples</include>
             </includes>
             <binaries>
-                <outputDirectory>lib</outputDirectory>
+                <outputDirectory>jars</outputDirectory>
                 <includeDependencies>true</includeDependencies>
                 <unpack>false</unpack>
             </binaries>
@@ -25,9 +25,7 @@
                 <include>org.noos.xing:mydoggy-api</include>
                 <include>org.noos.xing:mydoggy-plaf</include>
                 <include>org.noos.xing:mydoggy-res</include>
-                <include>org.noos.xing:mydoggy-itest</include>
                 <include>org.noos.xing:mydoggy-examples</include>
-                <include>org.noos.xing:mydoggy-site-skin</include>
             </includes>
             <sources>
                 <fileSets>
@@ -82,6 +80,10 @@
         <file>
             <source>README.txt</source>
             <outputDirectory>.</outputDirectory>
+        </file>
+        <file>
+            <source>./src/main/assembly/jpbc-distro.xml</source>
+            <outputDirectory>./src/main/assembly/</outputDirectory>
         </file>
     </files>
 
