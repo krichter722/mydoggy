@@ -10,7 +10,6 @@ CONTENTS
 * Usage and Installation
 * Building instructions
 * Contact
-* Changes
 
  
 License
@@ -75,10 +74,6 @@ To build MyDoggy for JDK5 simply call :
 To build the binary and the source distribution simply call :
 
     mvn -Ddistro clean package install assembly:assembly
-
-To build the site simply call :
-
-    mvn -Dsite clean package site assembly:assembly
 
 
 Contact
