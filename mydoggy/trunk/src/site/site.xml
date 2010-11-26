@@ -23,16 +23,14 @@
         </menu>
 
         <menu name="Demos">
-            <item name="MyDoggySet" href="/examples/mydoggyset.html"/>
-            <item name="TutorialSet" href="/examples/tutorialset.html"/>
+            <item name="MyDoggySet" href="/docs/mydoggyset.html"/>
+            <item name="TutorialSet" href="/docs/tutorialset.html"/>
         </menu>
 
         <menu name="Documentation">
-            <item name="ToolWindowManager" href="/api/toolwindowManager.html"/>
-            <item name="ToolWindow" href="/api/toolwindow.html"/>
-            <item name="ContentManager" href="/api/contentManager.html"/>
-            <item name="TransparencyManager" href="/plaf/transparency.html"/>
-            <item name="ResourceManager" href="/plaf/resourceManager.html">
+            <item name="ToolWindowManager" href="/docs/toolwindowManager.html"/>
+            <item name="ContentManager" href="/docs/contentManager.html"/>
+            <item name="ResourceManager" href="/docs/resourceManager.html">
             </item>
         </menu>
 

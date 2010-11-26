@@ -11,8 +11,8 @@
         <section name="MyDoggySet">
             <img src="./../images/examples/mydoggyset.png" alt="MyDoggySet" border="0" hspace="18" align="left"/>
             <p>
-                MyDoggySet is a sample application to see MyDoggy in action.
-                You can modify toolwindow properties, show or hide groups and manage the content area
+                MyDoggySet is a demo application to see MyDoggy in action.
+                You can modify toolwindow properties, show or hide groups and manage the content area.
             </p>
             <p>
                 Launch
