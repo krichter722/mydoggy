@@ -16,7 +16,7 @@
                 In every step, pay attention to the code in green that highlights the new code introduced in that step.
             </p>
             <p>
-                Launch <a href="./examples/jnlp/tutorialset.jnlp">TutorialSet</a> using Java Web Start.
+                Launch <a href="../jnlp/tutorialset.jnlp">TutorialSet</a> using Java Web Start.
             </p>
         </section>
     </body>
