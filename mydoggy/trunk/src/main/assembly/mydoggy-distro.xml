@@ -17,7 +17,7 @@
                 <include>org.noos.xing:mydoggy-examples</include>
             </includes>
             <binaries>
-                <outputDirectory>jars</outputDirectory>
+                <outputDirectory>lib</outputDirectory>
                 <includeDependencies>true</includeDependencies>
                 <unpack>false</unpack>
             </binaries>
