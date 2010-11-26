@@ -11,6 +11,9 @@
     <moduleSets>
         <moduleSet>
             <includes>
+                <include>org.noos.xing:mydoggy-api</include>
+                <include>org.noos.xing:mydoggy-plaf</include>
+                <include>org.noos.xing:mydoggy-res</include>
                 <include>org.noos.xing:mydoggy-examples</include>
             </includes>
             <binaries>
