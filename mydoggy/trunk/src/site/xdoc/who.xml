@@ -1,0 +1,18 @@
+<!DOCTYPE document PUBLIC
+        "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+        "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+    <properties>
+        <title>My Java Docking Framework : Who Uses MyDoggy?</title>
+        <author email="adecaro@users.sourceforge.net">Angelo De Caro</author>
+    </properties>
+
+    <body>
+
+        <section name="Who Uses MyDoggy">
+            If your project uses the MyDoggy library and you don’t mind it appearing here please
+            <a href="./contact.html">contact</a>
+            me.
+        </section>
+    </body>
+</document>

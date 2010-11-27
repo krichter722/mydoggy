@@ -323,7 +323,7 @@
 </div>
 <div id="leftColumn">
     <div id="navcolumn">
-        #publishDate( "navigation-top" $decoration.publishDate $decoration.version )
+       #publishDate( "navigation-top" $decoration.publishDate $decoration.version )
        #mainMenu( $decoration.body.menus )
        #poweredByLogo( $decoration.poweredBy )
        #publishDate( "navigation-bottom" $decoration.publishDate $decoration.version )
