@@ -87,9 +87,13 @@
                     contains some docs to see mydoggy in action.
                 </li>
             </ul>
-            <p>
-                Each module correspond to a directory where you can find the sources of the module and other stuff.
-            </p>
+            Each module correspond to a directory where you can find the sources of the module and other stuff.
+        </section>
+
+        <section name="Who Uses MyDoggy?">
+            If your project uses the MyDoggy library and you don’t mind it appearing here please
+            <a href="./contact.html">contact</a>
+            me.
         </section>
 
         <section name="Work in progress...">
