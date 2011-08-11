@@ -31,6 +31,7 @@
                 <include>org.noos.xing:mydoggy-plaf</include>
                 <include>org.noos.xing:mydoggy-res</include>
                 <include>org.noos.xing:mydoggy-examples</include>
+                <include>org.noos.xing:mydoggy-site-skin</include>
             </includes>
             <sources>
                 <fileSets>
@@ -45,7 +46,6 @@
                         <outputDirectory>.</outputDirectory>
                         <includes>
                             <include>pom.xml</include>
-                            <include>*.iml</include>
                         </includes>
                     </fileSet>
                 </fileSets>
@@ -74,10 +74,6 @@
     </fileSets>
 
     <files>
-        <file>
-            <source>mydoggy.iml</source>
-            <outputDirectory>.</outputDirectory>
-        </file>
         <file>
             <source>pom.xml</source>
             <outputDirectory>.</outputDirectory>
