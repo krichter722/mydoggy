@@ -216,6 +216,9 @@ public class MultiSplitTabbedContentContainer<D extends Dockable> extends MultiS
                         } catch (Throwable t) {
                             // TODO: use a default imager
                             t.printStackTrace();
+
+                            setGhostImage(dge.getDragOrigin(),
+                                    SwingUtil.getImage(MyDoggyKeySpace.DRAG));
                         }
                     }
                 } else

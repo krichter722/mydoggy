@@ -11,15 +11,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library name="flamingo">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../lib/flamingo.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="library" name="Maven: tablelayout:TableLayout:20050920" level="project" />
     <orderEntry type="module" module-name="mydoggy-api" />
     <orderEntry type="module" module-name="mydoggy-plaf" />

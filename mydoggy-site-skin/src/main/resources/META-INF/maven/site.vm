@@ -302,18 +302,29 @@
     #end
 </head>
 <body class="composite">
-<div id="banner">
-    <a href="http://mydoggy.sourceforge.net" id="bannerLeft">
-        <img id="bannerImage" src="http://mydoggy.sourceforge.net/images/banners/banner_4.jpg" alt="" width="1124"/>
-    </a>
+##<div id="banner">
+##    <a href="http://mydoggy.sourceforge.net" id="bannerLeft">
+##        <img id="bannerImage" src="http://mydoggy.sourceforge.net/images/banners/banner_4.jpg" alt="" width="1124"/>
+##    </a>
+##
+##    <div class="clear">
+##        <hr/>
+##    </div>
+##</div>
 
-    <div class="clear">
-        <hr/>
-    </div>
-</div>
 <div id="breadcrumbs">
     #publishDate( "left" $decoration.publishDate $decoration.version )
-    <div class="xright">#links( $decoration.body.links )#publishDate( "right" $decoration.publishDate $decoration.version )</div>
+    <div class="xright">
+        #links( $decoration.body.links )
+        | <!-- AddThis Button BEGIN -->
+        <a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=xa-4d60deb101a7e912"><img
+                src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16"
+                alt="Bookmark and Share" style="border:0"/></a>
+        <script type="text/javascript"
+                src="http://s7.addthis.com/js/250/addthis_widget.js#username=xa-4d60deb101a7e912"></script>
+        <!-- AddThis Button END -->
+        #publishDate( "right" $decoration.publishDate $decoration.version )
+    </div>
     <div class="xcenter">
         MyDoggy - My Java Docking Framework
     </div>
@@ -323,7 +334,7 @@
 </div>
 <div id="leftColumn">
     <div id="navcolumn">
-       #publishDate( "navigation-top" $decoration.publishDate $decoration.version )
+        #publishDate( "navigation-top" $decoration.publishDate $decoration.version )
        #mainMenu( $decoration.body.menus )
        #poweredByLogo( $decoration.poweredBy )
        #publishDate( "navigation-bottom" $decoration.publishDate $decoration.version )
