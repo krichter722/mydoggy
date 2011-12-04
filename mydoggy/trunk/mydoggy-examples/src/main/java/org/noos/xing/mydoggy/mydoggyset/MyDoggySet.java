@@ -222,7 +222,7 @@ public class MyDoggySet {
 
     }
 
-    public static class MemoryMonitorDockableDescriptor extends CustomDockableDescriptor {
+    public class MemoryMonitorDockableDescriptor extends CustomDockableDescriptor {
 
         public MemoryMonitorDockableDescriptor(MyDoggyToolWindowManager manager, ToolWindowAnchor anchor) {
             super(manager, anchor);
@@ -258,6 +258,13 @@ public class MyDoggySet {
                 gc.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         System.gc();
+                        
+//                        JDialog dialog = new FloatingDialog(manager, frame, true);
+//                        dialog.setTitle("Hello World!!!");
+//                        dialog.setSize(320,200);
+//                        dialog.setLocation(100,100);
+//                        dialog.setModal(true);
+//                        dialog.setVisible(true);
                     }
                 });
 

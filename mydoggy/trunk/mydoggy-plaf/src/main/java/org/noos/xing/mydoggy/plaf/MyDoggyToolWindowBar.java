@@ -294,7 +294,7 @@ public class MyDoggyToolWindowBar extends PropertyChangeEventSource implements T
         return (getAvailableTools() > 0) ? getLength() : 0;
     }
 
-    public boolean isValueAdjusting() {
+    public synchronized boolean isValueAdjusting() {
         return valueAdjusting;
     }
 
