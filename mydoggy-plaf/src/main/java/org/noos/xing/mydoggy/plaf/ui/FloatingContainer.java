@@ -328,11 +328,19 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
 //            window.getContentPane().setVisible(false);
             window.setBounds(new Rectangle(originalBounds.x + (originalBounds.width / 2),
                                            originalBounds.y + (originalBounds.height / 2),
-                                           0, 0));
+                                           10, 10));
+            window.setSize(10, 10);
 
             FloatingTypeDescriptor typeDescriptor = (FloatingTypeDescriptor) descriptor.getTypeDescriptor(ToolWindowType.FLOATING);
             window.setModal(typeDescriptor.isModal());
-            window.setVisible(true);
+            if (typeDescriptor.isModal()) {
+                new Thread(new Runnable() {
+                    public void run() {
+                        window.setVisible(true);
+                    }
+                }).start();
+            } else
+                window.setVisible(true);
         }
 
         protected void onStartAnimation(Direction direction) {
@@ -444,9 +452,13 @@ public class FloatingContainer extends MyDoggyToolWindowContainer {
                 return;
 
             if (window.isVisible()) {
-                window.dispose();
-                window.setModal((Boolean) evt.getNewValue());
-                window.setVisible(true);
+                toolWindow.setVisible(false);
+                toolWindow.setVisible(true);
+//                setVisible(false);
+//                setVisible(true);
+//                window.dispose();
+//                window.setModal((Boolean) evt.getNewValue());
+//                window.setVisible(true);
             }
         }
 

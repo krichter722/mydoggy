@@ -904,6 +904,7 @@ public class MultiSplitDockableContainer<D extends Dockable> extends JPanel {
             }
         }
 
+
         if (root instanceof Split) {
             // Step Two: apply model 1...Aggregate
             Stack<Split> stack = new Stack<Split>();
@@ -915,15 +916,14 @@ public class MultiSplitDockableContainer<D extends Dockable> extends JPanel {
                     if (child instanceof DockableLeaf) {
                         DockableLeaf leaf = (DockableLeaf) child;
 
-                        List<String> dockIds = leaf.getDockables();
-                        Dockable masterDockable = toolWindowManager.lookupDockable(leaf.getDockable());
-                        for (int i = 1; i < dockIds.size(); i++) {
-                            String dockId = dockIds.get(i);
+                        List<String> ids = leaf.getDockables();
+                        Dockable master = toolWindowManager.lookupDockable(leaf.getDockable());
 
-                            Dockable dockable = toolWindowManager.lookupDockable(dockId);
+                        for (int i = 1; i < ids.size(); i++) {
+                            Dockable dockable = toolWindowManager.lookupDockable(ids.get(i));
                             setConstraints(dockable,
                                     getComponentFromWrapper(currentChildMap.get(getLeaf(dockable).getName()), dockable),
-                                    masterDockable,
+                                    master,
                                     -1,
                                     AggregationPosition.DEFAULT
                             );
